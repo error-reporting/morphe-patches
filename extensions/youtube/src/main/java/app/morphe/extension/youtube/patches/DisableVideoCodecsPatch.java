@@ -117,7 +117,7 @@ public class DisableVideoCodecsPatch {
      * @return If AVC can be forced, which needs spoofing to be off or a spoof client that has AVC formats.
      */
     public static boolean isAvcAvailable() {
-        return VideoCodec.AVC.name().equals(getValue()) || !SpoofVideoStreamsPatch.isPatchIncluded()
+        return List.of(VideoCodec.AVC).contains(Settings.VIDEO_CODEC.get()) || !SpoofVideoStreamsPatch.isPatchIncluded()
                 || !SharedYouTubeSettings.SPOOF_VIDEO_STREAMS.get() || List.of(
                 ClientType.ANDROID_CREATOR,
                 ClientType.ANDROID_VR_DASH,
