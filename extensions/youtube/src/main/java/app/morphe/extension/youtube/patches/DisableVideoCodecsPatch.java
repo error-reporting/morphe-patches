@@ -117,7 +117,9 @@ public class DisableVideoCodecsPatch {
      * @return If AVC can be forced, which needs spoofing to be off or a spoof client that has AVC formats.
      */
     public static boolean isAvcAvailable() {
-        return List.of(VideoCodec.AVC).contains(Settings.VIDEO_CODEC.get()) || !SpoofVideoStreamsPatch.isPatchIncluded()
+        return List.of(
+            VideoCodec.AVC,
+            VideoCodec.VP9).contains(Settings.VIDEO_CODEC.get()) || !SpoofVideoStreamsPatch.isPatchIncluded()
                 || !SharedYouTubeSettings.SPOOF_VIDEO_STREAMS.get() || List.of(
                 ClientType.ANDROID_CREATOR,
                 ClientType.ANDROID_VR_DASH,
@@ -151,6 +153,6 @@ public class DisableVideoCodecsPatch {
      * Injection point.
      */
     public static boolean allowCodec(String mimeType) {
-        return !(VIDEO_CODEC == VideoCodec.AVC || VIDEO_CODEC == VideoCodec.VP9 && "video/av01".equals(mimeType));
+        return !(VIDEO_CODEC == VideoCodec.AVC || VIDEO_CODEC == VideoCodec.VP9 && "video/av01".equals(mimeType) || "video/vp09".equals(mimeType));
     }
 }
