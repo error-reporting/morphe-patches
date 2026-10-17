@@ -150,6 +150,6 @@ public class DisableVideoCodecsPatch {
      * Injection point.
      */
     public static boolean allowCodec(String mimeType) {
-        return !(VIDEO_CODEC == VideoCodec.VP9 && "video/av01".equals(mimeType));
+        return !(VIDEO_CODEC == VideoCodec.AVC || VIDEO_CODEC == VideoCodec.VP9 && "video/av01".equals(mimeType));
     }
 }
