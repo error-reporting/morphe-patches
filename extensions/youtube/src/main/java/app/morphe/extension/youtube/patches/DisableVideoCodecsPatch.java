@@ -118,7 +118,7 @@ public class DisableVideoCodecsPatch {
      */
     public static boolean isAvcAvailable() {
         return !SpoofVideoStreamsPatch.isPatchIncluded() 
-            || !SharedYouTubeSettings.SPOOF_VIDEO_STREAMS.get() || List.of(
+               || !SharedYouTubeSettings.SPOOF_VIDEO_STREAMS.get() || List.of(
                 ClientType.ANDROID_CREATOR,
                 ClientType.ANDROID_VR_DASH,
                 ClientType.ANDROID_VR_SABR,
