@@ -401,7 +401,7 @@ public class StreamingDataRequest {
             // TV SABR clients in live streams will be temporarily fallbacked to TV DASH clients.
             //
             // TODO: Override other playerConfigs such as exoPlayerConfig.
-            if ((clientType == ClientType.TV_SABR || clientType == ClientType.TV_SABR_WII_U)
+            if ((clientType == ClientType.TV_SABR || clientType == ClientType.TV_SABR_WII_U || ClientType == ClientType.IOS_PRODUCER)
                     && Utils.containsAny(streamingData.getServerAbrStreamingUrl(), "yt_live_broadcast", "yt_premiere_broadcast")) {
                 Logger.printDebug(() -> "Live stream detected, fallback to TV dash");
                 fallbackWithTVDash = true;
