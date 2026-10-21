@@ -270,7 +270,7 @@ public enum ClientType {
             TV_SABR.id,
             TV_SABR.clientName,
             "Samsung",
-            "SmartTV",
+            "UKS9800",
             "Tizen",
             "2.4.0",
             "5.20220918",
