@@ -124,6 +124,7 @@
         <item>Android VR Downgraded</item>
         <item>TV</item>
         <item>TV Simply</item>
+        <item>IOS Producer</item>
         <item>visionOS</item>
     </string-array>
     <string-array name="morphe_spoof_video_streams_client_type_entry_values">
@@ -132,11 +133,14 @@
         <item>ANDROID_VR_DASH</item>
         <item>TV_SABR</item>
         <item>TV_SIMPLY</item>
+        <item>IOS_PRODUCER</item>
         <item>VISIONOS_1_02</item>
     </string-array>
     <string-array name="morphe_spoof_video_streams_player_js_variant_entries">
         <item>House Brand</item>
         <item>Phone</item>
+        <item>TCE</item>
+        <item>TV</item>
         <item>TV ES6</item>
         <item>Web</item>
         <item>Web ES6</item>
@@ -145,6 +149,8 @@
     <string-array name="morphe_spoof_video_streams_player_js_variant_entry_values">
         <item>HOUSE_BRAND</item>
         <item>PHONE</item>
+        <item>TCE</item>
+        <item>TV</item>
         <item>TV_ES6</item>
         <item>WEB</item>
         <item>WEB_ES6</item>
