@@ -128,17 +128,39 @@ internal object PivotBarChangedFingerprint : Fingerprint(
     )
 )
 
+/**
+ * Feature flags of the translucent navigation bar. 21.29 and older read each of them with a single
+ * accessor method, newer targets read them inline in many classes, sometimes more than once in
+ * the same method.
+ */
+internal val TRANSLUCENT_NAVIGATION_BAR_FEATURE_FLAGS = listOf(
+    45630927L, // Blurred, translucent background of the navigation bar.
+    45632194L, // Navigation bar also covers the system navigation buttons.
+    45631257L  // Feed laid out behind the navigation bar instead of above it.
+)
+
 internal object TranslucentNavigationBarFeatureFlagsFingerprint : Fingerprint(
     filters = listOf(
-        /**
-        * Feature flags of the translucent navigation bar. 21.29 and older read each of them with a single
-        * accessor method, newer targets read them inline in many classes, sometimes more than once in
-        * the same method.
-        */
-        anyInstruction(
-            literal(45630927L), // Blurred, translucent background of the navigation bar.
-            literal(45632194L), // Navigation bar also covers the system navigation buttons.
-            literal(45631257L)  // Feed laid out behind the navigation bar instead of above it.
+        anyInstruction(*TRANSLUCENT_NAVIGATION_BAR_FEATURE_FLAGS.map { literal(it) }.toTypedArray())
+    )
+)
+
+/**
+ * Sets the bottom padding of the navigation bar to the bottom window inset, the room for
+ * the system navigation buttons when the bar is drawn behind them. The bar height also grows
+ * by the same value, which is first stored in a field of the bar.
+ */
+internal object NavigationBarBottomPaddingFingerprint : Fingerprint(
+    filters = listOf(
+        fieldAccess(
+            opcode = Opcode.IPUT,
+            definingClass = "Lcom/google/android/libraries/youtube/rendering/ui/pivotbar/PivotBar;",
+            type = "I"
+        ),
+        methodCall(
+            definingClass = "Lcom/google/android/libraries/youtube/rendering/ui/pivotbar/PivotBar;",
+            name = "setPadding",
+            location = MatchAfterWithin(10)
         )
     )
 )

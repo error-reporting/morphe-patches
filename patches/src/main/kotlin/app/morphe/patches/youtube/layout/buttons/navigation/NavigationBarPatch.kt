@@ -31,6 +31,7 @@ import app.morphe.patches.shared.misc.settings.preference.ListPreference
 import app.morphe.patches.shared.misc.settings.preference.PreferenceScreenPreference
 import app.morphe.patches.shared.misc.settings.preference.PreferenceScreenPreference.Sorting
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
+import app.morphe.patches.youtube.layout.hide.shorts.ShortsBottomBarContainerFingerprint
 import app.morphe.patches.youtube.misc.contexthook.Endpoint
 import app.morphe.patches.youtube.misc.contexthook.addOSNameHook
 import app.morphe.patches.youtube.misc.contexthook.clientContextHookPatch
@@ -48,11 +49,12 @@ import app.morphe.patches.youtube.misc.toolbar.toolBarHookPatch
 import app.morphe.patches.youtube.shared.ActionBarSearchResultsFingerprint
 import app.morphe.patches.youtube.shared.Constants.COMPATIBILITY_YOUTUBE
 import app.morphe.util.addInstructionsAtControlFlowLabel
+import app.morphe.util.containsLiteralInstruction
 import app.morphe.util.findElementByAttributeValueOrThrow
+import app.morphe.util.fiveRegisters
 import app.morphe.util.getFreeRegisterProvider
 import app.morphe.util.getReference
 import app.morphe.util.insertLiteralOverride
-import app.morphe.util.matchAllMethodIndicesForEach
 import app.morphe.util.removeFromParent
 import app.morphe.util.setExtensionIsPatchIncluded
 import com.android.tools.smali.dexlib2.AccessFlags
@@ -202,10 +204,48 @@ val navigationBarPatch = bytecodePatch(
         addBottomBarContainerHook("$EXTENSION_CLASS->hideNavigationBar(Landroid/view/View;)V")
 
         // The translucent navigation bar comes from three feature flags that not every account
-        // gets, so all of them are always turned on. The bar then looks the same on every account,
-        // and the opaque option below paints over the same translucent bar everywhere.
-        TranslucentNavigationBarFeatureFlagsFingerprint.matchAllMethodIndicesForEach { index ->
-            insertLiteralOverride(index, true)
+        // gets, so all of them are turned on whenever the window is drawn edge to edge. The bar then
+        // looks the same on every account, and the opaque option below paints over the same
+        // translucent bar everywhere.
+        TranslucentNavigationBarFeatureFlagsFingerprint.matchAll().forEach { match ->
+            match.method.apply {
+                TRANSLUCENT_NAVIGATION_BAR_FEATURE_FLAGS.forEach { flag ->
+                    if (containsLiteralInstruction(flag)) {
+                        // Overrides every read of the flag in the method.
+                        insertLiteralOverride(flag, "$EXTENSION_CLASS->useTranslucentNavigationBar(Z)Z")
+                    }
+                }
+            }
+        }
+
+        // With the translucent navigation bar, the navigation bar makes room for the system
+        // navigation buttons. If the navigation bar is hidden in the Shorts player, nothing makes
+        // that room, so the Shorts player makes it itself. The first parameter is the layout
+        // of the Shorts player fragment.
+        ShortsBottomBarContainerFingerprint.method.addInstruction(
+            0,
+            "invoke-static { p1 }, $EXTENSION_CLASS->setShortsPlayerBottomInset(Landroid/view/View;)V"
+        )
+
+        // With the keyboard open, the bottom inset also holds the keyboard, so the bar covering
+        // the system navigation buttons grows as tall as the keyboard and covers the page.
+        // The padding is first stored in a field of the bar, and the same register is then passed
+        // to setPadding. Some targets set it in two places.
+        NavigationBarBottomPaddingFingerprint.matchAll().forEach { match ->
+            match.method.apply {
+                val fieldIndex = match.instructionMatches.first().index
+                val fieldInstruction = getInstruction<TwoRegisterInstruction>(fieldIndex)
+                val paddingRegister = fieldInstruction.registerA
+                val navigationBarRegister = fieldInstruction.registerB
+
+                addInstructionsAtControlFlowLabel(
+                    fieldIndex,
+                    """
+                        invoke-static { v$navigationBarRegister, v$paddingRegister }, $EXTENSION_CLASS->getNavigationBarBottomPadding(Landroid/view/View;I)I
+                        move-result v$paddingRegister
+                    """
+                )
+            }
         }
 
         // Paint over the translucent status bar and navigation bar, instead of turning off the
@@ -625,11 +665,10 @@ val navigationBarPatch = bytecodePatch(
         OldSearchButtonVisibilityFingerprint.let {
             it.method.apply {
                 val index = it.instructionMatches.first().index
-                val instruction = getInstruction<FiveRegisterInstruction>(index)
 
                 replaceInstruction(
                     index,
-                    "invoke-static { v${instruction.registerC}, v${instruction.registerD} }, " +
+                    "invoke-static { ${fiveRegisters(index)} }, " +
                             "$EXTENSION_CLASS->hideOldSearchButton(Landroid/view/MenuItem;I)V"
                 )
             }
@@ -639,11 +678,10 @@ val navigationBarPatch = bytecodePatch(
         SearchButtonsVisibilityFingerprint.let {
             it.method.apply {
                 val index = it.instructionMatches[2].index
-                val instruction = getInstruction<FiveRegisterInstruction>(index)
 
                 replaceInstruction(
                     index,
-                    "invoke-static { v${instruction.registerC}, v${instruction.registerD} }, " +
+                    "invoke-static { ${fiveRegisters(index)} }, " +
                             "$EXTENSION_CLASS->hideMicrophoneButton(Landroid/view/View;I)V"
                 )
             }
