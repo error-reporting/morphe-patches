@@ -115,6 +115,12 @@ public class SpoofVideoStreamsSideEffectsPreference extends Preference {
                             + '\n' + str("morphe_spoof_video_streams_about_no_stable_volume");
             case TV_SABR, TV_SABR_WII_U, TV_DASH, TV_SIMPLY ->
                     summary = str("morphe_spoof_video_streams_about_js");
+            case IOS_PRODUCER ->
+                    summary = str("morphe_spoof_video_streams_about_no_audio_tracks")
+                            + '\n' + str("morphe_spoof_video_streams_about_failure")
+                            + '\n' + str("morphe_spoof_video_streams_about_no_stable_volume")
+                            + '\n' + str("morphe_spoof_video_streams_about_no_av1")
+                            + '\n' + str("morphe_spoof_video_streams_about_no_force_original_audio");
             default -> Logger.printException(() -> "Unknown client: " + clientType);
         }
 
