@@ -299,7 +299,7 @@ public enum ClientType {
             "1.1",
             TV_SABR.clientPlatform,
             TV_SABR.userAgent,
-            true,
+            false,
             // This client requires a PoToken for logout.
             false,
             TV_SABR.supportsMultiAudioTracks,
