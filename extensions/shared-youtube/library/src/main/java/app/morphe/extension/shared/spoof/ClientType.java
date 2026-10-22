@@ -290,23 +290,23 @@ public enum ClientType {
      * AV1 codec available.
      */
     TV_SIMPLY_NO_AUTH(
-            75,
-            "TVHTML5_SIMPLY",
-            TV_SABR.deviceMake,
-            TV_SABR.deviceModel,
-            TV_SABR.osName,
-            TV_SABR.osVersion,
-            "1.1",
-            TV_SABR.clientPlatform,
-            TV_SABR.userAgent,
+            TV_SIMPLY.id,
+            TV_SIMPLY.clientName,
+            TV_SIMPLY.deviceMake,
+            TV_SIMPLY.deviceModel,
+            TV_SIMPLY.osName,
+            TV_SIMPLY.osVersion,
+            TV_SIMPLY.clientVersion,
+            TV_SIMPLY.clientPlatform,
+            TV_SIMPLY.userAgent,
             false,
             // This client requires a PoToken for logout.
-            false,
-            TV_SABR.supportsMultiAudioTracks,
-            TV_SABR.supportsVRImmersiveMode,
-            TV_SABR.requireJS,
-            true,
-            false,
+            TV_SIMPLY.requireLogin,
+            TV_SIMPLY.supportsMultiAudioTracks,
+            TV_SIMPLY.supportsVRImmersiveMode,
+            TV_SIMPLY.requireJS,
+            TV_SIMPLY.requirePoToken,
+            TV_SIMPLY.requireSABR,
             "TV Simply No auth"
     ),
     /**
