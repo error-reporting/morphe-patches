@@ -307,7 +307,7 @@ public enum ClientType {
             TV_SABR.requireJS,
             true,
             false,
-            "TV Simply (no auth)"
+            "TV Simply No auth"
     ),
     /**
      * Video not playable: None.
