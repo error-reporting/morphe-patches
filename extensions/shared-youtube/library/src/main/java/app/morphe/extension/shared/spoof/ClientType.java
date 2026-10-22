@@ -286,30 +286,6 @@ public enum ClientType {
             "TV Downgraded"
     ),
     /**
-     * Video not playable: Paid, Movie, Private, Age-restricted.
-     * AV1 codec available.
-     */
-    TV_SIMPLY_NO_AUTH(
-            TV_SIMPLY.id,
-            TV_SIMPLY.clientName,
-            TV_SIMPLY.deviceMake,
-            TV_SIMPLY.deviceModel,
-            TV_SIMPLY.osName,
-            TV_SIMPLY.osVersion,
-            TV_SIMPLY.clientVersion,
-            TV_SIMPLY.clientPlatform,
-            TV_SIMPLY.userAgent,
-            false,
-            // This client requires a PoToken for logout.
-            TV_SIMPLY.requireLogin,
-            TV_SIMPLY.supportsMultiAudioTracks,
-            TV_SIMPLY.supportsVRImmersiveMode,
-            TV_SIMPLY.requireJS,
-            TV_SIMPLY.requirePoToken,
-            TV_SIMPLY.requireSABR,
-            "TV Simply No auth"
-    ),
-    /**
      * Video not playable: None.
      * AV1 codec available.
      */
@@ -332,6 +308,30 @@ public enum ClientType {
             true,
             false,
             "TV Simply"
+    ),
+    /**
+     * Video not playable: Paid, Movie, Private, Age-restricted.
+     * AV1 codec available.
+     */
+    TV_SIMPLY_NO_AUTH(
+            TV_SIMPLY.id,
+            TV_SIMPLY.clientName,
+            TV_SIMPLY.deviceMake,
+            TV_SIMPLY.deviceModel,
+            TV_SIMPLY.osName,
+            TV_SIMPLY.osVersion,
+            TV_SIMPLY.clientVersion,
+            TV_SIMPLY.clientPlatform,
+            TV_SIMPLY.userAgent,
+            false,
+            // This client requires a PoToken for logout.
+            TV_SIMPLY.requireLogin,
+            TV_SIMPLY.supportsMultiAudioTracks,
+            TV_SIMPLY.supportsVRImmersiveMode,
+            TV_SIMPLY.requireJS,
+            TV_SIMPLY.requirePoToken,
+            TV_SIMPLY.requireSABR,
+            "TV Simply No auth"
     ),
     IOS_PRODUCER(
             92,
