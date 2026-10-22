@@ -61,7 +61,7 @@ public class PoTokenWebView {
         webViewSettings.setDomStorageEnabled(true);
         webViewSettings.setSafeBrowsingEnabled(false);
         webViewSettings.setUserAgentString(BotGuardManager.getUserAgent());
-        webViewSettings.setBlockNetworkLoads(false); // No internet for WebView
+        webViewSettings.setBlockNetworkLoads(true); // No internet for WebView
 
         webView.addJavascriptInterface(this, JS_INTERFACE);
 
