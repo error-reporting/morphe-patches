@@ -286,6 +286,30 @@ public enum ClientType {
             "TV Downgraded"
     ),
     /**
+     * Video not playable: Paid, Movie, Private, Age-restricted.
+     * AV1 codec available.
+     */
+    TV_SIMPLY_NO_AUTH(
+            75,
+            "TVHTML5_SIMPLY",
+            TV_SABR.deviceMake,
+            TV_SABR.deviceModel,
+            TV_SABR.osName,
+            TV_SABR.osVersion,
+            "1.1",
+            TV_SABR.clientPlatform,
+            TV_SABR.userAgent,
+            false,
+            // This client requires a PoToken for logout.
+            false,
+            TV_SABR.supportsMultiAudioTracks,
+            TV_SABR.supportsVRImmersiveMode,
+            TV_SABR.requireJS,
+            true,
+            false,
+            "TV Simply (no auth)"
+    ),
+    /**
      * Video not playable: None.
      * AV1 codec available.
      */
@@ -299,7 +323,7 @@ public enum ClientType {
             "1.1",
             TV_SABR.clientPlatform,
             TV_SABR.userAgent,
-            false,
+            true,
             // This client requires a PoToken for logout.
             false,
             TV_SABR.supportsMultiAudioTracks,
