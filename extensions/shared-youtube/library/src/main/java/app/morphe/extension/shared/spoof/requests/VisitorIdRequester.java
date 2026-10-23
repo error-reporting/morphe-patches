@@ -156,8 +156,8 @@ public final class VisitorIdRequester {
             if (Utils.isNotEmpty(platform)) {
                 client.put("platform", platform);
             }
-            client.put("hl", "en-US");
-            client.put("gl", "US");
+            client.put("hl", "en-GB");
+            client.put("gl", "GB");
             client.put("utcOffsetMinutes", 0);
             context.put("client", client);
 
@@ -191,7 +191,7 @@ public final class VisitorIdRequester {
             );
             HttpURLConnection connection = Requester.openConnection(url);
             connection.setRequestMethod("POST");
-            connection.setRequestProperty("Accept-Language", "en-US, en;q=0.9");
+            connection.setRequestProperty("Accept-Language", "en-GB, en;q=0.9");
             connection.setRequestProperty("Content-Type", "application/json");
             if (clientType.canLogin) {
                 if (!AuthUtils.isNotLoggedIn()) {
