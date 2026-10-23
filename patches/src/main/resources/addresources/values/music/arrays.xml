@@ -143,6 +143,8 @@
         <item>Android VR Downgraded</item>
         <item>TV</item>
         <item>TV Simply</item>
+        <item>TV Simply No auth</item>
+        <item>IOS Producer</item>
         <item>visionOS</item>
     </string-array>
     <string-array name="morphe_spoof_video_streams_client_type_entry_values">
@@ -151,6 +153,8 @@
         <item>ANDROID_VR_DASH</item>
         <item>TV_SABR</item>
         <item>TV_SIMPLY</item>
+        <item>TV_SIMPLY_NO_AUTH</item>
+        <item>IOS_PRODUCER</item>
         <item>VISIONOS_1_02</item>
     </string-array>
 

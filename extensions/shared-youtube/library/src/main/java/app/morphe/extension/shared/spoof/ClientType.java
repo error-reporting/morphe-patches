@@ -54,9 +54,9 @@ public enum ClientType {
             ANDROID_MUSIC_REEL.deviceModel,
             ANDROID_MUSIC_REEL.osName,
             ANDROID_MUSIC_REEL.osVersion,
-            "7.12.52",
+            "7.29.52",
             null,
-            "com.google.android.apps.youtube.music/7.12.52 (Linux; U; Android " + Build.VERSION.RELEASE + ") gzip",
+            "com.google.android.apps.youtube.music/7.29.52 (Linux; U; Android " + Build.VERSION.RELEASE + ") gzip",
             IS_YOUTUBE_MUSIC,
             IS_YOUTUBE_MUSIC,
             false,
@@ -202,7 +202,7 @@ public enum ClientType {
             Build.VERSION.RELEASE,
             String.valueOf(Build.VERSION.SDK_INT),
             Build.ID,
-            "20.10.38",
+            "20.14.43",
             null,
             true,
             true,
@@ -270,10 +270,10 @@ public enum ClientType {
             TV_SABR.id,
             TV_SABR.clientName,
             "Samsung",
-            "SmartTV",
+            "UKS9800",
             "Tizen",
             "2.4.0",
-            "5.20150304",
+            "5.20220918",
             "TV",
             "Mozilla/5.0 (SMART-TV; Linux; Tizen 2.4.0) AppleWebKit/538.1 (KHTML, like Gecko) Version/2.4.0 TV Safari/538.1",
             TV_SABR.canLogin,
@@ -308,6 +308,49 @@ public enum ClientType {
             true,
             false,
             "TV Simply"
+    ),
+    /**
+     * Video not playable: Paid, Movie, Private, Age-restricted.
+     * AV1 codec available.
+     */
+    TV_SIMPLY_NO_AUTH(
+            TV_SIMPLY.id,
+            TV_SIMPLY.clientName,
+            TV_SABR.deviceMake,
+            TV_SABR.deviceModel,
+            TV_SABR.osName,
+            TV_SABR.osVersion,
+            TV_SIMPLY.clientVersion,
+            TV_SABR.clientPlatform,
+            TV_SABR.userAgent,
+            false,
+            // This client requires a PoToken for logout.
+            TV_SIMPLY.requireLogin,
+            TV_SABR.supportsMultiAudioTracks,
+            TV_SABR.supportsVRImmersiveMode,
+            TV_SABR.requireJS,
+            TV_SIMPLY.requirePoToken,
+            TV_SIMPLY.requireSABR,
+            "TV Simply No auth"
+    ),
+    IOS_PRODUCER(
+            92,
+            "IOS_PRODUCER",
+            "Apple",
+            "iPhone16,2",
+            "iPhone",
+            "18.3.2.22D82",
+            "0.147.945",
+            null,
+            "com.google.ios.youtubeproducer/0.147.945 (iPhone16,2; U; CPU iOS 18_3_2 like Mac OS X;)",
+            false,
+            false,
+            true,
+            false,
+            false,
+            false,
+            false,
+            "ios producer"
     ),
     /**
      * Video not playable: Kids, Paid, Movie, Private, Age-restricted.
