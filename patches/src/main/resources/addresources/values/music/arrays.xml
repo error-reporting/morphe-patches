@@ -229,7 +229,7 @@
         <item>ZH</item>
         <item>YUE</item>
     </string-array>
-    
+
     <!-- layout.lyrics.lyricsPatch - Translation & Romanization Providers -->
     <string-array name="morphe_music_lyrics_translation_provider_entries">
         <item>@string/morphe_music_lyrics_translation_provider_google</item>
