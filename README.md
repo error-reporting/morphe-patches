@@ -39,7 +39,7 @@ All modifications made by Morphe, along with their dates, can be found in the Gi
 > **[v1.49.0-dev.1](https://github.com/error-reporting/morphe-patches/releases/tag/v1.49.0-dev.3)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;191 patches total
 =======
 > **[v1.49.0-dev.3](https://github.com/MorpheApp/morphe-patches/releases/tag/v1.49.0-dev.3)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;191 patches total
->>>>>>> dev
+ dev
 <details>
 <summary>📦 YouTube&nbsp;&nbsp;•&nbsp;&nbsp;106 patches</summary>
 <br>
