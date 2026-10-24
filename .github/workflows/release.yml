@@ -43,7 +43,9 @@ jobs:
       - name: Release
         uses: cycjimmy/semantic-release-action@v6
         with:
-          branches: fix/video-codec-patch
+          semantic_version: 20
+          branches: |
+            [ 'fix/video-codec-patch' ]
         id: release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
