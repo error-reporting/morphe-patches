@@ -43,9 +43,7 @@ import app.morphe.patches.youtube.misc.extension.sharedExtensionPatch
 import app.morphe.patches.youtube.misc.navigation.addBottomBarContainerHook
 import app.morphe.patches.youtube.misc.navigation.hookNavigationButtonCreated
 import app.morphe.patches.youtube.misc.navigation.navigationBarHookPatch
-import app.morphe.patches.youtube.misc.playservice.is_20_26_or_greater
 import app.morphe.patches.youtube.misc.playservice.is_20_31_or_greater
-import app.morphe.patches.youtube.misc.playservice.is_21_07_or_greater
 import app.morphe.patches.youtube.misc.playservice.is_21_35_or_greater
 import app.morphe.patches.youtube.misc.playservice.versionCheckPatch
 import app.morphe.patches.youtube.misc.settings.PreferenceScreen
@@ -226,12 +224,12 @@ val navigationBarPatch = bytecodePatch(
         // they break. Every fix checks that the flags are turned on by this patch, so the fixes do
         // nothing if the flags are left to the account, as with the default navigation bar style.
 
-        // The translucent navigation bar comes from three feature flags that not every account
+        // The translucent navigation bar comes from two feature flags that not every account
         // gets, so they are turned on to make the bar look the same on every account, and the opaque
         // style below paints over the same translucent bar everywhere. The flag that makes the bar
         // cover the system navigation buttons is turned on only when the window is drawn edge to
-        // edge. The blur and the feed behind the bar do not change the room left for the system
-        // navigation buttons, so they are also turned on without it.
+        // edge. The blur does not change the room left for the system
+        // navigation buttons, so it is also turned on without it.
         TranslucentNavigationBarFeatureFlagsFingerprint.matchAll().forEach { match ->
             match.method.apply {
                 TRANSLUCENT_NAVIGATION_BAR_FEATURE_FLAGS.forEach { flag ->
@@ -326,17 +324,6 @@ val navigationBarPatch = bytecodePatch(
             )
         }
 
-        // A flag gives the pages the height of the navigation bar and the miniplayer in another way,
-        // which leaves wrong padding in some pages, such as the incognito search. It is turned off.
-        if (is_21_07_or_greater) {
-            IncognitoSearchPaddingFeatureFlagFingerprint.matchAllMethodIndicesForEach { index ->
-                val moveResultIndex = indexOfFirstInstructionOrThrow(index, Opcode.MOVE_RESULT)
-                val register = getInstruction<OneRegisterInstruction>(moveResultIndex).registerA
-
-                addInstruction(moveResultIndex + 1, "const/4 v$register, 0x0")
-            }
-        }
-
         // The slim status bar ("No connection", "Back online") is laid out below the bar covering
         // the system navigation buttons, so the buttons cover it. The room for the buttons is moved
         // below it while it is shown.
@@ -379,53 +366,51 @@ val navigationBarPatch = bytecodePatch(
         // does not scroll and its items only get the height left above the padding. With a tall
         // keyboard nothing is left, and the items are hidden. The keyboard is removed from
         // the padding, as for the navigation bar above.
-        if (is_20_26_or_greater) {
-            FeedListPaddingFingerprint.let {
-                it.method.apply {
-                    val index = it.instructionMatches.last().index
-                    val paddingInstruction = getInstruction<FiveRegisterInstruction>(index)
-                    val listRegister = paddingInstruction.registerC
-                    val bottomPaddingRegister = paddingInstruction.registerG
-                    val freeRegisters = getFreeRegisterProvider(index, 3)
-                    val insetsRegister = freeRegisters.getFreeRegister4Bit()
-                    val imeRegister = freeRegisters.getFreeRegister4Bit()
-                    val systemBarsRegister = freeRegisters.getFreeRegister4Bit()
+        FeedListPaddingFingerprint.let {
+            it.method.apply {
+                val index = it.instructionMatches.last().index
+                val paddingInstruction = getInstruction<FiveRegisterInstruction>(index)
+                val listRegister = paddingInstruction.registerC
+                val bottomPaddingRegister = paddingInstruction.registerG
+                val freeRegisters = getFreeRegisterProvider(index, 3)
+                val insetsRegister = freeRegisters.getFreeRegister4Bit()
+                val imeRegister = freeRegisters.getFreeRegister4Bit()
+                val systemBarsRegister = freeRegisters.getFreeRegister4Bit()
 
-                    addInstructionsWithLabels(
-                        index,
-                        $$"""
-                            invoke-static { }, $$EXTENSION_CLASS->isTranslucentNavigationBarBackgroundForced()Z
-                            move-result v$$imeRegister
-                            if-eqz v$$imeRegister, :keep_padding
-                            # The inset types are only on Android 11 and later.
-                            sget v$$imeRegister, Landroid/os/Build$VERSION;->SDK_INT:I
-                            const/16 v$$systemBarsRegister, 0x1e
-                            if-lt v$$imeRegister, v$$systemBarsRegister, :keep_padding
-                            invoke-virtual { v$$listRegister }, Landroid/view/View;->getRootWindowInsets()Landroid/view/WindowInsets;
-                            move-result-object v$$insetsRegister
-                            if-eqz v$$insetsRegister, :keep_padding
-                            # The keyboard inset is empty when the keyboard is hidden.
-                            invoke-static { }, Landroid/view/WindowInsets$Type;->ime()I
-                            move-result v$$imeRegister
-                            invoke-virtual { v$$insetsRegister, v$$imeRegister }, Landroid/view/WindowInsets;->getInsets(I)Landroid/graphics/Insets;
-                            move-result-object v$$imeRegister
-                            iget v$$imeRegister, v$$imeRegister, Landroid/graphics/Insets;->bottom:I
-                            # The padding does not hold the bottom inset, as when the feed is not behind the navigation bar.
-                            if-lt v$$bottomPaddingRegister, v$$imeRegister, :keep_padding
-                            invoke-static { }, Landroid/view/WindowInsets$Type;->systemBars()I
-                            move-result v$$systemBarsRegister
-                            invoke-virtual { v$$insetsRegister, v$$systemBarsRegister }, Landroid/view/WindowInsets;->getInsets(I)Landroid/graphics/Insets;
-                            move-result-object v$$systemBarsRegister
-                            iget v$$systemBarsRegister, v$$systemBarsRegister, Landroid/graphics/Insets;->bottom:I
-                            # Keyboard height above the system bars.
-                            sub-int/2addr v$$imeRegister, v$$systemBarsRegister
-                            if-lez v$$imeRegister, :keep_padding
-                            sub-int/2addr v$$bottomPaddingRegister, v$$imeRegister
-                            :keep_padding
-                            nop
-                        """
-                    )
-                }
+                addInstructionsWithLabels(
+                    index,
+                    $$"""
+                        invoke-static { }, $$EXTENSION_CLASS->isTranslucentNavigationBarBackgroundForced()Z
+                        move-result v$$imeRegister
+                        if-eqz v$$imeRegister, :keep_padding
+                        # The inset types are only on Android 11 and later.
+                        sget v$$imeRegister, Landroid/os/Build$VERSION;->SDK_INT:I
+                        const/16 v$$systemBarsRegister, 0x1e
+                        if-lt v$$imeRegister, v$$systemBarsRegister, :keep_padding
+                        invoke-virtual { v$$listRegister }, Landroid/view/View;->getRootWindowInsets()Landroid/view/WindowInsets;
+                        move-result-object v$$insetsRegister
+                        if-eqz v$$insetsRegister, :keep_padding
+                        # The keyboard inset is empty when the keyboard is hidden.
+                        invoke-static { }, Landroid/view/WindowInsets$Type;->ime()I
+                        move-result v$$imeRegister
+                        invoke-virtual { v$$insetsRegister, v$$imeRegister }, Landroid/view/WindowInsets;->getInsets(I)Landroid/graphics/Insets;
+                        move-result-object v$$imeRegister
+                        iget v$$imeRegister, v$$imeRegister, Landroid/graphics/Insets;->bottom:I
+                        # The padding does not hold the bottom inset, as when the feed is not behind the navigation bar.
+                        if-lt v$$bottomPaddingRegister, v$$imeRegister, :keep_padding
+                        invoke-static { }, Landroid/view/WindowInsets$Type;->systemBars()I
+                        move-result v$$systemBarsRegister
+                        invoke-virtual { v$$insetsRegister, v$$systemBarsRegister }, Landroid/view/WindowInsets;->getInsets(I)Landroid/graphics/Insets;
+                        move-result-object v$$systemBarsRegister
+                        iget v$$systemBarsRegister, v$$systemBarsRegister, Landroid/graphics/Insets;->bottom:I
+                        # Keyboard height above the system bars.
+                        sub-int/2addr v$$imeRegister, v$$systemBarsRegister
+                        if-lez v$$imeRegister, :keep_padding
+                        sub-int/2addr v$$bottomPaddingRegister, v$$imeRegister
+                        :keep_padding
+                        nop
+                    """
+                )
             }
         }
 

@@ -41,6 +41,7 @@ import app.morphe.util.copyResources
 import app.morphe.util.findElementByAttributeValueOrThrow
 import app.morphe.util.inputStreamFromBundledResource
 import app.morphe.util.removeFromParent
+import app.morphe.util.setExtensionIsPatchIncluded
 import com.android.tools.smali.dexlib2.iface.instruction.FiveRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.TwoRegisterInstruction
 import org.w3c.dom.Element
@@ -112,14 +113,22 @@ private val notificationIconPngDirectories = mapOf(
 /**
  * The icon files of the custom icon folder at [path], each in the resource folder it goes to, or
  * null when the folder has none or holds only part of the adaptive icon in a density.
+ * The reason is logged, as a failed option validation does not say what is wrong.
  */
 private fun customIconFiles(path: String): List<File>? {
     val folder = File(path.trim())
-    if (!folder.isDirectory) return null
+    if (!folder.isDirectory) {
+        logger.warning("Custom icon path is not a folder: ${folder.absolutePath}")
+        return null
+    }
 
     val adaptiveIcons = mipmapDirectories.keys.flatMap { density ->
         val layers = USER_CUSTOM_ADAPTIVE_FILE_NAMES.map { folder.resolve("$density/$it") }.filter(File::isFile)
-        if (layers.isNotEmpty() && layers.size != USER_CUSTOM_ADAPTIVE_FILE_NAMES.size) return null
+        if (layers.isNotEmpty() && layers.size != USER_CUSTOM_ADAPTIVE_FILE_NAMES.size) {
+            logger.warning("Custom icon folder $density must contain all of " +
+                    "${USER_CUSTOM_ADAPTIVE_FILE_NAMES.joinToString()} but only has ${layers.joinToString { it.name }}")
+            return null
+        }
         layers
     }
     val optionalIcons = listOf(
@@ -127,7 +136,10 @@ private fun customIconFiles(path: String): List<File>? {
         "drawable/$USER_CUSTOM_NOTIFICATION_ICON_XML_FILE_NAME"
     ) + notificationIconPngDirectories.keys.map { "$it/$USER_CUSTOM_NOTIFICATION_ICON_PNG_FILE_NAME" }
 
-    return (adaptiveIcons + optionalIcons.map(folder::resolve).filter(File::isFile)).ifEmpty { null }
+    return (adaptiveIcons + optionalIcons.map(folder::resolve).filter(File::isFile)).ifEmpty {
+        logger.warning("Custom icon folder has none of the expected icon files: ${folder.absolutePath}")
+        null
+    }
 }
 
 internal const val EXTENSION_CLASS = "Lapp/morphe/extension/shared/patches/CustomBrandingPatch;"
@@ -137,6 +149,10 @@ private val logger = Logger.getLogger(ResourcePatchContext::class.java.name)
 
 /**
  * Shared custom branding patch for YouTube and YT Music.
+ *
+ * @param appLauncherIconNames Launcher icons of the app that can be selected in the app settings,
+ * as the icon style name and the mipmap resource name. They are not patch option values,
+ * because older app versions do not have them.
  */
 internal fun baseCustomBrandingPatch(
     originalLauncherIconName: String,
@@ -149,6 +165,7 @@ internal fun baseCustomBrandingPatch(
     mainActivityName: String,
     activityAliasNameWithIntents: String,
     preferenceScreen: BasePreferenceScreen.Screen,
+    appLauncherIconNames: () -> Map<String, String> = { emptyMap() },
     block: ResourcePatchBuilder.() -> Unit,
     executeBlock: ResourcePatchContext.() -> Unit = {}
 ): ResourcePatch = resourcePatch(
@@ -224,6 +241,9 @@ internal fun baseCustomBrandingPatch(
         fixRecycledBitmapPatch,
         bytecodePatch {
             execute {
+                // Custom branding changes the default splash screen style to the Morphe animation.
+                setExtensionIsPatchIncluded(EXTENSION_CLASS)
+
                 mainActivityOnCreateFingerprint.method.addInstruction(
                     0,
                     "invoke-static { }, $EXTENSION_CLASS->setBranding()V"
@@ -430,6 +450,21 @@ internal fun baseCustomBrandingPatch(
                             )
                         }
 
+                        // Launcher icons of the app. Not enabled here, because they can only be
+                        // selected in the app settings.
+                        appLauncherIconNames().forEach { (style, iconMipmapName) ->
+                            application.appendChild(
+                                createAlias(
+                                    aliasName = aliasName(style),
+                                    iconMipmapName = iconMipmapName,
+                                    appNameIndex = appNameIndex,
+                                    useCustomName = useCustomNameLabel,
+                                    enabled = false,
+                                    intentFilters
+                                )
+                            )
+                        }
+
                         // User provided custom icon.
                         //
                         // Must add all aliases even if the user did not provide a custom icon of their own.
@@ -508,12 +543,15 @@ internal fun baseCustomBrandingPatch(
             ListPreference("morphe_custom_branding_name")
         }
 
+        // YouTube 21.41+ also has launcher icons of its own.
+        val arrayKeySuffix = if (appLauncherIconNames().isEmpty()) "" else "_21_41"
+
         if (useCustomIcon) {
             preferences += ListPreference(
                 key = "morphe_custom_branding_icon",
                 tag = "app.morphe.extension.shared.settings.preference.IconListPreference",
-                entriesKey = "morphe_custom_branding_icon_custom_entries",
-                entryValuesKey = "morphe_custom_branding_icon_custom_entry_values"
+                entriesKey = "morphe_custom_branding_icon${arrayKeySuffix}_custom_entries",
+                entryValuesKey = "morphe_custom_branding_icon${arrayKeySuffix}_custom_entry_values"
             )
             preferences += ListPreference(
                 key = "morphe_custom_branding_notification_icon",
@@ -524,7 +562,9 @@ internal fun baseCustomBrandingPatch(
         } else {
             preferences += ListPreference(
                 key = "morphe_custom_branding_icon",
-                tag = "app.morphe.extension.shared.settings.preference.IconListPreference"
+                tag = "app.morphe.extension.shared.settings.preference.IconListPreference",
+                entriesKey = "morphe_custom_branding_icon${arrayKeySuffix}_entries",
+                entryValuesKey = "morphe_custom_branding_icon${arrayKeySuffix}_entry_values"
             )
             preferences += ListPreference(
                 key = "morphe_custom_branding_notification_icon",
@@ -562,17 +602,6 @@ internal fun baseCustomBrandingPatch(
             ResourceGroup(
                 "mipmap-anydpi",
                 "$LAUNCHER_RESOURCE_NAME_PREFIX$CUSTOM_USER_ICON_STYLE_NAME.xml"
-            )
-        )
-
-        // Startup animation of each launcher foreground, played by the app hooks
-        // in place of the original one.
-        copyResources(
-            "custom-branding",
-            ResourceGroup(
-                "raw",
-                "morphe_startup_animation.json",
-                "morphe_startup_animation_play.json"
             )
         )
 

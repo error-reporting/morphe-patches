@@ -537,6 +537,13 @@ public final class FeedVideoActionsPatch {
 
         if (menuButton == null) {
             if (card != null) {
+                // Litho mounts only the part of a card that is shown, so the menu button below
+                // the thumbnail, such as of the classic layout, is not mounted while only the
+                // thumbnail is shown, as when the card leaves the screen. The button is kept
+                // until the card is fully shown and still has no menu button.
+                if (card.badgeAdded && isVideoShaped(host) && FeedVideoCardsPatch.scheduleScrollCheck(host)) {
+                    return card;
+                }
                 if (card.badgeAdded) {
                     host.getOverlay().remove(card.badge);
                     card.badgeAdded = false;
@@ -569,6 +576,27 @@ public final class FeedVideoActionsPatch {
             }
         } catch (Exception ex) {
             Logger.printException(() -> "updateRoots failure", ex);
+        }
+    }
+
+    /**
+     * Called when {@link FeedVideoCardsPatch} checks a card, which it also does again while
+     * the list scrolls and the card is partly shown. Litho mounts only the part of a card that
+     * is shown, so the menu button of a card that enters from the top of the list may not be
+     * found when it is laid out, and the card may not be laid out again once it is shown.
+     *
+     * @param videoId The video of the card, or null if the card is not a known video.
+     */
+    public static void onCardLaidOut(ComponentHost host, @Nullable String videoId) {
+        if (!ENABLED) {
+            return;
+        }
+        try {
+            if (updateCard(host) == null && videoId != null) {
+                FeedVideoCardsPatch.scheduleScrollCheck(host);
+            }
+        } catch (Exception ex) {
+            Logger.printException(() -> "onCardLaidOut failure", ex);
         }
     }
 
