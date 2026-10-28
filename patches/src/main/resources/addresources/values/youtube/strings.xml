@@ -119,6 +119,9 @@ Changes include:
     <string name="morphe_hide_surveys_title">Hide surveys</string>
     <string name="morphe_hide_surveys_summary">Hide surveys and nudges about feed recommendation accuracy</string>
     <string name="morphe_hide_ticket_shelf_title">Hide ticket shelf</string>
+    <!-- 'Unavailable videos are hidden' should be translated using the same localized wording YouTube displays for the banner in playlists. -->
+    <string name="morphe_hide_unavailable_videos_hidden_banner_title">Hide \'Unavailable videos are hidden\' banner</string>
+    <string name="morphe_hide_unavailable_videos_hidden_banner_summary">Hides the \'Unavailable videos are hidden\' banner in playlists</string>
     <string name="morphe_hide_upload_time_title">Hide upload time</string>
     <!-- Translations should match the language used in 'morphe_hide_view_count_summary'. -->
     <string name="morphe_hide_upload_time_summary">"Limitations:
@@ -905,8 +908,6 @@ To fix this, turn on \'Spoof video streams\' and change the \'Default client\' t
     <string name="morphe_auto_captions_style_entry_2">Never show</string>
     <string name="morphe_auto_captions_style_entry_3">Show when unmuted</string>
     <string name="morphe_auto_captions_style_entry_4">Show when muted</string>
-    <string name="morphe_auto_captions_style_legacy_entry_1">Show auto captions</string>
-    <string name="morphe_auto_captions_style_legacy_entry_2">Hide auto captions</string>
 
     <!-- layout.captions.preferredCaptionLanguagePatch -->
     <string name="morphe_preferred_caption_language_title">Preferred caption language</string>
@@ -1366,6 +1367,8 @@ Limitation: If \'Restore old video action bar\' is turned off, \'More videos\' o
     <string name="morphe_fix_status_bar_layout_summary">Keeps the layout of the status bar consistent, so it does not cover the top bars and leaves no empty space above the player. Turn this off if the app crashes or the top bars look wrong</string>
 
     <!-- layout.theme.themePatch -->
+    <string name="morphe_splash_screen_style_entry_6">Glow</string>
+    <string name="morphe_splash_screen_style_glow_not_supported">Glow splash screen is not supported by this device</string>
     <string name="morphe_theme_color_light_title">Light theme background</string>
     <string name="morphe_theme_color_light_entry_2">White</string>
     <string name="morphe_theme_color_light_entry_3">Material You (White)</string>
@@ -1393,6 +1396,9 @@ Limitation: If \'Restore old video action bar\' is turned off, \'More videos\' o
     <string name="morphe_custom_branding_name_entry_2" translatable="false">YouTube Morphe</string>
     <string name="morphe_custom_branding_name_entry_3" translatable="false">YT Morphe</string>
     <string name="morphe_custom_branding_name_entry_4" translatable="false">YT</string>
+    <string name="morphe_custom_branding_icon_entry_8">Original analog</string>
+    <string name="morphe_custom_branding_icon_entry_9">Original cake</string>
+    <string name="morphe_custom_branding_icon_entry_10">Original metal</string>
 
     <!-- layout.branding.header.changeHeaderPatch -->
     <string name="morphe_header_logo_title">Header logo</string>
