@@ -60,10 +60,6 @@ internal object Constants {
                 minSdk = 28
             ),
             AppTarget(
-                version = "20.31.42",
-                minSdk = 28
-            ),
-            AppTarget(
                 version = "20.26.46", // Last version for Android 8.0
                 minSdk = 26
             )
