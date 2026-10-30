@@ -59,7 +59,7 @@ public class SpoofVideoStreamsPatch {
      * Using a VPN or DNS can temporarily resolve this issue,
      * But the ideal workaround is to avoid using an unreachable IP address.
      */
-    private static final String INTERNET_CONNECTION_CHECK_URI_STRING = "http://connectivitycheck.gstatic.com/generate_204";
+    private static final String INTERNET_CONNECTION_CHECK_URI_STRING = "https://www.google.com/gen_204";
     private static final Uri INTERNET_CONNECTION_CHECK_URI = Uri.parse(INTERNET_CONNECTION_CHECK_URI_STRING);
 
     private static final boolean SPOOF_VIDEO_STREAMS = isPatchIncluded()
