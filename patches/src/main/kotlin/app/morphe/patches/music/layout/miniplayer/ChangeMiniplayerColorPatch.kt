@@ -105,7 +105,7 @@ val changeMiniplayerColorPatch = bytecodePatch(
                 val colorMathPlayerIPutReference = MiniPlayerConstructorFingerprint.method
                     .getInstruction<ReferenceInstruction>(iPutIndex).reference
 
-                SwitchToggleColorParentFingerprint.method.apply {                	
+                SwitchToggleColorParentFingerprint.method.apply {
                     val insertIndex = 0
                     val freeRegister = findFreeRegister(insertIndex)
 
