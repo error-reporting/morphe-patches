@@ -319,7 +319,7 @@ public class Settings extends SharedYouTubeSettings {
     public static final BooleanSetting COPY_VIDEO_LINK_WITH_TIMESTAMP_BUTTON = new BooleanSetting("morphe_copy_video_link_with_timestamp_button", TRUE, true, parent(COPY_VIDEO_LINK_BUTTON));
     public static final BooleanSetting HIDE_AUTOPLAY_BUTTON = new BooleanSetting("morphe_hide_autoplay_button", TRUE, true);
     public static final BooleanSetting HIDE_CAPTIONS_BUTTON = new BooleanSetting("morphe_hide_captions_button", FALSE);
-    public static final BooleanSetting HIDE_CAST_BUTTON = new BooleanSetting("morphe_hide_cast_button", TRUE, true);
+    public static final BooleanSetting HIDE_CAST_BUTTON = new BooleanSetting("morphe_hide_cast_button", FALSE, true);
     public static final BooleanSetting HIDE_COLLAPSE_BUTTON = new BooleanSetting("morphe_hide_collapse_button", FALSE, true);
     public static final BooleanSetting HIDE_FULLSCREEN_BUTTON = new BooleanSetting("morphe_hide_fullscreen_button", FALSE, true);
     public static final BooleanSetting HIDE_PLAYER_CONTROL_BUTTONS_BACKGROUND = new BooleanSetting("morphe_hide_player_control_buttons_background", FALSE, true);
@@ -573,6 +573,7 @@ public class Settings extends SharedYouTubeSettings {
     public static final BooleanSetting HIDE_STATUS_BAR = new BooleanSetting("morphe_hide_status_bar", FALSE, true);
     public static final BooleanSetting FIX_STATUS_BAR_LAYOUT = new BooleanSetting("morphe_fix_status_bar_layout", TRUE, true);
     public static final BooleanSetting WINDOW_BELOW_STATUS_BAR = new BooleanSetting("morphe_window_below_status_bar", FALSE, false, false);
+    public static final BooleanSetting WINDOW_ABOVE_NAVIGATION_BAR = new BooleanSetting("morphe_window_above_navigation_bar", FALSE, false, false);
     public static final EnumSetting<AnimationsMode> FORCE_ANIMATIONS = new EnumSetting<>("morphe_force_animations", AnimationsMode.DEFAULT);
 
     // Custom filter
@@ -606,7 +607,7 @@ public class Settings extends SharedYouTubeSettings {
     public static final EnumSetting<NavigationBarStyle> NAVIGATION_BAR_STYLE = new EnumSetting<>("morphe_navigation_bar_style", NavigationBarStyle.DEFAULT, true, "morphe_navigation_bar_style_user_dialog_message", parentNot(HIDE_NAVIGATION_BAR));
 
     // Toolbar
-    public static final BooleanSetting HIDE_TOOLBAR_CAST_BUTTON = new BooleanSetting("morphe_hide_toolbar_cast_button", TRUE, true);
+    public static final BooleanSetting HIDE_TOOLBAR_CAST_BUTTON = new BooleanSetting("morphe_hide_toolbar_cast_button", FALSE, true);
     public static final BooleanSetting HIDE_TOOLBAR_CHAT_BUTTON = new BooleanSetting("morphe_hide_toolbar_chat_button", FALSE, true);
     public static final BooleanSetting HIDE_TOOLBAR_CREATE_BUTTON = new BooleanSetting("morphe_hide_toolbar_create_button", FALSE, true, parent(SWAP_CREATE_WITH_NOTIFICATIONS_BUTTON));
     public static final BooleanSetting HIDE_TOOLBAR_MICROPHONE_BUTTON = new BooleanSetting("morphe_hide_toolbar_microphone_button", FALSE, true);
