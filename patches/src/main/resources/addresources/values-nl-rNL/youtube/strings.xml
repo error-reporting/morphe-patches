@@ -29,6 +29,8 @@ Second \"item\" text"</string>
   <string name="morphe_settings_screen_11_misc_title">Diversen</string>
   <string name="morphe_settings_screen_12_video_title">Video</string>
   <string name="morphe_restore_old_settings_menus_title">Herstel het oude YouTube instellingenscherm</string>
+  <string name="morphe_native_snackbar_title">Berichten in de YouTube-snackbar weergeven</string>
+  <string name="morphe_native_snackbar_summary">Morphe-berichten, zoals de bevestiging van een spelerknop, worden in de YouTube-snackbar getoond in plaats van een pop-up</string>
   <!-- misc.backgroundplayback.backgroundPlaybackPatch -->
   <string name="morphe_remove_background_playback_restrictions_title">Achtergrond afspeelbeperkingen verwijderen</string>
   <string name="morphe_shorts_disable_background_playback_title">Schakel afspelen in achtergrond uit</string>
@@ -455,6 +457,15 @@ Rapporten zijn openbaar en worden beoordeeld voordat een kanaal aan een lijst wo
   <string name="morphe_post_image_download_saved_single">Afbeelding opgeslagen in %s</string>
   <string name="morphe_post_image_download_failed">De afbeelding kon niet worden gedownload</string>
   <string name="morphe_post_image_download_not_found">Geen afbeelding gevonden in dit bericht</string>
+  <!-- interaction.posttranslate.postTranslatePatch -->
+  <string name="morphe_post_translate_title">Berichten vertalen</string>
+  <string name="morphe_post_translate_summary">Voegt een item toe aan het fly-outmenu om berichten van contentmakers te vertalen</string>
+  <string name="morphe_post_translate_language_title">Vertalingstaal voor berichten</string>
+  <string name="morphe_post_translate_flyout">Vertalen</string>
+  <string name="morphe_post_translate_flyout_original">Origineel tonen</string>
+  <string name="morphe_post_translate_started">Vertalen...</string>
+  <string name="morphe_post_translate_failed">Het bericht kon niet worden vertaald</string>
+  <string name="morphe_post_translate_same_language">Het bericht is al in de vertalingstaal</string>
   <!-- interaction.ask.askFlyoutMenuPatch -->
   <string name="morphe_ask_summarize_flyout_menu_title">Ask-item aan uitklapmenu toevoegen</string>
   <string name="morphe_ask_summarize_flyout_menu_summary">Videofatsummarisatie-item toevoegen aan het feed-uitklapmenu</string>
@@ -504,7 +515,6 @@ Nadat een video met de Ask-knop eenmaal is geopend, werkt de functie voor alle v
   <string name="morphe_external_downloader_quick_audio">Audio</string>
   <string name="morphe_external_downloader_quick_options">Alle opties</string>
   <string name="morphe_shorts_download_flyout_button_title">Download tonen in Shorts-menu</string>
-  <string name="morphe_shorts_download_flyout_button_summary">Voegt een extern downloadmenu-item toe aan de Shorts-speler</string>
   <string name="morphe_shorts_download_flyout_title">Download</string>
   <!-- video.voiceovertranslation.voiceOverTranslationPatch -->
   <string name="morphe_vot_screen_title">Spraakvertaling</string>
@@ -612,10 +622,6 @@ Info: Werkt mogelijk niet op livestreams"</string>
   <string name="morphe_save_to_watch_later_flyout_title">Opslaan in Watch later</string>
   <string name="morphe_save_to_watch_later_flyout_button_title">Toon de knop \'Opslaan in Later bekijken\' in de instellingenflyout van de speler.</string>
   <string name="morphe_save_to_watch_later_flyout_button_summary">Hiermee kun je de video die je momenteel bekijkt vanuit het uitklapmenu voor video-instellingen opslaan in \'Later bekijken\'.</string>
-  <string name="morphe_save_to_watch_later_kids_flyout_button_title">Toon knop Opslaan in Watch later bij kindervideo\'s</string>
-  <string name="morphe_save_to_watch_later_kids_flyout_button_summary">Hiermee kunt u kindgerelateerde video\'s opslaan in \'Later bekijken\' via het flyoutmenu</string>
-  <string name="morphe_save_to_watch_later_shorts_flyout_button_title">Toon de knop \'Opslaan in Later bekijken\' in het flyoutmenu voor Shorts</string>
-  <string name="morphe_save_to_watch_later_shorts_flyout_button_summary">Hiermee kunt u Shorts opslaan in \'Later bekijken\' via het flyoutmenu</string>
   <string name="morphe_save_to_watch_later_redirect_playlist_id_title">Stuur \'Later bekijken\' door naar afspeellijst</string>
   <string name="morphe_save_to_watch_later_redirect_playlist_id_summary">Later bekijken</string>
   <string name="morphe_queue_flyout_title">Toevoegen aan Morphe-wachtrij</string>
@@ -861,6 +867,8 @@ Om dit op te lossen, schakel 'Videostreams vervalsen' in en wijzig de 'Standaard
   <string name="morphe_fix_transcript_title">Transcriptie corrigeren</string>
   <string name="morphe_fix_transcript_summary">Lost een voorwaarde-controlefout op die kan voorkomen dat het transcript wordt geladen</string>
   <string name="morphe_captions_in_pip_title">Bijschriften weergeven in picture-in-picture</string>
+  <string name="morphe_stable_caption_blocks_title">Stabiele bijschriftblokken</string>
+  <string name="morphe_stable_caption_blocks_summary">Groepeer automatische ondertiteling in stabiele, leesbare blokken. Sommige woorden kunnen verschijnen voordat ze worden uitgesproken. Herstarten is vereist.</string>
   <!-- layout.buttons.navigation.navigationButtonsPatch -->
   <string name="morphe_navigation_buttons_screen_title">Navigatieknoppen</string>
   <string name="morphe_navigation_buttons_screen_summary">Kies welke componenten er in de werkbalk verschijnen</string>
@@ -1209,6 +1217,8 @@ Beperking: Als 'Herstel oude video acties balk' is uitgeschakeld, is de \"Meer v
   <string name="morphe_miniplayer_disable_resuming_summary">Schakelt de \'Doorgaan met kijken\'-minispeler uit, een functie van YouTube Premium die verschijnt bij het opstarten van de app</string>
   <string name="morphe_miniplayer_screen_title">Minispeler</string>
   <string name="morphe_miniplayer_screen_summary">Pas het uiterlijk en het gedrag van de geminimaliseerde videospeler aan</string>
+  <string name="morphe_miniplayer_not_available_title">Extra miniplayers</string>
+  <string name="morphe_miniplayer_not_available_summary">YouTube heeft alle extra miniplayers verwijderd. Om meer miniplayer-typen te herstellen, patch dan YouTube 21.28.208 of ouder</string>
   <string name="morphe_miniplayer_type_title">\"miniplayer\"-type</string>
   <string name="morphe_miniplayer_hide_title_title">Verberg titel en kanaal</string>
   <string name="morphe_miniplayer_type_entry_0">Uitgeschakeld</string>

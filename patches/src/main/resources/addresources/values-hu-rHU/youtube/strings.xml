@@ -29,6 +29,8 @@ Second \"item\" text"</string>
   <string name="morphe_settings_screen_11_misc_title">Egyéb</string>
   <string name="morphe_settings_screen_12_video_title">Videó</string>
   <string name="morphe_restore_old_settings_menus_title">Régi YouTube beállításképernyő visszaállítása</string>
+  <string name="morphe_native_snackbar_title">Üzenetek megjelenítése YouTube snackbarban</string>
+  <string name="morphe_native_snackbar_summary">Morphe üzenetek, például a lejátszó gomb megerősítése, a YouTube snackbarban jelennek meg felugró ablak helyett</string>
   <!-- misc.backgroundplayback.backgroundPlaybackPatch -->
   <string name="morphe_remove_background_playback_restrictions_title">Háttérben lejátszás korlátozásainak feloldása</string>
   <string name="morphe_shorts_disable_background_playback_title">Háttérben történő lejátszás kikapcsolása</string>
@@ -455,6 +457,15 @@ A jelentések nyilvánosak, és felülvizsgálják őket, mielőtt egy csatorna 
   <string name="morphe_post_image_download_saved_single">Kép mentve a %s mappába</string>
   <string name="morphe_post_image_download_failed">A kép letöltése nem sikerült</string>
   <string name="morphe_post_image_download_not_found">Ebben a bejegyzésben nem található kép</string>
+  <!-- interaction.posttranslate.postTranslatePatch -->
+  <string name="morphe_post_translate_title">Bejegyzések fordítása</string>
+  <string name="morphe_post_translate_summary">Kiegészíti a kislegyit menúvel a tartalomgyártók bejegyzéseinek fordításához</string>
+  <string name="morphe_post_translate_language_title">Bejegyzés fordítási nyelve</string>
+  <string name="morphe_post_translate_flyout">Fordítás</string>
+  <string name="morphe_post_translate_flyout_original">Eredeti megjelenítése</string>
+  <string name="morphe_post_translate_started">Fordítás folyamatban…</string>
+  <string name="morphe_post_translate_failed">Nem sikerült lefordítani a bejegyzést</string>
+  <string name="morphe_post_translate_same_language">A bejegyzés már a fordítási nyelvben van</string>
   <!-- interaction.ask.askFlyoutMenuPatch -->
   <string name="morphe_ask_summarize_flyout_menu_title">Ask elem hozzáadása a kizúgó menühez</string>
   <string name="morphe_ask_summarize_flyout_menu_summary">Video-összefoglaló elem hozzáadása az adatfolyam kizúgó menüjéhez</string>
@@ -504,7 +515,6 @@ Egy alkalommal megnyitott, Ask gombbal ellátott videó esetén a funkció minde
   <string name="morphe_external_downloader_quick_audio">Hang</string>
   <string name="morphe_external_downloader_quick_options">Összes beállítás</string>
   <string name="morphe_shorts_download_flyout_button_title">Letöltés megjelenítése a Shorts menüben</string>
-  <string name="morphe_shorts_download_flyout_button_summary">Egy külső letöltő alkalmazás menüpontot ad a Shorts lejátszóhoz</string>
   <string name="morphe_shorts_download_flyout_title">Letöltés</string>
   <!-- video.voiceovertranslation.voiceOverTranslationPatch -->
   <string name="morphe_vot_screen_title">Hangfelirat hangos felolvasása</string>
@@ -612,10 +622,6 @@ Figyelem: Lehet, hogy az élő közvetítéseknél nem működik"</string>
   <string name="morphe_save_to_watch_later_flyout_title">Mentés későbbre</string>
   <string name="morphe_save_to_watch_later_flyout_button_title">A „Mentés a Később nézem listába” gomb megjelenítése a lejátszó beállítási felugró menüjében</string>
   <string name="morphe_save_to_watch_later_flyout_button_summary">Lehetővé teszi az aktuálisan nézett videó mentését a \'Watch later\' listába a videóbeállítások felugró menüjéből</string>
-  <string name="morphe_save_to_watch_later_kids_flyout_button_title">Mentés későbbre gomb megjelenítése a gyerekvideókban</string>
-  <string name="morphe_save_to_watch_later_kids_flyout_button_summary">Lehetővé teszi gyerekeknek szóló videók mentését a \'Watch later\' listába a felugró menüből</string>
-  <string name="morphe_save_to_watch_later_shorts_flyout_button_title">A \'Watch later\' mentése gomb megjelenítése a Shorts felugró menüjében</string>
-  <string name="morphe_save_to_watch_later_shorts_flyout_button_summary">Lehetővé teszi a Shorts mentését a \'Watch later\' listába a felugró menüből</string>
   <string name="morphe_save_to_watch_later_redirect_playlist_id_title">Később megnézem átirányítása lejátszási listára</string>
   <string name="morphe_save_to_watch_later_redirect_playlist_id_summary">Megnézem később</string>
   <string name="morphe_queue_flyout_title">Hozzáadás a Morphe sorhoz</string>
@@ -863,6 +869,8 @@ A javításhoz kapcsolja be a „Videostreamek meghamisítása” beállítást,
   <string name="morphe_fix_transcript_title">Átirat javítása</string>
   <string name="morphe_fix_transcript_summary">Megoldja egy előfeltétel-ellenőrzési hibát, amely megakadályozhatja az átirat betöltését</string>
   <string name="morphe_captions_in_pip_title">Képekben a feliratok megjelenítése pip-ben</string>
+  <string name="morphe_stable_caption_blocks_title">Stabil feliratsorok</string>
+  <string name="morphe_stable_caption_blocks_summary">Csoportosítja az automatikus feliratokat stabil, jól olvasható blokkokba. Egyes szavak megjelenhetnek, mielőtt kimondanák őket. Újindítás szükséges.</string>
   <!-- layout.buttons.navigation.navigationButtonsPatch -->
   <string name="morphe_navigation_buttons_screen_title">Navigációs gombok</string>
   <string name="morphe_navigation_buttons_screen_summary">Válassza ki, mely gombok jelenjenek meg a felső eszköztáron</string>
@@ -1211,6 +1219,8 @@ Korlátozás: Ha a „Régi videós eszköztár visszaállítása” ki van kapc
   <string name="morphe_miniplayer_disable_resuming_summary">Letiltja a „Folytatás” minilejátszót, a YouTube Premium funkciót, amely az alkalmazás indításakor jelenik meg.</string>
   <string name="morphe_miniplayer_screen_title">Minilejátszó</string>
   <string name="morphe_miniplayer_screen_summary">A minimalizált videólejátszó megjelenésének és viselkedésének testreszabása</string>
+  <string name="morphe_miniplayer_not_available_title">További minimalizált lejátszók</string>
+  <string name="morphe_miniplayer_not_available_summary">A YouTube eltávolította az összes további minimalizált lejátszót. További minimalizált lejátszó típusok visszaállításához módosítsa a YouTube 21.28.208 vagy korábbi verzióját</string>
   <string name="morphe_miniplayer_type_title">Minilejátszó típus</string>
   <string name="morphe_miniplayer_hide_title_title">Cím és csatorna elrejtése</string>
   <string name="morphe_miniplayer_type_entry_0">Kikapcsolva</string>

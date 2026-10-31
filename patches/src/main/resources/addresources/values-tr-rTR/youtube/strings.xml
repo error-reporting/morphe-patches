@@ -29,6 +29,8 @@ Second \"item\" text"</string>
   <string name="morphe_settings_screen_11_misc_title">Çeşitli</string>
   <string name="morphe_settings_screen_12_video_title">Video</string>
   <string name="morphe_restore_old_settings_menus_title">Eski YouTube ayarlar ekranını geri yükle</string>
+  <string name="morphe_native_snackbar_title">Mesajları YouTube snackbar\'da göster</string>
+  <string name="morphe_native_snackbar_summary">Morphe mesajları, örneğin bir oynatıcı düğmesinin onayı gibi, popup yerine YouTube snackbar\'da gösterilir</string>
   <!-- misc.backgroundplayback.backgroundPlaybackPatch -->
   <string name="morphe_remove_background_playback_restrictions_title">Arka planda oynatma kısıtlamalarını kaldır</string>
   <string name="morphe_shorts_disable_background_playback_title">Arka planda oynatmayı devre dışı bırak</string>
@@ -456,6 +458,15 @@ Raporlar herkese açıktır ve bir kanal listeye eklenmeden önce incelenir. Kal
   <string name="morphe_post_image_download_saved_single">Görsel %s konumuna kaydedildi</string>
   <string name="morphe_post_image_download_failed">Görsel indirilemedi</string>
   <string name="morphe_post_image_download_not_found">Bu gönderide görsel bulunamadı</string>
+  <!-- interaction.posttranslate.postTranslatePatch -->
+  <string name="morphe_post_translate_title">Gönderileri çevir</string>
+  <string name="morphe_post_translate_summary">İçerik oluşturucu gönderilerini çevirmek için bir açılır menü öğesi ekler</string>
+  <string name="morphe_post_translate_language_title">Gönderi çeviri dili</string>
+  <string name="morphe_post_translate_flyout">Çevir</string>
+  <string name="morphe_post_translate_flyout_original">Orijinalini göster</string>
+  <string name="morphe_post_translate_started">Çevriliyor…</string>
+  <string name="morphe_post_translate_failed">Gönderi çevrilemedi</string>
+  <string name="morphe_post_translate_same_language">Gönderi zaten çeviri dilinde</string>
   <!-- interaction.ask.askFlyoutMenuPatch -->
   <string name="morphe_ask_summarize_flyout_menu_title">Soru ögesini açılır menüye ekle</string>
   <string name="morphe_ask_summarize_flyout_menu_summary">Akış açılır menüsüne bir video özetlendirme ögesi ekler</string>
@@ -505,7 +516,6 @@ Soru düğmesine sahip olan bir video bir kez açıldıktan sonra bu özellik, m
   <string name="morphe_external_downloader_quick_audio">Ses</string>
   <string name="morphe_external_downloader_quick_options">Tüm seçenekler</string>
   <string name="morphe_shorts_download_flyout_button_title">Shorts menüsünde indiri göster</string>
-  <string name="morphe_shorts_download_flyout_button_summary">Shorts oynatıcısına harici indirici açılır menü öğesi ekler</string>
   <string name="morphe_shorts_download_flyout_title">İndir</string>
   <!-- video.voiceovertranslation.voiceOverTranslationPatch -->
   <string name="morphe_vot_screen_title">Seslendirme çevirisi</string>
@@ -613,10 +623,6 @@ Bilgi: Canlı yayınlarda çalışmayabilir"</string>
   <string name="morphe_save_to_watch_later_flyout_title">Daha sonra izle</string>
   <string name="morphe_save_to_watch_later_flyout_button_title">Oynatıcı ayarları açılır menüsünde “Daha sonra İzle” butonunu göster</string>
   <string name="morphe_save_to_watch_later_flyout_button_summary">Video ayarları açılır menüsünden o anda izlenmekte olan videoyu “Daha sonra izle” bölümüne kaydetmeye olanak tanır</string>
-  <string name="morphe_save_to_watch_later_kids_flyout_button_title">Çocuk videolarında daha sonra izle düğmesini göster</string>
-  <string name="morphe_save_to_watch_later_kids_flyout_button_summary">Açılır menüden çocuklarla ilgili videoları “Daha sonra izle” bölümüne kaydetmeye olanak tanır</string>
-  <string name="morphe_save_to_watch_later_shorts_flyout_button_title">“Daha sonra izle” butonunu shorts açılır menüsünde göster</string>
-  <string name="morphe_save_to_watch_later_shorts_flyout_button_summary">Açılır menüden shorts videolarını “Daha sonra izle” bölümüne kaydetmeye olanak tanır</string>
   <string name="morphe_save_to_watch_later_redirect_playlist_id_title">\"Daha sonra izle\"yi oynatma listesine yönlendir</string>
   <string name="morphe_save_to_watch_later_redirect_playlist_id_summary">Daha sonra izle</string>
   <string name="morphe_queue_flyout_title">Morphe sırasına ekle</string>
@@ -864,6 +870,8 @@ Bunu düzeltmek için 'Video akışlarını taklit et' seçeneğini etkinleştir
   <string name="morphe_fix_transcript_title">Transkript\'i düzelt</string>
   <string name="morphe_fix_transcript_summary">Transkriptin yüklenmesini engelleyebilecek bir ön koşul denetimi hatasını giderir</string>
   <string name="morphe_captions_in_pip_title">Resim içinde resim modunda altyazıları göster</string>
+  <string name="morphe_stable_caption_blocks_title">Sabit altyazı blokları</string>
+  <string name="morphe_stable_caption_blocks_summary">Otomatik altyazıları sabit, okunabilir bloklar halinde gruplandırın. Bazı kelimeler konuşulmadan önce görünebilir. Yeniden başlatma gerekir.</string>
   <!-- layout.buttons.navigation.navigationButtonsPatch -->
   <string name="morphe_navigation_buttons_screen_title">Gezinme düğmeleri</string>
   <string name="morphe_navigation_buttons_screen_summary">Alt gezinme çubuğunda hangi düğmelerin görüneceğini seçin</string>
@@ -1242,7 +1250,7 @@ Sınırlamalar: 'Eski video eylem çubuğunu geri yükle' kapatılırsa, 'Daha f
   <string name="morphe_miniplayer_opacity_summary">Oynatma katmanının şeffaflık düzeyini ayarlayın (0 şeffaf, 100 opak)</string>
   <!-- misc.fix.fixBackToExitGesturePatch -->
   <string name="morphe_back_button_always_exits_feed_title">Geri düğmesi akıştan çıkar</string>
-  <string name="morphe_back_button_always_exits_feed_summary">Geri tuşuna basmak, akışın en üstüne kaydırmak yerine her zaman uygulamadan çıkar.  This is a placeholder to ensure validity.</string>
+  <string name="morphe_back_button_always_exits_feed_summary">Geri tuşuna dokunmak, akışın başına kaydırmak yerine her zaman uygulamadan çıkar</string>
   <!-- layout.animations.forceAnimationsPatch -->
   <string name="morphe_force_animations_title">Animasyonları zorla</string>
   <string name="morphe_force_animations_entry_default">Varsayılan</string>

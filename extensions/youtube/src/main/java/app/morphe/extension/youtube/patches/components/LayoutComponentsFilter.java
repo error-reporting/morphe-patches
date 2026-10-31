@@ -46,7 +46,6 @@ import app.morphe.extension.youtube.patches.FeedViewCountPatch;
 import app.morphe.extension.youtube.patches.VersionCheckPatch;
 import app.morphe.extension.youtube.patches.utils.ProtoNode;
 import app.morphe.extension.youtube.settings.Settings;
-import app.morphe.extension.youtube.shared.EngagementPanel;
 import app.morphe.extension.youtube.shared.NavigationBar;
 import app.morphe.extension.youtube.shared.NavigationBar.NavigationButton;
 import app.morphe.extension.youtube.shared.PlayerType;
@@ -67,14 +66,6 @@ public final class LayoutComponentsFilter extends Filter {
             "channel_profile"
     );
 
-    /**
-     * The comments panel of videos. Newer app versions use the first id.
-     */
-    private static final List<String> COMMENTS_PANEL_IDS = List.of(
-            "comment-item-section",
-            "engagement-panel-comments-section"
-    );
-
     private static final List<String> channelTabFilterStrings = Utils.getFilterStrings(Settings.HIDE_CHANNEL_TAB_FILTER_STRINGS);
     private static final List<String> flyoutMenuFilterStrings = Utils.getFilterStrings(Settings.HIDE_FEED_FLYOUT_MENU_FILTER_STRINGS);
 
@@ -82,6 +73,32 @@ public final class LayoutComponentsFilter extends Filter {
     private static List<?> channelTabs;
     @Nullable
     private static List<?> originalChannelTabs;
+
+    /**
+     * Browse id of the community page of a channel, which shows only community posts.
+     */
+    private static final String COMMUNITY_PAGE_BROWSE_ID = "FEcommunity_page";
+
+    /**
+     * Browse id of the page that is shown, or empty for the search feed.
+     */
+    private static volatile String browseId = "";
+
+    /**
+     * Injection point.
+     */
+    public static void setBrowseId(@Nullable String id) {
+        browseId = id == null ? "" : id;
+    }
+
+    /**
+     * Injection point.
+     * <p>
+     * The search feed is not a browse page.
+     */
+    public static void clearBrowseId() {
+        browseId = "";
+    }
 
     private final StringTrieSearch exceptions = new StringTrieSearch();
 
@@ -104,6 +121,8 @@ public final class LayoutComponentsFilter extends Filter {
     private final ByteArrayFilterGroupList linearLayoutGroupList = new ByteArrayFilterGroupList();
     private final StringFilterGroup liveStream;
     private final ByteArrayFilterGroup liveStreamBuffer;
+    private final StringFilterGroup libraryDownloads;
+    private final ByteArrayFilterGroup libraryDownloadsBuffer;
     private final StringFilterGroup notificationsMenuHeader;
     private final ByteArrayFilterGroup notificationsMenuHeaderBuffer;
     private final StringFilterGroup notifyMe;
@@ -187,6 +206,19 @@ public final class LayoutComponentsFilter extends Filter {
                 "yt_outline_experimental_live_black"
         );
 
+        // 'Downloads' item of the You tab. It's a lockup, so the bottom menu filter can't match its name.
+        libraryDownloads = new StringFilterGroup(
+                Settings.HIDE_ACCOUNT_MENU_DOWNLOADS,
+                "video_lockup_with_attachment.e"
+        );
+
+        // The title is localized, but only the 'Downloads' item has this icon.
+        libraryDownloadsBuffer = new ByteArrayFilterGroup(
+                null,
+                "yt_outline_download_black",
+                "yt_outline_experimental_download_black"
+        );
+
         // The hint shown in the player during seek gestures. The identifier is versioned.
         final var seekEduOverlay = new StringFilterGroup(
                 Settings.HIDE_PLAYER_GESTURE_HINTS,
@@ -199,6 +231,7 @@ public final class LayoutComponentsFilter extends Filter {
                 linearLayout,
                 liveChatReplay,
                 liveStream,
+                libraryDownloads,
                 seekEduOverlay
         );
 
@@ -602,16 +635,15 @@ public final class LayoutComponentsFilter extends Filter {
         }
 
         if (matchedGroup == communityPosts) {
-            // YouTube now also shows community posts on a dedicated page for channels.
-            // This page is navigated with a back button, and hiding its posts
-            // prevents any posts from loading (the page shows a loading spinner forever).
-            // Only hide the posts when no back button is visible (home and subscription feeds).
-            // https://github.com/MorpheApp/morphe-patches/issues/4101
-            // The comments of the watch page cover the page below them, whose back button
-            // stays visible when the video is opened from a page such as a playlist.
-            final boolean isCommentsPanel = PlayerType.getCurrent().isMaximizedOrFullscreen()
-                    && COMMENTS_PANEL_IDS.contains(EngagementPanel.getLastOpenedPanelId());
-            if (NavigationBar.isBackButtonVisible() && !isCommentsPanel) {
+            // YouTube now also shows community posts on a dedicated community page for channels,
+            // and hiding its posts prevents any posts from loading (the page shows a loading
+            // spinner forever) (https://github.com/MorpheApp/morphe-patches/issues/4101).
+            // The page is found by its browse id, as the back button it is navigated with is also
+            // visible on other pages, such as the search results, and on the page below the watch page.
+            // The watch page, with its related videos, comments and other panels, covers the page
+            // below it, also when the video is opened from the community page
+            // (https://github.com/MorpheApp/morphe-patches/issues/4170).
+            if (COMMUNITY_PAGE_BROWSE_ID.equals(browseId) && !PlayerType.getCurrent().isMaximizedOrFullscreen()) {
                 return false;
             }
 
@@ -667,6 +699,14 @@ public final class LayoutComponentsFilter extends Filter {
             // Only check the whole lockup. The buffers of its nested components include
             // a shared list of icon names that also has the 'LIVE' badge icon.
             return isLockupRoot(path) && liveStreamBuffer.check(buffer).isFiltered();
+        }
+
+        if (matchedGroup == libraryDownloads) {
+            // Only check the whole lockup, for the same reason as the live streams.
+            return Settings.HIDE_ACCOUNT_MENU.get()
+                    && isLockupRoot(path)
+                    && NavigationButton.getSelectedNavigationButton(contextInterface) == NavigationButton.LIBRARY
+                    && libraryDownloadsBuffer.check(buffer).isFiltered();
         }
 
         if (matchedGroup == notificationsMenuHeader) {

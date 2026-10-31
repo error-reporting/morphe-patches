@@ -29,6 +29,8 @@ Second \"item\" text"</string>
   <string name="morphe_settings_screen_11_misc_title">Khác</string>
   <string name="morphe_settings_screen_12_video_title">Video</string>
   <string name="morphe_restore_old_settings_menus_title">Khôi phục màn hình cài đặt YouTube cũ</string>
+  <string name="morphe_native_snackbar_title">Hiển thị thông báo trong snackbar của YouTube</string>
+  <string name="morphe_native_snackbar_summary">Các thông báo của Morphe, chẳng hạn như xác nhận nút phát lại, được hiển thị trong snackbar của YouTube thay vì cửa sổ pop-up</string>
   <!-- misc.backgroundplayback.backgroundPlaybackPatch -->
   <string name="morphe_remove_background_playback_restrictions_title">Bỏ hạn chế phát nền</string>
   <string name="morphe_shorts_disable_background_playback_title">Tắt phát nền</string>
@@ -455,6 +457,15 @@ Báo cáo được công khai và được xem xét trước khi một kênh đ�
   <string name="morphe_post_image_download_saved_single">Hình ảnh đã được lưu vào %s</string>
   <string name="morphe_post_image_download_failed">Không thể tải hình ảnh</string>
   <string name="morphe_post_image_download_not_found">Không tìm thấy hình ảnh nào trong bài viết này</string>
+  <!-- interaction.posttranslate.postTranslatePatch -->
+  <string name="morphe_post_translate_title">Dịch bài viết</string>
+  <string name="morphe_post_translate_summary">Thêm một mục menu flyout để dịch các bài viết của người sáng tạo nội dung</string>
+  <string name="morphe_post_translate_language_title">Ngôn ngữ dịch bài viết</string>
+  <string name="morphe_post_translate_flyout">Dịch</string>
+  <string name="morphe_post_translate_flyout_original">Hiển thị bản gốc</string>
+  <string name="morphe_post_translate_started">Đang dịch…</string>
+  <string name="morphe_post_translate_failed">Không thể dịch bài viết</string>
+  <string name="morphe_post_translate_same_language">Bài viết đã ở ngôn ngữ dịch</string>
   <!-- interaction.ask.askFlyoutMenuPatch -->
   <string name="morphe_ask_summarize_flyout_menu_title">Thêm mục Hỏi vào menu bay ra</string>
   <string name="morphe_ask_summarize_flyout_menu_summary">Thêm mục tóm tắt video vào menu bay ra của nguồn cấp dữ liệu</string>
@@ -504,7 +515,6 @@ Sau khi mở một video có nút Ask một lần, tính năng này hoạt độ
   <string name="morphe_external_downloader_quick_audio">Âm thanh</string>
   <string name="morphe_external_downloader_quick_options">Tất cả tùy chọn</string>
   <string name="morphe_shorts_download_flyout_button_title">Hiển thị tải xuống trong menu Shorts</string>
-  <string name="morphe_shorts_download_flyout_button_summary">Thêm mục menu bay ngoài trình tải xuống bên thứ ba vào trình phát Shorts</string>
   <string name="morphe_shorts_download_flyout_title">Tải về</string>
   <!-- video.voiceovertranslation.voiceOverTranslationPatch -->
   <string name="morphe_vot_screen_title">Dịch giọng nói</string>
@@ -612,10 +622,6 @@ Lưu ý: Có thể không hoạt động với video phát trực tiếp"</strin
   <string name="morphe_save_to_watch_later_flyout_title">Lưu vào Xem sau</string>
   <string name="morphe_save_to_watch_later_flyout_button_title">Hiển thị nút Lưu vào Xem sau trong menu cài đặt trình phát</string>
   <string name="morphe_save_to_watch_later_flyout_button_summary">Cho phép lưu video đang xem vào \'Xem sau\' từ menu cài đặt video</string>
-  <string name="morphe_save_to_watch_later_kids_flyout_button_title">Hiển thị nút Lưu vào Xem sau trong video dành cho trẻ em</string>
-  <string name="morphe_save_to_watch_later_kids_flyout_button_summary">Cho phép lưu video liên quan đến trẻ em vào \'Xem sau\' từ menu bật lên</string>
-  <string name="morphe_save_to_watch_later_shorts_flyout_button_title">Hiển thị nút Lưu vào Xem sau trong menu bật lên của Shorts</string>
-  <string name="morphe_save_to_watch_later_shorts_flyout_button_summary">Cho phép lưu Shorts vào \'Xem sau\' từ menu bật lên</string>
   <string name="morphe_save_to_watch_later_redirect_playlist_id_title">Chuyển hướng Xem sau đến danh sách phát</string>
   <string name="morphe_save_to_watch_later_redirect_playlist_id_summary">Xem sau</string>
   <string name="morphe_queue_flyout_title">Thêm vào hàng chờ Morphe</string>
@@ -863,6 +869,8 @@ Cần thiết lập \"Cookie phụ đề\""</string>
   <string name="morphe_fix_transcript_title">Sửa bản chép lời</string>
   <string name="morphe_fix_transcript_summary">Khắc phục lỗi kiểm tra tiên quyết có thể ngăn tải bản chép lời</string>
   <string name="morphe_captions_in_pip_title">Hiển thị phụ đề trong chế độ hình ảnh trong hình</string>
+  <string name="morphe_stable_caption_blocks_title">Các khối phụ đề ổn định</string>
+  <string name="morphe_stable_caption_blocks_summary">Nhóm các phụ đề tự động thành các khối ổn định, dễ đọc. Một số từ có thể xuất hiện trước khi được nói. Yêu cầu khởi động lại.</string>
   <!-- layout.buttons.navigation.navigationButtonsPatch -->
   <string name="morphe_navigation_buttons_screen_title">Nút điều hướng</string>
   <string name="morphe_navigation_buttons_screen_summary">Chọn các nút sẽ hiển thị trong thanh điều hướng dưới cùng</string>
@@ -1211,6 +1219,8 @@ Hạn chế: Nếu tùy chọn \"Khôi phục thanh thao tác video cũ\" bị t
   <string name="morphe_miniplayer_disable_resuming_summary">Ngăn không cho trình phát thu nhỏ \"tiếp tục xem\" khi mở ứng dụng (một tính năng Premium)</string>
   <string name="morphe_miniplayer_screen_title">Trình phát thu nhỏ</string>
   <string name="morphe_miniplayer_screen_summary">Tùy chỉnh giao diện và hành vi của trình phát thu nhỏ</string>
+  <string name="morphe_miniplayer_not_available_title">Các trình phát thu nhỏ bổ sung</string>
+  <string name="morphe_miniplayer_not_available_summary">YouTube đã xóa tất cả các trình phát thu nhỏ bổ sung. Để khôi phục nhiều loại trình phát thu nhỏ hơn, hãy vá YouTube 21.28.208 hoặc cũ hơn</string>
   <string name="morphe_miniplayer_type_title">Loại trình phát thu nhỏ</string>
   <string name="morphe_miniplayer_hide_title_title">Ẩn tiêu đề và kênh</string>
   <string name="morphe_miniplayer_type_entry_0">Tắt</string>
@@ -1252,6 +1262,8 @@ Hạn chế: Nếu tùy chọn \"Khôi phục thanh thao tác video cũ\" bị t
   <string name="morphe_fix_status_bar_layout_summary">Giữ cho bố cục của thanh trạng nhất quán, để nó không che các thanh trên cùng và không để khoảng trống phía trên trình phát. Tắt tùy chọn này nếu ứng dụng bị đóng băng hoặc các thanh trên cùng trông sai</string>
   <!-- layout.theme.themePatch -->
   <string name="morphe_splash_screen_style_entry_6">Phát sáng</string>
+  <string name="morphe_splash_screen_style_entry_7">Morphe Glow 1</string>
+  <string name="morphe_splash_screen_style_entry_8">Morphe Glow 2</string>
   <string name="morphe_splash_screen_style_glow_not_supported">Màn hình chào hiệu ứng phát sáng không được hỗ trợ bởi thiết bị này</string>
   <string name="morphe_theme_color_light_title">Nền chủ đề sáng</string>
   <string name="morphe_theme_color_light_entry_2">Trắng</string>

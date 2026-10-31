@@ -29,6 +29,8 @@ Second \"item\" text"</string>
   <string name="morphe_settings_screen_11_misc_title">Різне</string>
   <string name="morphe_settings_screen_12_video_title">Відео</string>
   <string name="morphe_restore_old_settings_menus_title">Відновити старий екран налаштувань YouTube</string>
+  <string name="morphe_native_snackbar_title">Показувати повідомлення в снекбарі YouTube</string>
+  <string name="morphe_native_snackbar_summary">Повідомлення Morphe, як-от підтвердження дії кнопки плеєра, показуються в снекбарі YouTube замість спливаючого повідомлення</string>
   <!-- misc.backgroundplayback.backgroundPlaybackPatch -->
   <string name="morphe_remove_background_playback_restrictions_title">Зняти обмеження фонового відтворення</string>
   <string name="morphe_shorts_disable_background_playback_title">Вимкнути фонове відтворення</string>
@@ -455,6 +457,15 @@ Second \"item\" text"</string>
   <string name="morphe_post_image_download_saved_single">Зображення збережено у %s</string>
   <string name="morphe_post_image_download_failed">Не вдалося завантажити зображення</string>
   <string name="morphe_post_image_download_not_found">У цьому дописі не знайдено зображення</string>
+  <!-- interaction.posttranslate.postTranslatePatch -->
+  <string name="morphe_post_translate_title">Перекладати дописи</string>
+  <string name="morphe_post_translate_summary">Додає пункт у спливне меню для перекладу дописів авторів контенту</string>
+  <string name="morphe_post_translate_language_title">Мова перекладу дописів</string>
+  <string name="morphe_post_translate_flyout">Перекласти</string>
+  <string name="morphe_post_translate_flyout_original">Оригінал</string>
+  <string name="morphe_post_translate_started">Переклад…</string>
+  <string name="morphe_post_translate_failed">Не вдалося перекласти допис</string>
+  <string name="morphe_post_translate_same_language">Допис уже написано мовою перекладу</string>
   <!-- interaction.ask.askFlyoutMenuPatch -->
   <string name="morphe_ask_summarize_flyout_menu_title">Додати пункт \"Запитати\" у спливне меню</string>
   <string name="morphe_ask_summarize_flyout_menu_summary">Додає пункт підсумовування відео до спливного меню стрічки</string>
@@ -504,7 +515,6 @@ Second \"item\" text"</string>
   <string name="morphe_external_downloader_quick_audio">Аудіо</string>
   <string name="morphe_external_downloader_quick_options">Усі параметри</string>
   <string name="morphe_shorts_download_flyout_button_title">Показувати \"Завантаження\" в меню Shorts</string>
-  <string name="morphe_shorts_download_flyout_button_summary">Додає до плеєра Shorts пункт спливного меню зовнішнього завантажувача</string>
   <string name="morphe_shorts_download_flyout_title">Завантажити</string>
   <!-- video.voiceovertranslation.voiceOverTranslationPatch -->
   <string name="morphe_vot_screen_title">Голосовий переклад</string>
@@ -612,10 +622,6 @@ Second \"item\" text"</string>
   <string name="morphe_save_to_watch_later_flyout_title">\"Зберегти для перегляду пізніше\"</string>
   <string name="morphe_save_to_watch_later_flyout_button_title">Показувати кнопку \"Зберегти в \'Дивитися пізніше\'\" у спливному меню налаштувань плеєра</string>
   <string name="morphe_save_to_watch_later_flyout_button_summary">Дозволяє зберегти поточне відео, що переглядається, у \"Дивитися пізніше\" зі спливного меню налаштувань відео</string>
-  <string name="morphe_save_to_watch_later_kids_flyout_button_title">Показувати кнопку \"Зберегти для перегляду пізніше\" у дитячих відео</string>
-  <string name="morphe_save_to_watch_later_kids_flyout_button_summary">Дозволяє зберегти відео для дітей у \"Дивитися пізніше\" зі спливного меню</string>
-  <string name="morphe_save_to_watch_later_shorts_flyout_button_title">Показувати кнопку \"Зберегти в \'Дивитися пізніше\'\" у спливному меню Shorts</string>
-  <string name="morphe_save_to_watch_later_shorts_flyout_button_summary">Дозволяє зберегти Shorts в \"Дивитися пізніше\" зі спливного меню</string>
   <string name="morphe_save_to_watch_later_redirect_playlist_id_title">Перенаправляти \"Дивитися пізніше\" до списку відтворення</string>
   <string name="morphe_save_to_watch_later_redirect_playlist_id_summary">Переглянути пізніше</string>
   <string name="morphe_queue_flyout_title">Додати до черги Morphe</string>
@@ -863,6 +869,8 @@ Second \"item\" text"</string>
   <string name="morphe_fix_transcript_title">Виправити транскрипцію</string>
   <string name="morphe_fix_transcript_summary">Усуває помилку перевірки передумов, яка може перешкоджати завантаженню транскрипції</string>
   <string name="morphe_captions_in_pip_title">Показувати субтитри в режимі \"Картинка в картинці\"</string>
+  <string name="morphe_stable_caption_blocks_title">Стабільні блоки субтитрів</string>
+  <string name="morphe_stable_caption_blocks_summary">Групує автоматичні субтитри в стабільні, зручні для читання блоки. Деякі слова можуть з\'являтися до того, як їх вимовлять. Потрібен перезапуск</string>
   <!-- layout.buttons.navigation.navigationButtonsPatch -->
   <string name="morphe_navigation_buttons_screen_title">Кнопки панелі навігації</string>
   <string name="morphe_navigation_buttons_screen_summary">Виберіть, які кнопки будуть показуватися на нижній панелі навігації</string>
@@ -1210,6 +1218,8 @@ Second \"item\" text"</string>
   <string name="morphe_miniplayer_disable_resuming_summary">Вимикає мініплеєр \"Продовжити перегляд\", функцію YouTube Premium, що з\'являється при запуску застосунку</string>
   <string name="morphe_miniplayer_screen_title">Мініплеєр</string>
   <string name="morphe_miniplayer_screen_summary">Налаштування вигляду та поведінки мінімізованого відеоплеєра</string>
+  <string name="morphe_miniplayer_not_available_title">Додаткові мініплеєри</string>
+  <string name="morphe_miniplayer_not_available_summary">YouTube прибрав усі додаткові мініплеєри. Щоб відновити більше типів мініплеєрів, пропатчте YouTube 21.28.208 або старіший</string>
   <string name="morphe_miniplayer_type_title">Тип мініплеєра</string>
   <string name="morphe_miniplayer_hide_title_title">Приховати назву та канал</string>
   <string name="morphe_miniplayer_type_entry_0">Вимкнено</string>

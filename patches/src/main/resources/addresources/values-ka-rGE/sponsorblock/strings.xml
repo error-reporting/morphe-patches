@@ -58,6 +58,8 @@ Second \"item\" text"</string>
   <string name="morphe_sb_guidelines_popup_already_read">უკვე წაკითხულია</string>
   <string name="morphe_sb_guidelines_popup_open">მაჩვენე</string>
   <string name="morphe_sb_general_title">ზოგადი</string>
+  <string name="morphe_sb_offline_segments_title">ჩამოტვირთული ვიდეოების სეგმენტების შენახვა</string>
+  <string name="morphe_sb_offline_segments_summary">აძლევს საშუალებას, ოფლაინ რეჟიმში ჩამოტვირთული ვიდეოების სეგმენტები გადაახტეთ</string>
   <string name="morphe_sb_toast_on_connection_error_title">კავშირის შეცდომის შეტყობინებების ჩვენება</string>
   <string name="morphe_sb_toast_on_connection_error_summary">აჩვენებს შეტყობინებას, როდესაც SponsorBlock-ის სერვერი მიუწვდომელია</string>
   <string name="morphe_sb_track_skip_count_title">გამოტოვების რაოდენობის თვალყურის დევნების ჩართვა</string>
@@ -224,6 +226,7 @@ Second \"item\" text"</string>
   <string name="morphe_sb_stats_self_saved_reset_title">გსურთ გადახტნილი სეგმენტების მთვლელის განულება?</string>
   <string name="morphe_sb_stats_saved_hour_format">%1$s საათი %2$s წუთი</string>
   <string name="morphe_sb_stats_saved_minute_format">%1$s წუთი %2$s წამი</string>
+  <string name="morphe_sb_stats_saved_second_format">%s წამი</string>
   <string name="morphe_sb_color_opacity_label">გამჭვირვალობა:</string>
   <string name="morphe_sb_color_dot_label">ფერი:</string>
   <string name="morphe_sb_about_api_summary">"SponsorBlock არის ვიდეოს სეგმენტების კროვსორსინგული მონაცემთა ბაზა, როგორიცაა სპონსორები, შესავალი, დასავალი და გამოწერის შეხსენებები. სეგმენტებს წარადგენს და ხვადს საზოგადოება, ხოლო მონაცემთა ბაზა ღიაა და უფასოა გადმოსაწერად

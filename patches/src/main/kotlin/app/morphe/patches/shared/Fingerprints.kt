@@ -20,12 +20,6 @@ import app.morphe.patcher.string
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
-internal object CastContextFetchFingerprint : Fingerprint(
-    filters = listOf(
-        string("Error fetching CastContext.")
-    )
-)
-
 internal object PrimeMethodFingerprint : Fingerprint(
     filters = listOf(
         string("com.android.vending"),
@@ -85,7 +79,7 @@ internal object CurrentAudioVideoFormatToStringFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     returnType = "Ljava/lang/String;",
     parameters = listOf(),
-    strings = listOf("currentVideoFormat=")
+    strings = listOf(string("currentVideoFormat=", StringComparisonType.CONTAINS))
 )
 
 internal object FormatStreamModelToStringFingerprint : Fingerprint(

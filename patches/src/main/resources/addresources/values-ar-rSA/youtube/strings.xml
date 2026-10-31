@@ -29,6 +29,8 @@ Second \"item\" text"</string>
   <string name="morphe_settings_screen_11_misc_title">خيارات متنوعة</string>
   <string name="morphe_settings_screen_12_video_title">الفيديو</string>
   <string name="morphe_restore_old_settings_menus_title">استعادة شاشة إعدادات YouTube القديمة</string>
+  <string name="morphe_native_snackbar_title">عرض الرسائل في شريط تنبيهات YouTube</string>
+  <string name="morphe_native_snackbar_summary">يتم عرض رسائل Morphe، مثل تأكيد زر المشغل، في شريط تنبيهات YouTube بدلًا من ظهور نافذة منبثقة</string>
   <!-- misc.backgroundplayback.backgroundPlaybackPatch -->
   <string name="morphe_remove_background_playback_restrictions_title">إزالة قيود التشغيل في الخلفية</string>
   <string name="morphe_shorts_disable_background_playback_title">تعطيل التشغيل في الخلفية</string>
@@ -59,6 +61,7 @@ Second \"item\" text"</string>
   <string name="morphe_hide_account_menu_title">تمكين تصفية قائمة المكتبة / أنت السفلية</string>
   <string name="morphe_hide_account_menu_filter_strings_title">تصفية قائمة المكتبة / أنت السفلية</string>
   <string name="morphe_hide_account_menu_filter_strings_summary">أدخل أسماء قائمة المكتبة / أنت السفلية التي تريد تصفية النتائج بناءً عليها، مفصولة بأسطر جديدة</string>
+  <string name="morphe_hide_account_menu_downloads_title">إخفاء التنزيلات</string>
   <string name="morphe_hide_album_cards_title">إخفاء بطاقات الألبوم</string>
   <string name="morphe_hide_album_cards_summary">يخفي بطاقات الألبوم أسفل وصف الفنان</string>
   <string name="morphe_hide_artist_cards_title">إخفاء بطاقات الفنان</string>
@@ -455,6 +458,15 @@ Second \"item\" text"</string>
   <string name="morphe_post_image_download_saved_single">تم حفظ الصورة في %s</string>
   <string name="morphe_post_image_download_failed">تعذر تنزيل الصورة</string>
   <string name="morphe_post_image_download_not_found">لم يتم العثور على صورة في هذا المنشور</string>
+  <!-- interaction.posttranslate.postTranslatePatch -->
+  <string name="morphe_post_translate_title">ترجمة المنشورات</string>
+  <string name="morphe_post_translate_summary">يُضيف عنصر بالقائمة المنبثقة لترجمة منشورات صانعي المحتوى</string>
+  <string name="morphe_post_translate_language_title">لغة ترجمة المنشور</string>
+  <string name="morphe_post_translate_flyout">ترجمة</string>
+  <string name="morphe_post_translate_flyout_original">عرض الأصل</string>
+  <string name="morphe_post_translate_started">جارٍ الترجمة...</string>
+  <string name="morphe_post_translate_failed">تعذّر ترجمة المنشور</string>
+  <string name="morphe_post_translate_same_language">المنشور موجود بالفعل باللغة المحددة للترجمة</string>
   <!-- interaction.ask.askFlyoutMenuPatch -->
   <string name="morphe_ask_summarize_flyout_menu_title">إضافة عنصر اسأل إلى القائمة المنبثقة</string>
   <string name="morphe_ask_summarize_flyout_menu_summary">إضافة عنصر تلخيص الفيديو إلى قائمة الخلاصة المنبثقة</string>
@@ -504,8 +516,23 @@ Second \"item\" text"</string>
   <string name="morphe_external_downloader_quick_audio">الصوت</string>
   <string name="morphe_external_downloader_quick_options">كل الخيارات</string>
   <string name="morphe_shorts_download_flyout_button_title">عرض التنزيل في قائمة Shorts</string>
-  <string name="morphe_shorts_download_flyout_button_summary">يضيف عنصر بالقائمة المنبثقة لأداة التنزيل الخارجية إلى مشغل Shorts</string>
+  <string name="morphe_shorts_download_flyout_button_summary">يُضيف عنصر تنزيل إلى قائمة مشغل فيديوهات Shorts</string>
   <string name="morphe_shorts_download_flyout_title">تنزيل</string>
+  <string name="morphe_export_download_folder_title">تصدير الفيديوهات المحفوظة</string>
+  <string name="morphe_export_download_folder_summary">"تصدير الفيديوهات المحفوظة داخل التطبيق إلى تخزين جهازك. انقر لتغيير مجلد التصدير
+
+مجلد التصدير: %s"</string>
+  <string name="morphe_export_download_folder_dialog_title">مجلد التصدير</string>
+  <string name="morphe_export_download_folder_change">تغيير المجلد</string>
+  <string name="morphe_export_download_folder_changed">تم تغيير مجلد التصدير</string>
+  <string name="morphe_export_download_folder_reset">إعادة تعيين مجلد التصدير</string>
+  <string name="morphe_export_download_flyout_title">تصدير إلى جهاز</string>
+  <string name="morphe_export_download_started">جارٍ تصدير الفيديو</string>
+  <string name="morphe_export_download_progress">تصدير الفيديو: %d%%</string>
+  <string name="morphe_export_download_notification_channel">تصدير الفيديو</string>
+  <string name="morphe_export_download_saved">تم تصدير الفيديو إلى %s</string>
+  <string name="morphe_export_download_failed">تعذر تصدير الفيديو</string>
+  <string name="morphe_export_download_canceled">تم إلغاء التصدير</string>
   <!-- video.voiceovertranslation.voiceOverTranslationPatch -->
   <string name="morphe_vot_screen_title">الترجمة الصوتية</string>
   <string name="morphe_vot_screen_summary">قراءة نصوص ترجمة الفيديو بصوت عالٍ باستخدام تحويل النص إلى كلام على الجهاز، بالتزامن مع التشغيل</string>
@@ -616,10 +643,6 @@ Mistral Nemo هو الخيار الأرخص، بينما توفر Gemma 4 أعل
   <string name="morphe_save_to_watch_later_flyout_title">الحفظ في المشاهدة لاحقًا</string>
   <string name="morphe_save_to_watch_later_flyout_button_title">عرض زر الحفظ في قائمة \"المشاهدة لاحقًا\" في قائمة إعدادات المشغّل المنبثقة</string>
   <string name="morphe_save_to_watch_later_flyout_button_summary">يتيح حفظ الفيديوهات المتعلقة بالأطفال في قائمة \"المشاهدة لاحقًا\" من قائمة إعدادات الفيديو المنبثقة</string>
-  <string name="morphe_save_to_watch_later_kids_flyout_button_title">عرض زر الحفظ في المشاهدة لاحقًا بفيديوهات الأطفال</string>
-  <string name="morphe_save_to_watch_later_kids_flyout_button_summary">يتيح حفظ فيديوهات Shorts في قائمة \"المشاهدة لاحقًا\" من القائمة المنبثقة</string>
-  <string name="morphe_save_to_watch_later_shorts_flyout_button_title">عرض زر \"الحفظ للمشاهدة لاحقًا\" في قائمة Shorts المنبثقة</string>
-  <string name="morphe_save_to_watch_later_shorts_flyout_button_summary">يتيح حفظ فيديوهات Shorts في قائمة \"المشاهدة لاحقًا\" من القائمة المنبثقة</string>
   <string name="morphe_save_to_watch_later_redirect_playlist_id_title">إعادة توجيه المشاهدة لاحقًا إلى قائمة تشغيل</string>
   <string name="morphe_save_to_watch_later_redirect_playlist_id_summary">المشاهدة لاحقًا</string>
   <string name="morphe_queue_flyout_title">إضافة الى قائمة المحتوى التالي الخاصة بـ Morphe</string>
@@ -867,6 +890,8 @@ Mistral Nemo هو الخيار الأرخص، بينما توفر Gemma 4 أعل
   <string name="morphe_fix_transcript_title">إصلاح النصوص</string>
   <string name="morphe_fix_transcript_summary">يحل مشكلة فشل التحقق من شرط مسبق قد يمنع تحميل النص</string>
   <string name="morphe_captions_in_pip_title">عرض الترجمة في وضع صورة داخل صورة</string>
+  <string name="morphe_stable_caption_blocks_title">تنسيق الترجمة الآلية</string>
+  <string name="morphe_stable_caption_blocks_summary">تجميع الترجمة الآلية في كتل ثابتة وواضحة للقراءة. قد تظهر بعض الكلمات قبل نطقها. يلزم إعادة تشغيل التطبيق.</string>
   <!-- layout.buttons.navigation.navigationButtonsPatch -->
   <string name="morphe_navigation_buttons_screen_title">أزرار التنقل</string>
   <string name="morphe_navigation_buttons_screen_summary">اختر الأزرار التي تظهر في شريط التنقل السفلي</string>
@@ -1261,6 +1286,8 @@ Mistral Nemo هو الخيار الأرخص، بينما توفر Gemma 4 أعل
   <string name="morphe_splash_screen_style_entry_7">Morphe Glow 1</string>
   <string name="morphe_splash_screen_style_entry_8">Morphe Glow 2</string>
   <string name="morphe_splash_screen_style_glow_not_supported">شاشة البدء المتوهجة غير مدعومة في هذا الجهاز</string>
+  <string name="morphe_splash_screen_duration_title">مدة تشغيل تأثير الحركة عند البدء</string>
+  <string name="morphe_splash_screen_duration_summary">مدة تشغيل تأثير التوهج المتحرك. انقر على التأثير لتخطيه</string>
   <string name="morphe_theme_color_light_title">خلفية المظهر الفاتح</string>
   <string name="morphe_theme_color_light_entry_2">أبيض</string>
   <string name="morphe_theme_color_light_entry_3">Material You (أبيض)</string>
