@@ -24,6 +24,7 @@ import app.morphe.patches.shared.misc.fix.proto.parseByteArrayWithRegistryMethod
 import app.morphe.patches.shared.misc.fix.proto.protoDefaultInstanceFingerprint
 import app.morphe.patches.shared.misc.proto.hookElement
 import app.morphe.patches.shared.misc.settings.preference.ListPreference
+import app.morphe.patches.shared.misc.settings.preference.NonInteractivePreference
 import app.morphe.patches.shared.misc.settings.preference.PreferenceScreenPreference
 import app.morphe.patches.shared.misc.settings.preference.PreferenceScreenPreference.Sorting
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
@@ -31,6 +32,7 @@ import app.morphe.patches.shared.misc.settings.preference.TextPreference
 import app.morphe.patches.youtube.layout.flyout.flyoutPatch
 import app.morphe.patches.youtube.layout.player.icons.copyPlayerButtonIcons
 import app.morphe.patches.youtube.misc.auth.authHookPatch
+import app.morphe.patches.youtube.misc.commandrouter.commandRouterHookPatch
 import app.morphe.patches.youtube.misc.playercontrols.addTopControl
 import app.morphe.patches.youtube.misc.playercontrols.initializeTopControl
 import app.morphe.patches.youtube.misc.playercontrols.legacyPlayerControlsPatch
@@ -61,14 +63,20 @@ private val downloadsResourcePatch = resourcePatch {
                 sorting = Sorting.UNSORTED,
                 preferences = setOf(
                     ListPreference("morphe_download_mode"),
+                    SwitchPreference("morphe_shorts_download_flyout_button", summary = true),
+                    NonInteractivePreference(
+                        "morphe_export_download_folder",
+                        summaryKey = null,
+                        tag = "app.morphe.extension.youtube.settings.preference.ExportFolderPreference",
+                        selectable = true
+                    ),
                     SwitchPreference("morphe_external_downloader_overlay_button", summary = true),
                     TextPreference(
                         "morphe_external_downloader_name",
                         tag = "app.morphe.extension.shared.settings.preference.ExternalDownloaderPreference",
                     ),
                     SwitchPreference("morphe_external_downloader_quick_menu", summary = true),
-                    SwitchPreference("morphe_external_downloader_mark_watched", summary = true),
-                    SwitchPreference("morphe_shorts_download_flyout_button", summary = true)
+                    SwitchPreference("morphe_external_downloader_mark_watched", summary = true)
                 )
             )
         )
@@ -96,12 +104,15 @@ private val downloadsResourcePatch = resourcePatch {
 
 private const val EXTENSION_CLASS = "Lapp/morphe/extension/youtube/patches/DownloadsPatch;"
 
-private const val EXTENSION_IN_APP_DOWNLOADS_CLASS = "Lapp/morphe/extension/youtube/patches/InAppDownloadsPatch;"
+internal const val EXTENSION_IN_APP_DOWNLOADS_CLASS = "Lapp/morphe/extension/youtube/patches/InAppDownloadsPatch;"
 
 private const val EXTENSION_SPOOF_CLASS = "Lapp/morphe/extension/shared/spoof/SpoofVideoStreamsPatch;"
 
 private const val EXTENSION_SHORTS_DOWNLOAD_BUTTON =
     "Lapp/morphe/extension/youtube/videoplayer/ShortsDownloadButton;"
+
+private const val EXTENSION_EXPORT_DOWNLOAD_BUTTON =
+    "Lapp/morphe/extension/youtube/videoplayer/ExportDownloadButton;"
 
 private const val EXTENSION_BUTTON = "Lapp/morphe/extension/youtube/videoplayer/ExternalDownloadButton;"
 
@@ -119,7 +130,7 @@ val downloadsPatch = bytecodePatch(
     name = "Downloads",
     description = "Adds support to download videos with an external downloader app " +
         "using the in-app download button or a video player action button, " +
-        "and adds an option to download videos in-app.",
+        "adds an option to download videos in-app, and exports saved videos to the device.",
 ) {
     dependsOn(
         downloadsResourcePatch,
@@ -128,7 +139,8 @@ val downloadsPatch = bytecodePatch(
         legacyPlayerControlsPatch,
         fixProtoLibraryPatch,
         elementProtoParserHookPatch,
-        flyoutPatch
+        flyoutPatch,
+        commandRouterHookPatch
     )
 
     compatibleWith(COMPATIBILITY_YOUTUBE)
@@ -137,6 +149,7 @@ val downloadsPatch = bytecodePatch(
         initializeTopControl(EXTENSION_BUTTON)
 
         setExtensionIsPatchIncluded(EXTENSION_SHORTS_DOWNLOAD_BUTTON)
+        setExtensionIsPatchIncluded(EXTENSION_EXPORT_DOWNLOAD_BUTTON)
 
         OfflineVideoEndpointFingerprint.method.addInstructionsWithLabels(
             0,
@@ -344,6 +357,21 @@ val downloadsPatch = bytecodePatch(
                 )
             }
         }
+
+        // Commands run by the extension have no interaction logger, which saving a video
+        // can use without checking it is set. The logger interface has a logger that logs nothing.
+        val interactionLoggerType = InteractionLoggerContextFingerprint.instructionMatches.last()
+            .instruction.getReference<TypeReference>()!!.type
+        val noOpInteractionLogger = classDefBy(interactionLoggerType).fields.single { field ->
+            AccessFlags.STATIC.isSet(field.accessFlags) && field.type == interactionLoggerType
+        }
+        NoOpInteractionLoggerFingerprint.method.addInstructions(
+            0,
+            """
+                sget-object v0, $interactionLoggerType->${noOpInteractionLogger.name}:$interactionLoggerType
+                return-object v0
+            """
+        )
 
         // endregion
     }
