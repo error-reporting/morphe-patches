@@ -588,6 +588,7 @@ OpenRouter.ai খুলিবলৈ ইয়াত টিপক"</string>
   <string name="morphe_pip_button_overlay_title">Picture-in-Picture বুটনটো দেখুৱাওক</string>
   <string name="morphe_pip_button_flyout_title">Picture-in-Picture মেনুটো দেখুৱাওক</string>
   <string name="morphe_pip_button_flyout_name">Picture-in-Picture লৈ পৰিৱৰ্তন কৰক</string>
+  <!-- interaction.pictureinpicture.changePipActionsPatch -->
   <!-- interaction.playall.playAllButtonPatch -->
   <string name="morphe_play_all_button_title">Play all বুটামটো দেখুৱাওক</string>
   <string name="morphe_play_all_button_summary">"চেনেলৰ সকলো ভিডিঅ'ৰ এখন প্লেলিষ্ট সৃষ্টি কৰিবলৈ টেপ কৰক, বাতিল কৰিবলৈ টেপ কৰি ধৰি ৰাখক
@@ -867,8 +868,6 @@ OpenRouter.ai খুলিবলৈ ইয়াত টিপক"</string>
   <string name="morphe_fix_transcript_title">ট্ৰান্সক্ৰিপ্ট ঠিক কৰক</string>
   <string name="morphe_fix_transcript_summary">এটা প্ৰাক-চৰ্ত পৰীক্ষাৰ বিফলতা সমাধান কৰে যাৰ বাবে ট্ৰান্সক্ৰিপ্ট লোড হোৱাত বাধা আহিব পাৰে</string>
   <string name="morphe_captions_in_pip_title">পিকচাৰ-ইন-পিকচাৰত কেপচন দেখুৱাওক</string>
-  <string name="morphe_stable_caption_blocks_title">ষ্টেবল কেপচন ব্লক</string>
-  <string name="morphe_stable_caption_blocks_summary">স্বয়ংক্ৰীয় কেপচনসমূহক সুস্থিৰ, পঢ়িব পৰা ব্লকত গ্ৰুপ কৰক। কিছুমান শব্দ কোৱাৰ আগতেই দেখা যাব পাৰে। পুনৰ আৰম্ভ কৰা প্ৰয়োজনীয়।</string>
   <!-- layout.buttons.navigation.navigationButtonsPatch -->
   <string name="morphe_navigation_buttons_screen_title">নেভিগেশ্বন বুটামসমূহ</string>
   <string name="morphe_navigation_buttons_screen_summary">তলৰ নেভিগেছন বাৰত কোনবোৰ বুটাম দেখুৱাব সেইটো বাছনি কৰক</string>

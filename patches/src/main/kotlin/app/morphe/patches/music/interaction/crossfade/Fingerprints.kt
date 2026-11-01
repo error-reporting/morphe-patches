@@ -29,10 +29,7 @@ internal object PlayNextInQueueFingerprint : Fingerprint(
     filters = listOf(
         opcode(Opcode.IGET_OBJECT)
     ),
-    strings = listOf(
-        string("gapless.seek.next", StringComparisonType.CONTAINS),
-        string("playNextInQueue.", StringComparisonType.STARTS_WITH)
-    )
+    strings = listOf("gapless.seek.next", "playNextInQueue.")
 )
 
 internal object AudioVideoToggleFingerprint : Fingerprint(
@@ -49,18 +46,16 @@ internal object PauseVideoFingerprint : Fingerprint(
 
 internal object PlayVideoFingerprint : Fingerprint(
     returnType = "V",
-    strings = listOf(
-        string("playVideo", StringComparisonType.CONTAINS),
-        string("MedialibPlayer.playVideo()", StringComparisonType.STARTS_WITH)
-    )
+    strings = listOf("playVideo", "MedialibPlayer.playVideo()")
 )
 
 /**
  * A synthetic Runnable also logs with the "ExoPlayerImpl" tag, so the interface check is required.
+ * Matches seekTo, since newer app versions log with this tag in more than one method.
  */
 internal object ExoPlayerImplFingerprint : Fingerprint(
     interfaces = listOf(EXO_PLAYER_TYPE),
-    strings = listOf("ExoPlayerImpl")
+    strings = listOf("ExoPlayerImpl", "seekTo ignored because an ad is playing")
 )
 
 internal object LoadVideoFingerprint : Fingerprint(

@@ -590,6 +590,8 @@ Second \"item\" text"</string>
   <string name="morphe_pip_button_overlay_title">Прикажи копче за слика во слика</string>
   <string name="morphe_pip_button_flyout_title">Прикажи мени за слика во слика</string>
   <string name="morphe_pip_button_flyout_name">Префрли на слика во слика</string>
+  <!-- interaction.pictureinpicture.changePipActionsPatch -->
+  <string name="morphe_pip_action_entry_default">Стандардно</string>
   <!-- interaction.playall.playAllButtonPatch -->
   <string name="morphe_play_all_button_title">Прикажи копче за репродукција на сите</string>
   <string name="morphe_play_all_button_summary">"Допрете за да генерирате листа на репродукција со сите видеа од каналот, допрете и задржете за да го поништите"</string>
@@ -867,8 +869,6 @@ Second \"item\" text"</string>
   <string name="morphe_fix_transcript_title">Поправете го транскриптот</string>
   <string name="morphe_fix_transcript_summary">Отстранува проблем со претходни услови што може да спречи да се вчита транскрипт</string>
   <string name="morphe_captions_in_pip_title">Прикажи написи во слика-во-слика</string>
-  <string name="morphe_stable_caption_blocks_title">Стабилни блокови на титлови</string>
-  <string name="morphe_stable_caption_blocks_summary">Групирајте ги автоматските титлови во стабилни, читливи блокови. Некои зборови може да се појават пред да бидат изговорени. Потребно е рестартирање.</string>
   <!-- layout.buttons.navigation.navigationButtonsPatch -->
   <string name="morphe_navigation_buttons_screen_title">Копчиња за навигација</string>
   <string name="morphe_navigation_buttons_screen_summary">Изберете кои копчиња да се појавуваат во лентата за навигација</string>
