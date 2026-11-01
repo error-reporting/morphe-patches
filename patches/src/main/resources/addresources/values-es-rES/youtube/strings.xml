@@ -519,7 +519,7 @@ Después de abrir por primera vez un vídeo con el botón «Preguntar», la func
   <string name="morphe_shorts_download_flyout_button_summary">Añade un elemento de descarga al menú del reproductor de Shorts</string>
   <string name="morphe_shorts_download_flyout_title">Descargar</string>
   <string name="morphe_export_download_folder_title">Exportar vídeos guardados</string>
-  <string name="morphe_export_download_folder_summary">"Exporta los vídeos guardados en la aplicación al almacenamiento de tu dispositivo. Pulsa para cambiar la carpeta de exportación
+  <string name="morphe_export_download_folder_summary">"Exporta los vídeos guardados en la aplicación al almacenamiento de tu dispositivo utilizando el menú desplegable de descargas de la aplicación. Pulsa para cambiar la carpeta de exportación
 
 Carpeta de exportación: %s"</string>
   <string name="morphe_export_download_folder_dialog_title">Carpeta de exportación</string>
@@ -607,6 +607,19 @@ Tu clave API nunca debe compartirse. Cualquiera que tenga acceso a ella puede us
   <string name="morphe_pip_button_overlay_title">Mostrar botón de imagen en imagen</string>
   <string name="morphe_pip_button_flyout_title">Mostrar menú de imagen en imagen</string>
   <string name="morphe_pip_button_flyout_name">Cambiar a imagen en imagen</string>
+  <!-- interaction.pictureinpicture.changePipActionsPatch -->
+  <string name="morphe_pip_actions_screen_title">Acciones de imagen en imagen</string>
+  <string name="morphe_pip_actions_screen_summary">Cambia los botones que se muestran en la función de imagen en imagen</string>
+  <string name="morphe_pip_action_left_title">Botón izquierdo</string>
+  <string name="morphe_pip_action_center_title">Botón central</string>
+  <string name="morphe_pip_action_right_title">Botón derecho</string>
+  <string name="morphe_pip_action_entry_default">Predeterminada</string>
+  <string name="morphe_pip_action_entry_previous">Vídeo anterior</string>
+  <string name="morphe_pip_action_entry_next">Siguiente vídeo</string>
+  <string name="morphe_pip_action_entry_rewind">Retroceder 10 segundos</string>
+  <string name="morphe_pip_action_entry_fast_forward">Avanzar 10 segundos</string>
+  <string name="morphe_pip_action_entry_play_pause">Reproducir/pausar</string>
+  <string name="morphe_pip_action_entry_background_playback">Reproducción en segundo plano</string>
   <!-- interaction.playall.playAllButtonPatch -->
   <string name="morphe_play_all_button_title">Mostrar botón \'Reproducir todo\'</string>
   <string name="morphe_play_all_button_summary">"Pulsa para generar una lista de reproducción de todos los vídeos del canal. Mantén pulsado para deshacer.
@@ -886,8 +899,6 @@ Se deben proporcionar 'cookies de subtítulos'"</string>
   <string name="morphe_fix_transcript_title">Corregir transcripción</string>
   <string name="morphe_fix_transcript_summary">Soluciona un fallo de la comprobación de un requisito previo que puede impedir la carga de la transcripción</string>
   <string name="morphe_captions_in_pip_title">Mostrar subtítulos en «imagen en imagen»</string>
-  <string name="morphe_stable_caption_blocks_title">Bloques de subtítulos estables</string>
-  <string name="morphe_stable_caption_blocks_summary">Agrupa los subtítulos automáticos en bloques estables y legibles. Es posible que algunas palabras aparezcan antes de que se pronuncien. Es necesario reiniciar.</string>
   <!-- layout.buttons.navigation.navigationButtonsPatch -->
   <string name="morphe_navigation_buttons_screen_title">Botones de navegación</string>
   <string name="morphe_navigation_buttons_screen_summary">Elige qué botones aparecen en la barra de navegación inferior</string>
@@ -1239,6 +1250,10 @@ Limitación: si la opción 'Restaurar antigua barra de acciones de vídeo' está
   <string name="morphe_miniplayer_not_available_summary">YouTube eliminó todos los reproductores en miniatura adicionales. Para restaurar más tipos de reproductores en miniatura, parchea YouTube 21.28.208 o anterior</string>
   <string name="morphe_miniplayer_type_title">Tipo de reproductor en miniatura</string>
   <string name="morphe_miniplayer_hide_title_title">Ocultar título y canal</string>
+  <string name="morphe_miniplayer_swipe_up_expand_title">Expandir deslizando hacia arriba</string>
+  <string name="morphe_miniplayer_swipe_up_expand_summary">Al deslizar el mini-reproductor hacia arriba se expande el reproductor, en lugar de mover el mini-reproductor a la parte superior de la pantalla</string>
+  <string name="morphe_miniplayer_docked_title">Mini-reproductor anclado</string>
+  <string name="morphe_miniplayer_docked_summary">Ancla el mini-reproductor a la barra de navegación y a los lados de la pantalla, en lugar de flotar sobre ellos</string>
   <string name="morphe_miniplayer_type_entry_0">Desactivado</string>
   <string name="morphe_miniplayer_type_entry_1">Predeterminado</string>
   <string name="morphe_miniplayer_type_entry_2">Mínimo</string>
