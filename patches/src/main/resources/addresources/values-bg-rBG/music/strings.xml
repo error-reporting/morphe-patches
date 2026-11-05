@@ -158,6 +158,38 @@ Second \"item\" text"</string>
   <string name="morphe_music_downloads_track_deleted">Изтеглянето е изтрито</string>
   <string name="morphe_music_downloads_track_delete_failed">Не можа да се изтрие изтеглянето</string>
   <string name="morphe_music_downloads_play_failed">Не можа да се пусне изтеглянето</string>
+  <string name="morphe_music_downloads_playlists">Плейлисти</string>
+  <string name="morphe_music_downloads_playlists_section">Създадени плейлисти (%s)</string>
+  <string name="morphe_music_downloads_playlists_empty">Все още няма локални плейлисти</string>
+  <string name="morphe_music_downloads_playlists_hide">Скриване на плейлисти ▲</string>
+  <string name="morphe_music_downloads_playlist_new">+ Нов плейлист</string>
+  <string name="morphe_music_downloads_playlist_new_button">Нов плейлист</string>
+  <string name="morphe_music_downloads_playlist_selected">Избрани (%s)</string>
+  <string name="morphe_music_downloads_playlist_select_first">Първо изберете песни</string>
+  <string name="morphe_music_downloads_playlist_clear_selection">Изчистване на селекцията</string>
+  <string name="morphe_music_downloads_playlist_create">Създаване на плейлист</string>
+  <string name="morphe_music_downloads_playlist_create_button">Създаване</string>
+  <string name="morphe_music_downloads_playlist_add">Добавяне към плейлист</string>
+  <string name="morphe_music_downloads_playlist_added">Добавено към %s</string>
+  <string name="morphe_music_downloads_playlist_name_hint">Име на плейлиста</string>
+  <string name="morphe_music_downloads_playlist_name_empty">Името на плейлиста не може да бъде празно</string>
+  <string name="morphe_music_downloads_playlist_save_failed">Плейлистът не можа да бъде запазен</string>
+  <string name="morphe_music_downloads_playlist_track_count">%s песни</string>
+  <string name="morphe_music_downloads_playlist_track_count_one">1 песен</string>
+  <string name="morphe_music_downloads_playlist_no_tracks">Няма песни в този плейлист</string>
+  <string name="morphe_music_downloads_playlist_play">Възпроизвеждане на плейлиста</string>
+  <string name="morphe_music_downloads_playlist_play_all">Възпроизвеждане на всички</string>
+  <string name="morphe_music_downloads_playlist_rename">Преименуване</string>
+  <string name="morphe_music_downloads_playlist_rename_title">Преименуване на плейлиста</string>
+  <string name="morphe_music_downloads_playlist_save">Запази</string>
+  <string name="morphe_music_downloads_playlist_delete">Изтриване на плейлиста</string>
+  <string name="morphe_music_downloads_playlist_delete_title">Изтриване на плейлиста?</string>
+  <string name="morphe_music_downloads_playlist_delete_message">%s ще бъде изтрит. Изтеглените песни ще бъдат запазени</string>
+  <string name="morphe_music_downloads_playlist_deleted">Плейлистът е изтрит</string>
+  <string name="morphe_music_downloads_playlist_remove_track">Премахване от плейлиста</string>
+  <string name="morphe_music_downloads_playlist_drag_track">Плъзнете за пренареждане</string>
+  <string name="morphe_music_downloads_playlist_reorder_hint">%s • Плъзнете дръжката за пренареждане</string>
+  <string name="morphe_music_downloads_playlist_reorder_done">Готово</string>
   <string name="morphe_music_downloads_notification_channel">Аудио изтегляния</string>
   <string name="morphe_music_downloads_playback_channel">Офлайн възпроизвеждане</string>
   <string name="morphe_music_downloads_unknown_track">Не можа да се идентифицира песента за изтегляне</string>
@@ -168,6 +200,26 @@ Second \"item\" text"</string>
   <string name="morphe_music_downloads_progress">Изтегляне %s%%</string>
   <string name="morphe_music_downloads_complete">Изтеглянето е завършено</string>
   <string name="morphe_music_downloads_failed">Изтеглянето не успя</string>
+  <string name="morphe_music_downloads_playlist_download_title">Изтегляне на плейлист</string>
+  <string name="morphe_music_downloads_playlist_download_listing">Изброяване на песните…</string>
+  <string name="morphe_music_downloads_playlist_download_listed">%s изброени…</string>
+  <string name="morphe_music_downloads_playlist_download_listing_failed">Не успяхме да изброим песните в плейлиста</string>
+  <string name="morphe_music_downloads_playlist_download_all_saved">Вече изтеглени: %s</string>
+  <string name="morphe_music_downloads_playlist_download_confirm_message">"%1$s в този плейлист, %2$s още не са изтеглени.
+
+Те се изтеглят една по една, което може да отнеме много време и изисква около %3$s свободно пространство"</string>
+  <string name="morphe_music_downloads_playlist_download_confirm_button">Изтегляне</string>
+  <string name="morphe_music_downloads_playlist_download_progress">Изтегляне на песен %1$s от %2$s</string>
+  <string name="morphe_music_downloads_playlist_download_complete">%s изтеглени</string>
+  <string name="morphe_music_downloads_playlist_download_complete_with_failures">%1$s изтеглени, %2$s не можаха да бъдат изтеглени</string>
+  <string name="morphe_music_downloads_playlist_download_already_running">Изтеглянето на плейлиста вече е в ход</string>
+  <string name="morphe_music_downloads_playlist_download_needs_account">Вашият акаунт все още не е разпознат. Опитайте отново след малко</string>
+  <string name="morphe_music_downloads_playlist_download_listed_all_saved">%s изброени, всички вече са изтеглени</string>
+  <string name="morphe_music_downloads_playlist_download_incomplete">Само част от плейлиста можеше да бъде изброена. Докоснете Изтегляне отново по-късно, за да получите останалото</string>
+  <string name="morphe_music_downloads_playlist_download_started">Изтегляне на %s във фонов режим</string>
+  <string name="morphe_music_downloads_playlist_download_no_network">Няма мрежова връзка</string>
+  <string name="morphe_music_downloads_playlist_download_waiting_network">Изчакване на мрежата…</string>
+  <string name="morphe_music_downloads_playlist_download_stopped">Спряно след %1$s от %2$s. Докоснете Изтегляне отново, за да продължите</string>
   <!-- misc.settings.settingsPatch -->
   <!-- In languages where "About" is ambiguous, translate this as "About Morphe" (i.e., About this app). -->
   <string name="morphe_settings_music_screen_0_about_title">Относно</string>
@@ -206,6 +258,9 @@ Second \"item\" text"</string>
   <string name="morphe_music_hide_comments_community_guidelines_title">Скрий Правила на общността</string>
   <string name="morphe_music_hide_comments_context_title">Скрий съобщението за контекст</string>
   <string name="morphe_music_hide_comments_emoji_button_title">Скрий бутон \'Емотикон\'</string>
+  <string name="morphe_music_hide_comments_gif_button_title">Скрий бутона за GIF</string>
+  <string name="morphe_music_hide_comments_gifs_and_images_title">Скриване на GIF файлове и изображения</string>
+  <string name="morphe_music_hide_comments_gifs_and_images_summary">Скрива GIF файловете и изображенията, прикачени към коментари и отговори.</string>
   <string name="morphe_music_hide_comments_info_button_title">Скрий бутон \'Информация\'</string>
   <string name="morphe_music_hide_comments_timestamp_button_title">Скрий бутон \'Времеви печат\'</string>
   <!-- interaction.crossfade.crossfadePatch -->
@@ -563,7 +618,6 @@ SABR възпроизвеждане (имитирането на видео по
   <string name="morphe_music_lyrics_local_romanization_dict_chinese">Китайски думи (pinyin-pro, ~17 MB)</string>
   <string name="morphe_music_lyrics_local_romanization_dict_cldr">Гръцки, славянски кирилски (вкл. руски, украински, български, сръбски, беларуски, македонски), грузински, арменски, еврейски, арабски, амхарски и сирийска транслитерация (CLDR, ~0.5 MB)</string>
   <string name="morphe_music_lyrics_local_romanization_dict_building">Четене %1$s: %2$d%%</string>
-  <string name="morphe_music_lyrics_local_romanization_dict_empty">Изберете поне един речник</string>
   <string name="morphe_music_lyrics_show_refresh_button_title">Показване на бутона за опресняване</string>
   <string name="morphe_music_lyrics_show_refresh_button_summary">Докосване за превключване към следващ кандидат за текстове; дълго натискане за търсене на текстове по заглавие и изпълнител</string>
   <string name="morphe_music_lyrics_search_dialog_title">Търсене на текст</string>
@@ -582,6 +636,10 @@ SABR възпроизвеждане (имитирането на видео по
   <string name="morphe_music_lyrics_hide_played_summary">Скриване на редовете от текста над реда, който се изпълнява в момента.</string>
   <string name="morphe_music_lyrics_hide_unplayed_title">Скриване на неизпетите редове</string>
   <string name="morphe_music_lyrics_hide_unplayed_summary">Скриване на редовете от текста под реда, който се изпълнява в момента.</string>
+  <string name="morphe_music_lyrics_dynamic_background_title">Динамичен фон</string>
+  <string name="morphe_music_lyrics_dynamic_background_summary">Показва замъглен фон, създаден от обложката на албума, зад текста на песента</string>
+  <string name="morphe_music_lyrics_dynamic_background_animated_title">Анимиране на динамичния фон</string>
+  <string name="morphe_music_lyrics_dynamic_background_animated_summary">Премества фона по време на възпроизвеждане и го пулсира в ритъма на музиката, ако YouTube Music има разрешение за микрофона. Изключете за статичен фон, който консумира по-малко батерия</string>
   <string name="morphe_music_lyrics_mediasession_title">Показване на текстовете от MediaSession на заключения екран.</string>
   <string name="morphe_music_lyrics_mediasession_summary">Показва текущия ред на екрана за заключване, Android Auto и Bluetooth. Изисква Android 11 или по-нова версия</string>
   <string name="morphe_music_lyrics_miniplayer_title">Показване на текстовете в миниплейъра.</string>
@@ -680,7 +738,7 @@ SABR възпроизвеждане (имитирането на видео по
   <string name="morphe_music_lyrics_hide_info_title">Скриване на реда с кредитна информация</string>
   <string name="morphe_music_lyrics_hide_info_summary">Скриване на реда с кредитна информация, показан под текста.</string>
   <string name="morphe_music_lyrics_swap_trans_roma_title">Размяна на превода и романизацията</string>
-  <string name="morphe_music_lyrics_swap_trans_roma_summary">ВКЛ включва романизация или транслитерация под текстовe и превод над тях; ИЗКЛ пази романизация или транслитерация над и превод под. Прочит, поставен върху всяка сричка, се движи с нея – отгоре ѝ към отдолу</string>
+  <string name="morphe_music_lyrics_swap_trans_roma_summary">Разменя реда на показване на превода и романизацията под текста на песента</string>
   <string name="morphe_music_lyrics_force_center_title">Винаги центрирай текста</string>
   <string name="morphe_music_lyrics_force_center_summary">ВКЛ поставя всеки ред в средата и игнорира подравняването от източника, включително страни дуета; ИЗКЛ запазва подравняването, което искат текстовете</string>
   <string name="morphe_music_lyrics_providers_keep_one">Трябва да остане най-малко един активен доставчик</string>
@@ -688,11 +746,19 @@ SABR възпроизвеждане (имитирането на видео по
   <string name="morphe_music_lyrics_romanization_provider_title">Романизация или транслитерация</string>
   <string name="morphe_music_lyrics_romanization_provider_local">Офлайн речник</string>
   <string name="morphe_music_lyrics_romanization_provider_rime">Списък с думи Rime</string>
+  <string name="morphe_music_lyrics_ruby_provider_title">Ruby</string>
+  <string name="morphe_music_lyrics_ruby_provider_local">Офлайн речник</string>
+  <string name="morphe_music_lyrics_ruby_style_title">Ruby скрипт</string>
+  <string name="morphe_music_lyrics_ruby_style_entry_hiragana">Хирагана (ひらがな)</string>
+  <string name="morphe_music_lyrics_ruby_style_entry_katakana">Катакана (カタカナ)</string>
+  <string name="morphe_music_lyrics_show_ruby_button_title">Покажи бутон за Ruby</string>
+  <string name="morphe_music_lyrics_show_ruby_button_summary">Докоснете, за да превключите ruby четенето над текстовете; задръжте, за да превключите между хирагана и катакана. Използва активираните ruby доставчици в изброения им ред</string>
+  <string name="morphe_music_lyrics_ruby_generating">Генериране на ruby…</string>
   <string name="morphe_music_lyrics_use_ai_section_title">Разпознаване на секции чрез AI</string>
   <string name="morphe_music_lyrics_use_ai_section_summary">Използва се само когато доставчикът няма етикети за секции като Припев или Куплет, които тогава разпознава вашият модел, съвместим с OpenAI. Редактирането на реда също отваря неговия подсказка</string>
   <string name="morphe_music_lyrics_ai_config_base_url_hint">URL адрес на API endpoint (напр. https://api.openai.com/v1/chat/completions, https://api.anthropic.com/v1/chat/completions, https://generativelanguage.googleapis.com/v1beta/openai/chat/completions)</string>
   <string name="morphe_music_lyrics_ai_prompt_dialog_title">Шаблон за подкана</string>
-  <string name="morphe_music_lyrics_ai_prompt_dialog_hint">Запълнители: {language}, {task}, {title}, {artist}, {count}, {lines}</string>
+  <string name="morphe_music_lyrics_ai_prompt_dialog_hint">Заместители: {task}, {language}, {title}, {artist}, {count}, {lines}. Неизвестните се оставят така, както са въведени.</string>
   <string name="morphe_music_lyrics_ai_prompt_toast_saved">Подканата е запазена</string>
   <string name="morphe_music_lyrics_ai_prompt_toast_endpoint_invalid">Подканването е запазено, но AI крайният接口 все още не е годен. Конфигурирайте го първо в Настройки на AI</string>
   <string name="morphe_music_lyrics_ai_prompt_toast_reset">Подканата е нулирана</string>

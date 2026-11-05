@@ -158,6 +158,38 @@ Nedlastede spor vises her"</string>
   <string name="morphe_music_downloads_track_deleted">Nedlasting slettet</string>
   <string name="morphe_music_downloads_track_delete_failed">Kunne ikke slette nedlastingen</string>
   <string name="morphe_music_downloads_play_failed">Kunne ikke spille av nedlastingen</string>
+  <string name="morphe_music_downloads_playlists">Spillelister</string>
+  <string name="morphe_music_downloads_playlists_section">Opprettede spillelister (%s)</string>
+  <string name="morphe_music_downloads_playlists_empty">Ingen lokale spillelister ennå</string>
+  <string name="morphe_music_downloads_playlists_hide">Skjul spillelister ▲</string>
+  <string name="morphe_music_downloads_playlist_new">+ Ny spilleliste</string>
+  <string name="morphe_music_downloads_playlist_new_button">Ny spilleliste</string>
+  <string name="morphe_music_downloads_playlist_selected">Valgt (%s)</string>
+  <string name="morphe_music_downloads_playlist_select_first">Velg sanger først</string>
+  <string name="morphe_music_downloads_playlist_clear_selection">Tøm valg</string>
+  <string name="morphe_music_downloads_playlist_create">Opprett spilleliste</string>
+  <string name="morphe_music_downloads_playlist_create_button">Opprett</string>
+  <string name="morphe_music_downloads_playlist_add">Legg til i spilleliste</string>
+  <string name="morphe_music_downloads_playlist_added">Lagt til i %s</string>
+  <string name="morphe_music_downloads_playlist_name_hint">Navn på spilleliste</string>
+  <string name="morphe_music_downloads_playlist_name_empty">Navn på spilleliste kan ikke være tomt</string>
+  <string name="morphe_music_downloads_playlist_save_failed">Kunne ikke lagre spillelisten</string>
+  <string name="morphe_music_downloads_playlist_track_count">%s spor</string>
+  <string name="morphe_music_downloads_playlist_track_count_one">1 spor</string>
+  <string name="morphe_music_downloads_playlist_no_tracks">Ingen spor i denne spillelisten</string>
+  <string name="morphe_music_downloads_playlist_play">Spill av spilleliste</string>
+  <string name="morphe_music_downloads_playlist_play_all">Spill av alle</string>
+  <string name="morphe_music_downloads_playlist_rename">Gi nytt navn</string>
+  <string name="morphe_music_downloads_playlist_rename_title">Gi spilleliste nytt navn</string>
+  <string name="morphe_music_downloads_playlist_save">Lagre</string>
+  <string name="morphe_music_downloads_playlist_delete">Slett spilleliste</string>
+  <string name="morphe_music_downloads_playlist_delete_title">Slette spilleliste?</string>
+  <string name="morphe_music_downloads_playlist_delete_message">%s vil bli slettet. Nedlastede sanger blir beholdt</string>
+  <string name="morphe_music_downloads_playlist_deleted">Spilleliste slettet</string>
+  <string name="morphe_music_downloads_playlist_remove_track">Fjern fra spilleliste</string>
+  <string name="morphe_music_downloads_playlist_drag_track">Dra for å endre rekkefølge</string>
+  <string name="morphe_music_downloads_playlist_reorder_hint">%s • Dra i håndtaket for å endre rekkefølge</string>
+  <string name="morphe_music_downloads_playlist_reorder_done">Ferdig</string>
   <string name="morphe_music_downloads_notification_channel">Lydnedlastinger</string>
   <string name="morphe_music_downloads_playback_channel">Offline-avspilling</string>
   <string name="morphe_music_downloads_unknown_track">Kunne ikke identifisere sporet som skal lastes ned</string>
@@ -168,6 +200,26 @@ Nedlastede spor vises her"</string>
   <string name="morphe_music_downloads_progress">Laster ned %s%%</string>
   <string name="morphe_music_downloads_complete">Nedlasting fullført</string>
   <string name="morphe_music_downloads_failed">Nedlasting feilet</string>
+  <string name="morphe_music_downloads_playlist_download_title">Nedlasting av spilleliste</string>
+  <string name="morphe_music_downloads_playlist_download_listing">Henter spor…</string>
+  <string name="morphe_music_downloads_playlist_download_listed">%s hentet…</string>
+  <string name="morphe_music_downloads_playlist_download_listing_failed">Kunne ikke hente sporene i spillelisten</string>
+  <string name="morphe_music_downloads_playlist_download_all_saved">Allerede nedlastet: %s</string>
+  <string name="morphe_music_downloads_playlist_download_confirm_message">"%1$s i denne spillelisten, %2$s er ikke nedlastet ennå.
+
+De lastes ned én etter én, noe som kan ta lang tid og krever omtrent %3$s ledig plass"</string>
+  <string name="morphe_music_downloads_playlist_download_confirm_button">Last ned</string>
+  <string name="morphe_music_downloads_playlist_download_progress">Laster ned spor %1$s av %2$s</string>
+  <string name="morphe_music_downloads_playlist_download_complete">%s nedlastet</string>
+  <string name="morphe_music_downloads_playlist_download_complete_with_failures">%1$s nedlastet, %2$s kunne ikke lastes ned</string>
+  <string name="morphe_music_downloads_playlist_download_already_running">Nedlasting av spilleliste pågår allerede</string>
+  <string name="morphe_music_downloads_playlist_download_needs_account">Kontoen din er ikke kjent ennå. Prøv igjen om et øyeblikk</string>
+  <string name="morphe_music_downloads_playlist_download_listed_all_saved">%s hentet, alle er allerede nedlastet</string>
+  <string name="morphe_music_downloads_playlist_download_incomplete">Kun deler av spillelisten kunne hentes. Trykk på Last ned igjen senere for å hente resten</string>
+  <string name="morphe_music_downloads_playlist_download_started">Laster ned %s i bakgrunnen</string>
+  <string name="morphe_music_downloads_playlist_download_no_network">Ingen nettverksforbindelse</string>
+  <string name="morphe_music_downloads_playlist_download_waiting_network">Venter på nettverk…</string>
+  <string name="morphe_music_downloads_playlist_download_stopped">Stoppet etter %1$s av %2$s. Trykk på Last ned igjen for å fortsette</string>
   <!-- misc.settings.settingsPatch -->
   <!-- In languages where "About" is ambiguous, translate this as "About Morphe" (i.e., About this app). -->
   <string name="morphe_settings_music_screen_0_about_title">Om</string>
@@ -206,6 +258,9 @@ Nedlastede spor vises her"</string>
   <string name="morphe_music_hide_comments_community_guidelines_title">Skjul retningslinjer for fellesskapet</string>
   <string name="morphe_music_hide_comments_context_title">Skjul kontekstmelding</string>
   <string name="morphe_music_hide_comments_emoji_button_title">Skjul emoji-knappen</string>
+  <string name="morphe_music_hide_comments_gif_button_title">Skjul GIF-knapp</string>
+  <string name="morphe_music_hide_comments_gifs_and_images_title">Skjul GIF-er og bilder</string>
+  <string name="morphe_music_hide_comments_gifs_and_images_summary">Skjuler GIF-er og bilder vedlagt i kommentarer og svar</string>
   <string name="morphe_music_hide_comments_info_button_title">Skjul info-knappen</string>
   <string name="morphe_music_hide_comments_timestamp_button_title">Skjul tidsstempel-knapp</string>
   <!-- interaction.crossfade.crossfadePatch -->
@@ -575,7 +630,6 @@ Nødvendige informasjonskapsler: SID, HSID, SSID, SAPISID, __Secure-1PAPISID, __
   <string name="morphe_music_lyrics_local_romanization_dict_chinese">Kinesiske ord (pinyin-pro, ~17 MB)</string>
   <string name="morphe_music_lyrics_local_romanization_dict_cldr">Gresk, slavisk kyrillisk (inkl. russisk, ukrainsk, bulgarsk, serbisk, belarusisk, makedonsk), georgisk, armensk, hebraisk, arabisk, amharisk og syrisk translitterasjon (CLDR, ~0,5 MB)</string>
   <string name="morphe_music_lyrics_local_romanization_dict_building">Lesning %1$s: %2$d%%</string>
-  <string name="morphe_music_lyrics_local_romanization_dict_empty">Velg minst én ordbok</string>
   <string name="morphe_music_lyrics_show_refresh_button_title">Vis oppdater-knappen</string>
   <string name="morphe_music_lyrics_show_refresh_button_summary">Trykk for å bytte til neste kandidat til tekst; lang-trykk for å søke etter tekst basert på sangtittel og artist</string>
   <string name="morphe_music_lyrics_search_dialog_title">Søk etter sangtekst</string>
@@ -594,6 +648,10 @@ Nødvendige informasjonskapsler: SID, HSID, SSID, SAPISID, __Secure-1PAPISID, __
   <string name="morphe_music_lyrics_hide_played_summary">Skjul sangtekstlinjene over linjen som spilles for øyeblikket</string>
   <string name="morphe_music_lyrics_hide_unplayed_title">Skjul ikke-avspilte tekster</string>
   <string name="morphe_music_lyrics_hide_unplayed_summary">Skjul tekstlinjer under gjeldende avspilling […] skjerm</string>
+  <string name="morphe_music_lyrics_dynamic_background_title">Dynamisk bakgrunn</string>
+  <string name="morphe_music_lyrics_dynamic_background_summary">Vis en uskarp bakgrunn laget av albumcoveret bak sangtekstene</string>
+  <string name="morphe_music_lyrics_dynamic_background_animated_title">Animer dynamisk bakgrunn</string>
+  <string name="morphe_music_lyrics_dynamic_background_animated_summary">Beveg bakgrunnen under avspilling, og la den pulsere med musikken hvis YouTube Music har mikrofontillatelse. Slå av for en stillestående bakgrunn som bruker mindre batteri</string>
   <string name="morphe_music_lyrics_mediasession_title">Vis MediaSession-sangtekster på låseskjermen</string>
   <string name="morphe_music_lyrics_mediasession_summary">Viser gjeldende linje på låsskjerm, Android Auto og Bluetooth. Krever Android 11 eller nyere</string>
   <string name="morphe_music_lyrics_miniplayer_title">Vis minispillertekster</string>
@@ -692,7 +750,7 @@ Sanger kommer fra tredjepartstjenester som ikke er tilknyttet, sponsorerer eller
   <string name="morphe_music_lyrics_hide_info_title">Skjul krediteringslinjen</string>
   <string name="morphe_music_lyrics_hide_info_summary">Skjul krediteringslinjen som vises under teksten</string>
   <string name="morphe_music_lyrics_swap_trans_roma_title">Bytt om oversettelse og romanisering</string>
-  <string name="morphe_music_lyrics_swap_trans_roma_summary">PÅ setter romanisering eller translitterasjon under tekster og oversettelse over; FRA holder romanisering eller translitterasjon over og oversettelse under. En uttale plassert over hver stavelse flytter med den, fra over stavelser til under den</string>
+  <string name="morphe_music_lyrics_swap_trans_roma_summary">Bytter visningsrekkefølgen for oversettelse og romanisering under sangtekstene</string>
   <string name="morphe_music_lyrics_force_center_title">Alltid sentrér tekster</string>
   <string name="morphe_music_lyrics_force_center_summary">PÅ setter hver linje midt i skjermen og ignorerer kildejustering, inkludert duett-sider; FRA beholder justeringen tekstene ber om</string>
   <string name="morphe_music_lyrics_providers_keep_one">Minst én leverandør må være aktiv</string>
@@ -700,11 +758,19 @@ Sanger kommer fra tredjepartstjenester som ikke er tilknyttet, sponsorerer eller
   <string name="morphe_music_lyrics_romanization_provider_title">Romanisering eller translitterasjon</string>
   <string name="morphe_music_lyrics_romanization_provider_local">Frakoblet ordbok</string>
   <string name="morphe_music_lyrics_romanization_provider_rime">Rime-ordliste</string>
+  <string name="morphe_music_lyrics_ruby_provider_title">Ruby</string>
+  <string name="morphe_music_lyrics_ruby_provider_local">Frakoblet ordbok</string>
+  <string name="morphe_music_lyrics_ruby_style_title">Ruby-skript</string>
+  <string name="morphe_music_lyrics_ruby_style_entry_hiragana">Hiragana (ひらがな)</string>
+  <string name="morphe_music_lyrics_ruby_style_entry_katakana">Katakana (カタカナ)</string>
+  <string name="morphe_music_lyrics_show_ruby_button_title">Vis Ruby-knapp</string>
+  <string name="morphe_music_lyrics_show_ruby_button_summary">Trykk for å veksle mellom ruby-lesinger over sangtekster; hold inne for å bytte mellom hiragana og katakana. Bruker aktiverte ruby-leverandører i den oppførte rekkefølgen</string>
+  <string name="morphe_music_lyrics_ruby_generating">Genererer ruby…</string>
   <string name="morphe_music_lyrics_use_ai_section_title">Oppdaga seksjoner med AI</string>
   <string name="morphe_music_lyrics_use_ai_section_summary">Brukes kun når leverandøren ikke sender seksjonsmerkelapper som Refreng eller Vers, noe som den OpenAI-kompatible modellen deretter oppdager. Redigering av raden åpner også prompten</string>
   <string name="morphe_music_lyrics_ai_config_base_url_hint">API-endepunkt-URL (f.eks. https://api.openai.com/v1/chat/completions, https://api.anthropic.com/v1/chat/completions, https://generativelanguage.googleapis.com/v1beta/openai/chat/completions)</string>
   <string name="morphe_music_lyrics_ai_prompt_dialog_title">Malskjema for ledetekst</string>
-  <string name="morphe_music_lyrics_ai_prompt_dialog_hint">Plassholdere: {language}, {task}, {title}, {artist}, {count}, {lines}</string>
+  <string name="morphe_music_lyrics_ai_prompt_dialog_hint">Plassholdere: {task}, {language}, {title}, {artist}, {count}, {lines}. Ukjente beholdes slik de er skrevet</string>
   <string name="morphe_music_lyrics_ai_prompt_toast_saved">Ledetekst lagret</string>
   <string name="morphe_music_lyrics_ai_prompt_toast_endpoint_invalid">Oppfordring lagret, men AI-endepunktet er ikke brukbart ennå. Konfigurer det først under AI-innstillinger</string>
   <string name="morphe_music_lyrics_ai_prompt_toast_reset">Ledetekst tilbakestilt</string>

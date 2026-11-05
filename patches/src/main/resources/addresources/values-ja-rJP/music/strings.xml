@@ -158,6 +158,38 @@ Second \"item\" text"</string>
   <string name="morphe_music_downloads_track_deleted">ダウンロードを削除しました</string>
   <string name="morphe_music_downloads_track_delete_failed">ダウンロードを削除できませんでした</string>
   <string name="morphe_music_downloads_play_failed">ダウンロードを再生できませんでした</string>
+  <string name="morphe_music_downloads_playlists">再生リスト</string>
+  <string name="morphe_music_downloads_playlists_section">作成済みのプレイリスト (%s)</string>
+  <string name="morphe_music_downloads_playlists_empty">ローカルプレイリストはまだありません</string>
+  <string name="morphe_music_downloads_playlists_hide">プレイリストを非表示 ▲</string>
+  <string name="morphe_music_downloads_playlist_new">+ 新しいプレイリスト</string>
+  <string name="morphe_music_downloads_playlist_new_button">新しいプレイリスト</string>
+  <string name="morphe_music_downloads_playlist_selected">選択済み (%s)</string>
+  <string name="morphe_music_downloads_playlist_select_first">先に曲を選択してください</string>
+  <string name="morphe_music_downloads_playlist_clear_selection">選択を解除</string>
+  <string name="morphe_music_downloads_playlist_create">プレイリストを作成</string>
+  <string name="morphe_music_downloads_playlist_create_button">作成</string>
+  <string name="morphe_music_downloads_playlist_add">プレイリストに追加</string>
+  <string name="morphe_music_downloads_playlist_added">%sに追加しました</string>
+  <string name="morphe_music_downloads_playlist_name_hint">プレイリスト名</string>
+  <string name="morphe_music_downloads_playlist_name_empty">プレイリスト名は空欄にはできません</string>
+  <string name="morphe_music_downloads_playlist_save_failed">プレイリストを保存できませんでした</string>
+  <string name="morphe_music_downloads_playlist_track_count">%s 曲</string>
+  <string name="morphe_music_downloads_playlist_track_count_one">1 曲</string>
+  <string name="morphe_music_downloads_playlist_no_tracks">このプレイリストに曲はありません</string>
+  <string name="morphe_music_downloads_playlist_play">プレイリストを再生</string>
+  <string name="morphe_music_downloads_playlist_play_all">すべて再生</string>
+  <string name="morphe_music_downloads_playlist_rename">名前変更</string>
+  <string name="morphe_music_downloads_playlist_rename_title">プレイリストの名前変更</string>
+  <string name="morphe_music_downloads_playlist_save">適用</string>
+  <string name="morphe_music_downloads_playlist_delete">プレイリストを削除</string>
+  <string name="morphe_music_downloads_playlist_delete_title">プレイリストを削除しますか？</string>
+  <string name="morphe_music_downloads_playlist_delete_message">%s が削除されます。ダウンロード済みの曲は保持されます</string>
+  <string name="morphe_music_downloads_playlist_deleted">プレイリストを削除しました</string>
+  <string name="morphe_music_downloads_playlist_remove_track">プレイリストから削除</string>
+  <string name="morphe_music_downloads_playlist_drag_track">ドラッグして並べ替え</string>
+  <string name="morphe_music_downloads_playlist_reorder_hint">%s • ドラッグハンドルで並べ替え</string>
+  <string name="morphe_music_downloads_playlist_reorder_done">完了</string>
   <string name="morphe_music_downloads_notification_channel">音声ダウンロード</string>
   <string name="morphe_music_downloads_playback_channel">オフライン再生</string>
   <string name="morphe_music_downloads_unknown_track">ダウンロードする楽曲を特定できませんでした</string>
@@ -168,6 +200,26 @@ Second \"item\" text"</string>
   <string name="morphe_music_downloads_progress">ダウンロード中: %s%%</string>
   <string name="morphe_music_downloads_complete">ダウンロード完了</string>
   <string name="morphe_music_downloads_failed">ダウンロードに失敗しました</string>
+  <string name="morphe_music_downloads_playlist_download_title">プレイリストのダウンロード</string>
+  <string name="morphe_music_downloads_playlist_download_listing">トラックをリストアップ中…</string>
+  <string name="morphe_music_downloads_playlist_download_listed">%s 件をリストアップしました…</string>
+  <string name="morphe_music_downloads_playlist_download_listing_failed">プレイリストのトラックをリストアップできませんでした</string>
+  <string name="morphe_music_downloads_playlist_download_all_saved">すでにダウンロード済み: %s</string>
+  <string name="morphe_music_downloads_playlist_download_confirm_message">"このプレイリストに %1$s 件あり、%2$s 件がまだダウンロードされていません。
+
+これらは1つずつダウンロードされるため、時間がかかり、約 %3$s の空き容量が必要です"</string>
+  <string name="morphe_music_downloads_playlist_download_confirm_button">ダウンロード</string>
+  <string name="morphe_music_downloads_playlist_download_progress">トラック %1$s / %2$s をダウンロード中</string>
+  <string name="morphe_music_downloads_playlist_download_complete">%s 件をダウンロードしました</string>
+  <string name="morphe_music_downloads_playlist_download_complete_with_failures">%1$s 件をダウンロードしましたが、%2$s 件をダウンロードできませんでした</string>
+  <string name="morphe_music_downloads_playlist_download_already_running">プレイリストのダウンロードはすでに進行中です</string>
+  <string name="morphe_music_downloads_playlist_download_needs_account">アカウントがまだ認識されていません。しばらくしてからもう一度お試しください</string>
+  <string name="morphe_music_downloads_playlist_download_listed_all_saved">%s 件をリストアップしましたが、すべて的にダウンロード済みです</string>
+  <string name="morphe_music_downloads_playlist_download_incomplete">プレイリストの一部しかリストアップできませんでした。後で再度ダウンロードをタップして残りを取得してください</string>
+  <string name="morphe_music_downloads_playlist_download_started">バックグラウンドで %s をダウンロード中</string>
+  <string name="morphe_music_downloads_playlist_download_no_network">ネットワーク接続がありません</string>
+  <string name="morphe_music_downloads_playlist_download_waiting_network">ネットワークを待機中…</string>
+  <string name="morphe_music_downloads_playlist_download_stopped">%2$s 件中 %1$s 件で停止しました。再開するには再度ダウンロードをタップしてください</string>
   <!-- misc.settings.settingsPatch -->
   <!-- In languages where "About" is ambiguous, translate this as "About Morphe" (i.e., About this app). -->
   <string name="morphe_settings_music_screen_0_about_title">Morphe について</string>
@@ -206,6 +258,9 @@ Second \"item\" text"</string>
   <string name="morphe_music_hide_comments_community_guidelines_title">コミュニティ ガイドラインを非表示</string>
   <string name="morphe_music_hide_comments_context_title">コメントの表示方法のヒントを非表示</string>
   <string name="morphe_music_hide_comments_emoji_button_title">絵文字ボタンを非表示</string>
+  <string name="morphe_music_hide_comments_gif_button_title">GIFボタンを非表示</string>
+  <string name="morphe_music_hide_comments_gifs_and_images_title">GIFと画像を非表示</string>
+  <string name="morphe_music_hide_comments_gifs_and_images_summary">コメントと返信に添付されているGIFと画像を非表示にします</string>
   <string name="morphe_music_hide_comments_info_button_title">情報ボタン (i アイコン) を非表示</string>
   <string name="morphe_music_hide_comments_timestamp_button_title">タイムスタンプ ボタンを非表示</string>
   <!-- interaction.crossfade.crossfadePatch -->
@@ -570,7 +625,6 @@ Rime 単語リストが読み取るリストにチェックを入れ、[保存] 
   <string name="morphe_music_lyrics_local_romanization_dict_chinese">中国語単語（pinyin-pro、約17 MB）</string>
   <string name="morphe_music_lyrics_local_romanization_dict_cldr">ギリシャ語、スラヴ系キリル文字（ロシア語、ウクライナ語、ブルガリア語、セルビア語、ベラルーシ語、マケドニア語を含む）、ジョージア語、アルメニア語、ヘブライ語、アラビア語、アムハラ語、シリア語の翻記（CLDR、約0.5 MB）</string>
   <string name="morphe_music_lyrics_local_romanization_dict_building">%1$s を読み込み中: %2$d%%</string>
-  <string name="morphe_music_lyrics_local_romanization_dict_empty">少なくとも1つの辞書を選択してください</string>
   <string name="morphe_music_lyrics_show_refresh_button_title">更新ボタンを表示</string>
   <string name="morphe_music_lyrics_show_refresh_button_summary">タップして次の歌詞候補に切り替え、長押しで曲名とアーティストから歌詞を検索</string>
   <string name="morphe_music_lyrics_search_dialog_title">歌詞を検索</string>
@@ -589,6 +643,10 @@ Rime 単語リストが読み取るリストにチェックを入れ、[保存] 
   <string name="morphe_music_lyrics_hide_played_summary">現在再生中の行より上に表示される歌詞を非表示にします</string>
   <string name="morphe_music_lyrics_hide_unplayed_title">未再生の歌詞を非表示</string>
   <string name="morphe_music_lyrics_hide_unplayed_summary">現在再生中の行より下に表示される歌詞を非表示にします</string>
+  <string name="morphe_music_lyrics_dynamic_background_title">ダイナミック背景</string>
+  <string name="morphe_music_lyrics_dynamic_background_summary">歌詞の背後に、アルバムアートから作成されたぼかし背景を表示します</string>
+  <string name="morphe_music_lyrics_dynamic_background_animated_title">ダイナミック背景をアニメーション化</string>
+  <string name="morphe_music_lyrics_dynamic_background_animated_summary">再生中に背景を移動させ、YouTube Musicにマイク権限がある場合は音楽に合わせてパルスさせます。バッテリー消費を抑えたい場合は、オフにして静止画背景にします</string>
   <string name="morphe_music_lyrics_mediasession_title">ロック画面に MediaSession の歌詞を表示する</string>
   <string name="morphe_music_lyrics_mediasession_summary">ロック画面、Android Auto、Bluetooth で現在の行を表示。Android 11 以降が必要</string>
   <string name="morphe_music_lyrics_miniplayer_title">ミニプレイヤーの歌詞を表示</string>
@@ -687,7 +745,7 @@ Rime 単語リストが読み取るリストにチェックを入れ、[保存] 
   <string name="morphe_music_lyrics_hide_info_title">クレジット行を非表示</string>
   <string name="morphe_music_lyrics_hide_info_summary">歌詞欄最下部の、作詞作曲などのクレジット情報を表示する行を非表示にします</string>
   <string name="morphe_music_lyrics_swap_trans_roma_title">翻訳とローマ字表記を入れ替える</string>
-  <string name="morphe_music_lyrics_swap_trans_roma_summary">ON にすると、ローマ字変換または翻記が歌詞の下、翻訳が上に配置されます；OFF にすると、ローマ字変換または翻記が上、翻訳が下になります。各音節の上に配置された読みはそれと一緒に移動し、音節の上から下に移動します</string>
+  <string name="morphe_music_lyrics_swap_trans_roma_summary">歌詞の下にある翻訳とローマ字の表示順序を入れ替えます</string>
   <string name="morphe_music_lyrics_force_center_title">常に歌詞を中央揃え</string>
   <string name="morphe_music_lyrics_force_center_summary">ONにすると、各行を中央に配置し、ソースの配置（デュエットのサイドを含む）を無視します；OFFにすると、歌詞が要求する配置を保持します</string>
   <string name="morphe_music_lyrics_providers_keep_one">少なくとも1つのプロバイダーをONにしておく必要があります</string>
@@ -695,11 +753,19 @@ Rime 単語リストが読み取るリストにチェックを入れ、[保存] 
   <string name="morphe_music_lyrics_romanization_provider_title">ローマ字変換または翻記</string>
   <string name="morphe_music_lyrics_romanization_provider_local">オフライン辞書</string>
   <string name="morphe_music_lyrics_romanization_provider_rime">Rime 語彙リスト</string>
+  <string name="morphe_music_lyrics_ruby_provider_title">ルビ</string>
+  <string name="morphe_music_lyrics_ruby_provider_local">オフライン辞書</string>
+  <string name="morphe_music_lyrics_ruby_style_title">ルビ形式</string>
+  <string name="morphe_music_lyrics_ruby_style_entry_hiragana">ひらがな (ひらがな)</string>
+  <string name="morphe_music_lyrics_ruby_style_entry_katakana">カタカナ (カタカナ)</string>
+  <string name="morphe_music_lyrics_show_ruby_button_title">ルビ表示ボタンを表示</string>
+  <string name="morphe_music_lyrics_show_ruby_button_summary">タップして歌詞の上のルビ表示を切り替えます。長押しするとひらがなとカタカナを切り替えられます。有効なルビプロバイダーがリストされた順に使用されます</string>
+  <string name="morphe_music_lyrics_ruby_generating">ルビを生成中…</string>
   <string name="morphe_music_lyrics_use_ai_section_title">AI でセクションを検出</string>
   <string name="morphe_music_lyrics_use_ai_section_summary">プロバイダーがコーラスやヴァースなどのセクションラベルを提供しない場合にのみ使用されます。その後、あなたの OpenAI 互換モデルが検出します。行を編集するとプロンプトも開きます</string>
   <string name="morphe_music_lyrics_ai_config_base_url_hint">API エンドポイント URL（例：https://api.openai.com/v1/chat/completions, https://api.anthropic.com/v1/chat/completions, https://generativelanguage.googleapis.com/v1beta/openai/chat/completions）</string>
   <string name="morphe_music_lyrics_ai_prompt_dialog_title">プロンプト テンプレート</string>
-  <string name="morphe_music_lyrics_ai_prompt_dialog_hint">プレースホルダー: {language}, {task}, {title}, {artist}, {count}, {lines}</string>
+  <string name="morphe_music_lyrics_ai_prompt_dialog_hint">プレースホルダー: {task}, {language}, {title}, {artist}, {count}, {lines}。それ以外は入力したままになります</string>
   <string name="morphe_music_lyrics_ai_prompt_toast_saved">プロンプトを保存しました</string>
   <string name="morphe_music_lyrics_ai_prompt_toast_endpoint_invalid">プロンプトは保存されましたが、AIエンドポイントはまだ使用できません。まずAI設定で構成してください</string>
   <string name="morphe_music_lyrics_ai_prompt_toast_reset">プロンプトをリセットしました</string>

@@ -158,6 +158,38 @@ Lalabas dito ang mga na-download na track"</string>
   <string name="morphe_music_downloads_track_deleted">Natanggal ang download</string>
   <string name="morphe_music_downloads_track_delete_failed">Hindi matanggal ang download</string>
   <string name="morphe_music_downloads_play_failed">Hindi ma-play ang download</string>
+  <string name="morphe_music_downloads_playlists">Talatugtugin</string>
+  <string name="morphe_music_downloads_playlists_section">Mga nilikhang playlist (%s)</string>
+  <string name="morphe_music_downloads_playlists_empty">Wala pang mga lokal na playlist</string>
+  <string name="morphe_music_downloads_playlists_hide">Itago ang mga playlist ▲</string>
+  <string name="morphe_music_downloads_playlist_new">+ Bagong playlist</string>
+  <string name="morphe_music_downloads_playlist_new_button">Bagong playlist</string>
+  <string name="morphe_music_downloads_playlist_selected">Napili (%s)</string>
+  <string name="morphe_music_downloads_playlist_select_first">Pumili muna ng mga kanta</string>
+  <string name="morphe_music_downloads_playlist_clear_selection">Linisin ang pinili</string>
+  <string name="morphe_music_downloads_playlist_create">Gumawa ng playlist</string>
+  <string name="morphe_music_downloads_playlist_create_button">Gumawa</string>
+  <string name="morphe_music_downloads_playlist_add">Idagdag sa playlist</string>
+  <string name="morphe_music_downloads_playlist_added">Naidagdag sa %s</string>
+  <string name="morphe_music_downloads_playlist_name_hint">Pangalan ng playlist</string>
+  <string name="morphe_music_downloads_playlist_name_empty">Hindi maaaring walang pangalan ang playlist</string>
+  <string name="morphe_music_downloads_playlist_save_failed">Hindi ma-save ang playlist</string>
+  <string name="morphe_music_downloads_playlist_track_count">%s na track</string>
+  <string name="morphe_music_downloads_playlist_track_count_one">1 track</string>
+  <string name="morphe_music_downloads_playlist_no_tracks">Walang mga track sa playlist na ito</string>
+  <string name="morphe_music_downloads_playlist_play">Patugtugin ang playlist</string>
+  <string name="morphe_music_downloads_playlist_play_all">Patugtugin lahat</string>
+  <string name="morphe_music_downloads_playlist_rename">Palitan</string>
+  <string name="morphe_music_downloads_playlist_rename_title">Palitan ang pangalan ng playlist</string>
+  <string name="morphe_music_downloads_playlist_save">I-save</string>
+  <string name="morphe_music_downloads_playlist_delete">Burahin ang playlist</string>
+  <string name="morphe_music_downloads_playlist_delete_title">Burahin ang playlist?</string>
+  <string name="morphe_music_downloads_playlist_delete_message">Buburahin ang %s. Mananatili ang mga na-download na kanta</string>
+  <string name="morphe_music_downloads_playlist_deleted">Nabura na ang playlist</string>
+  <string name="morphe_music_downloads_playlist_remove_track">Alisin mula sa playlist</string>
+  <string name="morphe_music_downloads_playlist_drag_track">I-drag para baguhin ang pagkakasunod-sunod</string>
+  <string name="morphe_music_downloads_playlist_reorder_hint">%s • I-drag ang handle para baguhin ang pagkakasunod-sunod</string>
+  <string name="morphe_music_downloads_playlist_reorder_done">Tapos</string>
   <string name="morphe_music_downloads_notification_channel">Mga audio download</string>
   <string name="morphe_music_downloads_playback_channel">Offline na playback</string>
   <string name="morphe_music_downloads_unknown_track">Hindi matukoy ang track na i-download</string>
@@ -168,6 +200,26 @@ Lalabas dito ang mga na-download na track"</string>
   <string name="morphe_music_downloads_progress">Dina-download ang %s%%</string>
   <string name="morphe_music_downloads_complete">Nakumpleto ang download</string>
   <string name="morphe_music_downloads_failed">Nabigo ang download</string>
+  <string name="morphe_music_downloads_playlist_download_title">Pag-download ng playlist</string>
+  <string name="morphe_music_downloads_playlist_download_listing">Inililista ang mga track…</string>
+  <string name="morphe_music_downloads_playlist_download_listed">%s ang nailista…</string>
+  <string name="morphe_music_downloads_playlist_download_listing_failed">Hindi ma-listahan ang mga track ng playlist</string>
+  <string name="morphe_music_downloads_playlist_download_all_saved">Na-download na: %s</string>
+  <string name="morphe_music_downloads_playlist_download_confirm_message">"%1$s sa playlist na ito, %2$s ay hindi pa na-download.
+
+I-da-download ang mga ito nang isa-isa, na maaaring magtagal at nangangailangan ng mga humigit-kumulang %3$s na libreng espasyo"</string>
+  <string name="morphe_music_downloads_playlist_download_confirm_button">I-download</string>
+  <string name="morphe_music_downloads_playlist_download_progress">I-da-download ang track %1$s ng %2$s</string>
+  <string name="morphe_music_downloads_playlist_download_complete">%s ang na-download</string>
+  <string name="morphe_music_downloads_playlist_download_complete_with_failures">%1$s ang na-download, %2$s ang hindi ma-download</string>
+  <string name="morphe_music_downloads_playlist_download_already_running">Kasalukuyang nag-da-download na ng playlist</string>
+  <string name="morphe_music_downloads_playlist_download_needs_account">Hindi pa kilala ang iyong account. Subukan muli mamaya</string>
+  <string name="morphe_music_downloads_playlist_download_listed_all_saved">%s ang nailista, lahat ay na-download na</string>
+  <string name="morphe_music_downloads_playlist_download_incomplete">Bahagi lamang ng playlist ang nailista. I-tap muli ang Download mamaya para makuha ang iba pa</string>
+  <string name="morphe_music_downloads_playlist_download_started">I-da-download ang %s sa background</string>
+  <string name="morphe_music_downloads_playlist_download_no_network">Walang koneksyon sa network</string>
+  <string name="morphe_music_downloads_playlist_download_waiting_network">Naghihintay para sa network…</string>
+  <string name="morphe_music_downloads_playlist_download_stopped">Tumigil pagkatapos ng %1$s ng %2$s. I-tap muli ang Download para magpatuloy</string>
   <!-- misc.settings.settingsPatch -->
   <!-- In languages where "About" is ambiguous, translate this as "About Morphe" (i.e., About this app). -->
   <string name="morphe_settings_music_screen_0_about_title">Tungkol sa</string>
@@ -206,6 +258,9 @@ Lalabas dito ang mga na-download na track"</string>
   <string name="morphe_music_hide_comments_community_guidelines_title">Itago ang mga Alituntunin ng Komunidad</string>
   <string name="morphe_music_hide_comments_context_title">Itago ang mensahe ng konteksto</string>
   <string name="morphe_music_hide_comments_emoji_button_title">Itago ang Emoji button</string>
+  <string name="morphe_music_hide_comments_gif_button_title">Itago ang button ng GIF</string>
+  <string name="morphe_music_hide_comments_gifs_and_images_title">Itago ang mga GIF at imahe</string>
+  <string name="morphe_music_hide_comments_gifs_and_images_summary">Itatago ang mga GIF at imahe na nakalakip sa mga komento at reply</string>
   <string name="morphe_music_hide_comments_info_button_title">Itago ang Info button</string>
   <string name="morphe_music_hide_comments_timestamp_button_title">Itago ang Timestamp button</string>
   <!-- interaction.crossfade.crossfadePatch -->
@@ -572,7 +627,6 @@ Mga kinakailangang cookie: SID, HSID, SSID, SAPISID, __Secure-3PAPISID, __Secure
   <string name="morphe_music_lyrics_local_romanization_dict_chinese">Mga salitang Chinese (pinyin-pro, ~17 MB)</string>
   <string name="morphe_music_lyrics_local_romanization_dict_cldr">Transliteration para sa Greek, Slavic Cyrillic (kasama ang Russian, Ukrainian, Bulgarian, Serbian, Belarusian, Macedonian), Georgian, Armenian, Hebrew, Arabic, Amharic at Syriac (CLDR, ~0.5 MB)</string>
   <string name="morphe_music_lyrics_local_romanization_dict_building">Pagbabasa %1$s: %2$d%%</string>
-  <string name="morphe_music_lyrics_local_romanization_dict_empty">Pumili ng hindi bababa sa isang dictionary</string>
   <string name="morphe_music_lyrics_show_refresh_button_title">Ipakita ang button na Refresh</string>
   <string name="morphe_music_lyrics_show_refresh_button_summary">Pindutin para lumipat sa susunod na lyrics candidate; long-press para maghanap ng lyrics gamit ang pamagat ng kanta at artist</string>
   <string name="morphe_music_lyrics_search_dialog_title">Maghanap ng lyrics</string>
@@ -591,6 +645,10 @@ Mga kinakailangang cookie: SID, HSID, SSID, SAPISID, __Secure-3PAPISID, __Secure
   <string name="morphe_music_lyrics_hide_played_summary">Itago ang mga linya ng lyrics sa itaas ng linyang kasalukuyang pinapatugtog</string>
   <string name="morphe_music_lyrics_hide_unplayed_title">Itago ang mga lyrics na hindi pa na-play.</string>
   <string name="morphe_music_lyrics_hide_unplayed_summary">Itago ang mga linya ng lyrics sa ibaba ng screen ng kasalukuyang nagpe-play […].</string>
+  <string name="morphe_music_lyrics_dynamic_background_title">Dynamic na background</string>
+  <string name="morphe_music_lyrics_dynamic_background_summary">Magpakita ng blurred na background mula sa album art sa likod ng mga liriko</string>
+  <string name="morphe_music_lyrics_dynamic_background_animated_title">I-animate ang dynamic na background</string>
+  <string name="morphe_music_lyrics_dynamic_background_animated_summary">Igalaw ang background habang nagpapatugtog, at i-pulse ito kasabay ng musika kung may permiso ang YouTube Music sa mikropono. I-off para sa isang hindi gumagalaw na background na mas matipid sa baterya</string>
   <string name="morphe_music_lyrics_mediasession_title">Ipakita ang MediaSession Lyrics sa lock screen</string>
   <string name="morphe_music_lyrics_mediasession_summary">Ipakita ang current line sa lock screen, Android Auto at Bluetooth. Kailangan ng Android 11 o mas baga</string>
   <string name="morphe_music_lyrics_miniplayer_title">Ipakita ang Lyrics sa Miniplayer</string>
@@ -689,7 +747,7 @@ Ang mga lyrics ay galing sa mga third-party services na walang koneksyon, hindi 
   <string name="morphe_music_lyrics_hide_info_title">Itago ang linya ng kredito</string>
   <string name="morphe_music_lyrics_hide_info_summary">Itago ang linya ng kredito na ipinapakita sa ibaba ng lyrics.</string>
   <string name="morphe_music_lyrics_swap_trans_roma_title">Pagpalitin ang pagsasalin at romanisasyon.</string>
-  <string name="morphe_music_lyrics_swap_trans_roma_summary">ON ay naglalagay ng romanization o transliteration sa ilalim ng mga lyrics at translation sa itaas; OFF ay pinapanatili ang romanization o transliteration sa itaas at translation sa ilalim. Ang pagbasa na inilagay sa itaas ng bawat syllable ay gumagalaw kasama ito, mula sa itaas ng kanyang syllage patungo sa ilalim nito</string>
+  <string name="morphe_music_lyrics_swap_trans_roma_summary">Pagpapalitin ang pagkakasunod-sunod ng pagpapakita ng translation at romanization sa ibaba ng mga liriko</string>
   <string name="morphe_music_lyrics_force_center_title">Palaging i-center ang mga lyrics</string>
   <string name="morphe_music_lyrics_force_center_summary">ON ay naglalagay ng bawat line sa gitna at naiiwalat ang source alignment, kasama ang duet sides; OFF ay pinapanatili ang alignment na hiningi ng mga lyrics</string>
   <string name="morphe_music_lyrics_providers_keep_one">Dapat napanatiling on ang hindi bababa sa isang provider</string>
@@ -697,11 +755,19 @@ Ang mga lyrics ay galing sa mga third-party services na walang koneksyon, hindi 
   <string name="morphe_music_lyrics_romanization_provider_title">Romanization o transliteration</string>
   <string name="morphe_music_lyrics_romanization_provider_local">Offline Dictionary</string>
   <string name="morphe_music_lyrics_romanization_provider_rime">Talaan ng mga salita sa Rime</string>
+  <string name="morphe_music_lyrics_ruby_provider_title">Ruby</string>
+  <string name="morphe_music_lyrics_ruby_provider_local">Offline na Diksyunaryo</string>
+  <string name="morphe_music_lyrics_ruby_style_title">Ruby script</string>
+  <string name="morphe_music_lyrics_ruby_style_entry_hiragana">Hiragana (ひらがな)</string>
+  <string name="morphe_music_lyrics_ruby_style_entry_katakana">Katakana (カタカナ)</string>
+  <string name="morphe_music_lyrics_show_ruby_button_title">Ipakita ang button na Ruby</string>
+  <string name="morphe_music_lyrics_show_ruby_button_summary">I-tap para i-toggle ang mga ruby reading sa itaas ng lyrics; i-long-press para lumipat sa pagitan ng hiragana at katakana. Ginagamit ang mga enabled na ruby provider sa pagkakasunod-sunod ng mga ito</string>
+  <string name="morphe_music_lyrics_ruby_generating">Bumubuo ng ruby…</string>
   <string name="morphe_music_lyrics_use_ai_section_title">Detektahin ang sections gamit ang AI</string>
   <string name="morphe_music_lyrics_use_ai_section_summary">Ginagamit lamang kapag ang provider ay walang label ng section tulad ng Chorus o Verse, na detektahin ng iyong OpenAI-compatible model pagkatapos. Ang pag-edit ng row ay bubukas din ng prompt nito</string>
   <string name="morphe_music_lyrics_ai_config_base_url_hint">API endpoint URL (hal. https://api.openai.com/v1/chat/completions, https://api.anthropic.com/v1/chat/completions, https://generativelanguage.googleapis.com/v1beta/openai/chat/completions)</string>
   <string name="morphe_music_lyrics_ai_prompt_dialog_title">Template ng Prompt</string>
-  <string name="morphe_music_lyrics_ai_prompt_dialog_hint">Mga Placeholder: {language}, {task}, {title}, {artist}, {count}, {lines}</string>
+  <string name="morphe_music_lyrics_ai_prompt_dialog_hint">Mga Placeholder: {task}, {language}, {title}, {artist}, {count}, {lines}. Ang mga hindi kilala ay mananatili kung paano ito itinaype</string>
   <string name="morphe_music_lyrics_ai_prompt_toast_saved">Nai-save na ang prompt</string>
   <string name="morphe_music_lyrics_ai_prompt_toast_endpoint_invalid">Na-save ang prompt, ngunit hindi pa gagamit ang AI endpoint. I-configure muna ito sa ilalim ng AI Settings.</string>
   <string name="morphe_music_lyrics_ai_prompt_toast_reset">Na-reset na ang prompt</string>

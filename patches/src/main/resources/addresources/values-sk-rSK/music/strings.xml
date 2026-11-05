@@ -158,6 +158,37 @@ Stiahnuté skladby sa zobrazia tu"</string>
   <string name="morphe_music_downloads_track_deleted">Sťahovanie bolo odstránené</string>
   <string name="morphe_music_downloads_track_delete_failed">Sťahovanie sa nepodarilo odstrániť</string>
   <string name="morphe_music_downloads_play_failed">Sťahovanie sa nepodarilo prehrať</string>
+  <string name="morphe_music_downloads_playlists">Zoznamy</string>
+  <string name="morphe_music_downloads_playlists_section">Vytvorené zoznamy skladieb (%s)</string>
+  <string name="morphe_music_downloads_playlists_empty">Zatiaľ žiadne lokálne zoznamy skladieb</string>
+  <string name="morphe_music_downloads_playlists_hide">Skryť zoznamy skladieb ▲</string>
+  <string name="morphe_music_downloads_playlist_new">+ Nový zoznam skladieb</string>
+  <string name="morphe_music_downloads_playlist_new_button">Nový zoznam skladieb</string>
+  <string name="morphe_music_downloads_playlist_selected">Vybrané (%s)</string>
+  <string name="morphe_music_downloads_playlist_select_first">Najprv vyberte skladby</string>
+  <string name="morphe_music_downloads_playlist_clear_selection">Zrušiť výber</string>
+  <string name="morphe_music_downloads_playlist_create">Vytvoriť zoznam skladieb</string>
+  <string name="morphe_music_downloads_playlist_create_button">Vytvoriť</string>
+  <string name="morphe_music_downloads_playlist_add">Pridať do zoznamu skladieb</string>
+  <string name="morphe_music_downloads_playlist_added">Pridané do %s</string>
+  <string name="morphe_music_downloads_playlist_name_hint">Názov zoznamu skladieb</string>
+  <string name="morphe_music_downloads_playlist_name_empty">Názov zoznamu skladieb nesmie byť prázdny</string>
+  <string name="morphe_music_downloads_playlist_save_failed">Zoznam skladieb sa nepodarilo uložiť</string>
+  <string name="morphe_music_downloads_playlist_track_count_one">1 skladba</string>
+  <string name="morphe_music_downloads_playlist_no_tracks">V tomto zozname skladieb nie sú žiadne skladby</string>
+  <string name="morphe_music_downloads_playlist_play">Prehrať zoznam skladieb</string>
+  <string name="morphe_music_downloads_playlist_play_all">Prehrať všetko</string>
+  <string name="morphe_music_downloads_playlist_rename">Premenovať</string>
+  <string name="morphe_music_downloads_playlist_rename_title">Premenovať zoznam skladieb</string>
+  <string name="morphe_music_downloads_playlist_save">Uložiť</string>
+  <string name="morphe_music_downloads_playlist_delete">Odstrániť zoznam skladieb</string>
+  <string name="morphe_music_downloads_playlist_delete_title">Odstrániť zoznam skladieb?</string>
+  <string name="morphe_music_downloads_playlist_delete_message">%s bude odstránené. Stiahnuté skladby zostanú zachované</string>
+  <string name="morphe_music_downloads_playlist_deleted">Zoznam skladieb bol odstránený</string>
+  <string name="morphe_music_downloads_playlist_remove_track">Odstrániť z zoznamu skladieb</string>
+  <string name="morphe_music_downloads_playlist_drag_track">Ťahajte na zmenu poradia</string>
+  <string name="morphe_music_downloads_playlist_reorder_hint">%s • Preťahujte za rukoväť na zmenu poradia</string>
+  <string name="morphe_music_downloads_playlist_reorder_done">Hotovo</string>
   <string name="morphe_music_downloads_notification_channel">Sťahovanie zvuku</string>
   <string name="morphe_music_downloads_playback_channel">Offline prehrávanie</string>
   <string name="morphe_music_downloads_unknown_track">Nepodarilo sa identifikovať skladbu na stiahnutie</string>
@@ -168,6 +199,23 @@ Stiahnuté skladby sa zobrazia tu"</string>
   <string name="morphe_music_downloads_progress">Sťahuje sa %s%%</string>
   <string name="morphe_music_downloads_complete">Sťahovanie dokončené</string>
   <string name="morphe_music_downloads_failed">Sťahovanie zlyhalo</string>
+  <string name="morphe_music_downloads_playlist_download_title">Sťahovanie playlistu</string>
+  <string name="morphe_music_downloads_playlist_download_listing">Zoznam skladieb sa sťahuje…</string>
+  <string name="morphe_music_downloads_playlist_download_listing_failed">Nepodarilo sa získať zoznam skladieb playlistu</string>
+  <string name="morphe_music_downloads_playlist_download_all_saved">Už stiahnuté: %s</string>
+  <string name="morphe_music_downloads_playlist_download_confirm_message">"V tomto playliste je %1$s, %2$s ešte nie sú stiahnuté.
+
+Sťahujú sa postupne po jednej, čo môže trvať dlhšie a vyžaduje približne %3$s voľného priestoru"</string>
+  <string name="morphe_music_downloads_playlist_download_confirm_button">Stiahnuť</string>
+  <string name="morphe_music_downloads_playlist_download_progress">Sťahovanie skladby %1$s z %2$s</string>
+  <string name="morphe_music_downloads_playlist_download_complete_with_failures">%1$s stiahnutých, %2$s sa nepodarilo stiahnuť</string>
+  <string name="morphe_music_downloads_playlist_download_already_running">Sťahovanie playlistu už prebieha</string>
+  <string name="morphe_music_downloads_playlist_download_needs_account">Váš účet ešte nie je známy. Skúste to o chvíľu znova</string>
+  <string name="morphe_music_downloads_playlist_download_incomplete">Podarilo sa zoznamovať len časť playlistu. Ak chcete získať zvyšok, klepnite neskôr znova na Stiahnuť</string>
+  <string name="morphe_music_downloads_playlist_download_started">Sťahovanie %s na pozadí</string>
+  <string name="morphe_music_downloads_playlist_download_no_network">Žiadne sieťové pripojenie</string>
+  <string name="morphe_music_downloads_playlist_download_waiting_network">Čakanie na sieť…</string>
+  <string name="morphe_music_downloads_playlist_download_stopped">Zastavené po %1$s z %2$s. Pokračujte klepnutím znova na Stiahnuť</string>
   <!-- misc.settings.settingsPatch -->
   <!-- In languages where "About" is ambiguous, translate this as "About Morphe" (i.e., About this app). -->
   <string name="morphe_settings_music_screen_0_about_title">O aplikácii</string>
@@ -206,6 +254,9 @@ Stiahnuté skladby sa zobrazia tu"</string>
   <string name="morphe_music_hide_comments_community_guidelines_title">Skryť pravidlá komunity</string>
   <string name="morphe_music_hide_comments_context_title">Skryť kontextovú správu</string>
   <string name="morphe_music_hide_comments_emoji_button_title">Skryť tlačidlo Emoji</string>
+  <string name="morphe_music_hide_comments_gif_button_title">Skryť tlačidlo GIF</string>
+  <string name="morphe_music_hide_comments_gifs_and_images_title">Skryť GIF-y a obrázky</string>
+  <string name="morphe_music_hide_comments_gifs_and_images_summary">Skryje GIF-y a obrázky priložené k komentárom a odpoveďam</string>
   <string name="morphe_music_hide_comments_info_button_title">Skryť tlačidlo Info</string>
   <string name="morphe_music_hide_comments_timestamp_button_title">Skryť tlačidlo Časová pečiatka</string>
   <!-- interaction.crossfade.crossfadePatch -->
@@ -572,7 +623,6 @@ Vyžadované cookies: SID, HSID, SSID, SAPISID, __Secure-3PAPISID, __Secure-1PAP
   <string name="morphe_music_lyrics_local_romanization_dict_chinese">Čínske slová (pinyin-pro, ~17 MB)</string>
   <string name="morphe_music_lyrics_local_romanization_dict_cldr">Transliterácia gréčtiny, slovanských cyrilík (vrátane ruštiny, ukrajinčiny, bulharčiny, srbčiny, bielorumčiny, macedónčiny), gruzínčiny, arménčiny, hebrejčiny, arabčiny, amharčiny a syriáčiny (CLDR, ~0,5 MB)</string>
   <string name="morphe_music_lyrics_local_romanization_dict_building">Čítanie %1$s: %2$d%%</string>
-  <string name="morphe_music_lyrics_local_romanization_dict_empty">Vyberte aspoň jeden slovník</string>
   <string name="morphe_music_lyrics_show_refresh_button_title">Preložiť text piesne</string>
   <string name="morphe_music_lyrics_show_refresh_button_summary">Klepnutím prepnite na ďalší kandidát na text; dlhým podržím hľadajte texty podľa názvu pesničky a interpreta</string>
   <string name="morphe_music_lyrics_search_dialog_title">Vyhľadávanie textov</string>
@@ -591,6 +641,10 @@ Vyžadované cookies: SID, HSID, SSID, SAPISID, __Secure-3PAPISID, __Secure-1PAP
   <string name="morphe_music_lyrics_hide_played_summary">Preložený text piesne</string>
   <string name="morphe_music_lyrics_hide_unplayed_title">Preklad bol skopírovaný</string>
   <string name="morphe_music_lyrics_hide_unplayed_summary">Pôvodný text piesne bol skopírovaný</string>
+  <string name="morphe_music_lyrics_dynamic_background_title">Dynamické pozadie</string>
+  <string name="morphe_music_lyrics_dynamic_background_summary">Zobrazí rozmazané pozadie vytvorené z obalu albumu za textom piesne</string>
+  <string name="morphe_music_lyrics_dynamic_background_animated_title">Animovať dynamické pozadie</string>
+  <string name="morphe_music_lyrics_dynamic_background_animated_summary">Počas prehrávania pohýba pozadím a pulzuje ho podľa hudby, ak má YouTube Music povolenie na prístup k mikrofónu. Vypnite pre statické pozadie, ktoré spotrebuje menej batérie</string>
   <string name="morphe_music_lyrics_mediasession_title">Kopírovanie zlyhalo</string>
   <string name="morphe_music_lyrics_mediasession_summary">Zobrazuje aktuálny riadok na zamknutej obrazovke, Android Auto a Bluetooth. Vyžaduje Android 11 alebo novší</string>
   <string name="morphe_music_lyrics_miniplayer_title">Zobraziť text piesne v mini prehrávači</string>
@@ -689,7 +743,7 @@ Texty piesní pochádzajú zo služieb tretích strán, ktoré nie sú spojené,
   <string name="morphe_music_lyrics_hide_info_title">Nahlásiť problém s prekladom</string>
   <string name="morphe_music_lyrics_hide_info_summary">Nahlásiť problém s textom piesne</string>
   <string name="morphe_music_lyrics_swap_trans_roma_title">Problém bol nahlásený</string>
-  <string name="morphe_music_lyrics_swap_trans_roma_summary">ZAPNUTÉ umiestni transkripciu alebo transliteráciu pod texty piesní a preklad nad; VYPNUTÉ ponechá transkripciu alebo transliteráciu hore a preklad dole. Čítanie umiestnené nad každú slabiku sa s ňou posúva, zhora jej slabiky smerom dolu</string>
+  <string name="morphe_music_lyrics_swap_trans_roma_summary">Zmení poradie zobrazenia prekladu a romanizácie pod textom piesne</string>
   <string name="morphe_music_lyrics_force_center_title">Vždy strediť texty piesní</string>
   <string name="morphe_music_lyrics_force_center_summary">ZAPNUTÉ umiestni každý riadok doprostred a ignoruje zarovnanie zdroja vrátane strán duet; VYPNUTÉ zachová zarovnanie, ktoré požadujú texty piesní</string>
   <string name="morphe_music_lyrics_providers_keep_one">Aspoň jeden poskytovateľ musí zostať zapnutý</string>
@@ -697,11 +751,19 @@ Texty piesní pochádzajú zo služieb tretích strán, ktoré nie sú spojené,
   <string name="morphe_music_lyrics_romanization_provider_title">Transkripcia alebo transliterácia</string>
   <string name="morphe_music_lyrics_romanization_provider_local">Offline slovník</string>
   <string name="morphe_music_lyrics_romanization_provider_rime">Zoznam slov Rime</string>
+  <string name="morphe_music_lyrics_ruby_provider_title">Ruby</string>
+  <string name="morphe_music_lyrics_ruby_provider_local">Ofline slovník</string>
+  <string name="morphe_music_lyrics_ruby_style_title">Ruby skript</string>
+  <string name="morphe_music_lyrics_ruby_style_entry_hiragana">Hiragana (ひらがな)</string>
+  <string name="morphe_music_lyrics_ruby_style_entry_katakana">Katakana (カタカナ)</string>
+  <string name="morphe_music_lyrics_show_ruby_button_title">Zobraziť tlačidlo Ruby</string>
+  <string name="morphe_music_lyrics_show_ruby_button_summary">Ťuknutím prepnete zobrazenie ruby nad textom piesne; dlhým stlačením prepnete medzi hiraganou a katakanou. Používa povolených poskytovateľov ruby v uvedenom poradí</string>
+  <string name="morphe_music_lyrics_ruby_generating">Generovanie ruby…</string>
   <string name="morphe_music_lyrics_use_ai_section_title">Detekovať sekcie pomocou AI</string>
   <string name="morphe_music_lyrics_use_ai_section_summary">Používa sa len vtedy, keď poskytovateľ neposkytuje štítky sekcií ako Refrén alebo Sloha, ktoré následne deteguje váš kompatibilný model OpenAI. Úprava riadku tiež otvorí jeho výzvu</string>
   <string name="morphe_music_lyrics_ai_config_base_url_hint">URL koncového bodu API (napr. https://api.openai.com/v1/chat/completions, https://api.anthropic.com/v1/chat/completions, https://generativelanguage.googleapis.com/v1beta/openai/chat/completions)</string>
   <string name="morphe_music_lyrics_ai_prompt_dialog_title">Šablóna promptu</string>
-  <string name="morphe_music_lyrics_ai_prompt_dialog_hint">Zástupníky: {language}, {task}, {title}, {artist}, {count}, {lines}</string>
+  <string name="morphe_music_lyrics_ai_prompt_dialog_hint">Zástupné znaky: {task}, {language}, {title}, {artist}, {count}, {lines}. Neznáme zostanú tak, ako boli napísané</string>
   <string name="morphe_music_lyrics_ai_prompt_toast_saved">Prompt uložený</string>
   <string name="morphe_music_lyrics_ai_prompt_toast_endpoint_invalid">Výzva bola uložená, ale AI endpoint ešte nie je použiteľný. Najprv ho nakonfigurujte pod Nastaveniami AI</string>
   <string name="morphe_music_lyrics_ai_prompt_toast_reset">Prompt resetovaný</string>

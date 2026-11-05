@@ -135,7 +135,7 @@ internal object RiveSplashScreenAnimationViewFingerprint : Fingerprint(
 )
 
 /**
- * 21.32 - 21.34 sets the view that the Rive animation is drawn in,
+ * 21.31 - 21.34 sets the view that the Rive animation is drawn in,
  * with a resource id that was loaded earlier for another view.
  */
 internal object RiveSplashScreenAnimationViewLegacyFingerprint : Fingerprint(
@@ -412,5 +412,24 @@ internal object SpinnerThemeHookFingerprint : Fingerprint(
             opcode = Opcode.CHECK_CAST,
             location = MatchAfterWithin(3)
         )
+    )
+)
+
+/**
+ * If the status bar shows dark icons on a color, which it does only above a luminance of 0.8.
+ */
+internal object StatusBarDarkIconsFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC),
+    returnType = "Z",
+    parameters = listOf("I"),
+    filters = listOf(
+        methodCall(
+            opcode = Opcode.INVOKE_STATIC,
+            parameters = listOf("I"),
+            returnType = "D"
+        ),
+        opcode(Opcode.MOVE_RESULT_WIDE, MatchAfterImmediately()),
+        literal(0.8, location = MatchAfterImmediately()),
+        opcode(Opcode.CMPL_DOUBLE, MatchAfterImmediately())
     )
 )

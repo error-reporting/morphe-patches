@@ -151,7 +151,7 @@ val downloadsPatch = bytecodePatch(
         setExtensionIsPatchIncluded(EXTENSION_SHORTS_DOWNLOAD_BUTTON)
         setExtensionIsPatchIncluded(EXTENSION_EXPORT_DOWNLOAD_BUTTON)
 
-        OfflineVideoEndpointFingerprint.method.addInstructionsWithLabels(
+        YouTubeOfflineVideoEndpointFingerprint.method.addInstructionsWithLabels(
             0,
             """
                 invoke-static/range { p3 .. p3 }, $EXTENSION_CLASS->inAppDownloadButtonOnClick(Ljava/lang/String;)Z
@@ -164,7 +164,7 @@ val downloadsPatch = bytecodePatch(
         )
 
         // Open the external downloader with the playlist link, instead of saving the playlist.
-        OfflinePlaylistEndpointFingerprint.method.addInstructionsWithLabels(
+        YouTubeOfflinePlaylistEndpointFingerprint.method.addInstructionsWithLabels(
             0,
             """
                 # The parameter registers can be higher than 15.
@@ -360,8 +360,9 @@ val downloadsPatch = bytecodePatch(
 
         // Commands run by the extension have no interaction logger, which saving a video
         // can use without checking it is set. The logger interface has a logger that logs nothing.
-        val interactionLoggerType = InteractionLoggerContextFingerprint.instructionMatches.last()
-            .instruction.getReference<TypeReference>()!!.type
+        // Everything reading the logger from a context uses the same type, so any match will do.
+        val interactionLoggerType = InteractionLoggerContextFingerprint.matchAll().first()
+            .instructionMatches.last().instruction.getReference<TypeReference>()!!.type
         val noOpInteractionLogger = classDefBy(interactionLoggerType).fields.single { field ->
             AccessFlags.STATIC.isSet(field.accessFlags) && field.type == interactionLoggerType
         }
