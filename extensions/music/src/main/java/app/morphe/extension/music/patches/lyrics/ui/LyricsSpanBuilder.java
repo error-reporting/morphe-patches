@@ -22,10 +22,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 import app.morphe.extension.music.patches.lyrics.LyricsPresentation;
 import app.morphe.extension.music.patches.lyrics.derive.LyricsRomanizer;
@@ -38,21 +36,43 @@ import app.morphe.extension.music.patches.lyrics.romanizers.ScriptDetector;
 import app.morphe.extension.music.settings.Settings;
 import app.morphe.extension.shared.ui.Dim;
 
-final class LyricsSpanBuilder {
+public final class LyricsSpanBuilder {
     static final float TRANSLATION_RELATIVE_SIZE = 0.7f;
+    /** Furigana is drawn at half the size of the kanji it reads. */
+    static final float RUBY_RELATIVE_SIZE = 0.5f;
     static final float MAIN_LINE_SPACING = 1.22f;
 
     /**
      * @param hasTrailingSpace Whether a space follows the word, which a syllable reading keeps so
      *                         the readings of two words do not run together.
+     * @param ruby             The furigana drawn above the word.
+     * @param averaged         The line's own time spread evenly over its words, not the source's
+     *                         word timings.
      */
-    record WordTiming(int start, int end, long startMs, long endMs,
-                      @Nullable String romaji, boolean hasTrailingSpace) {
+    public record WordTiming(int start, int end, long startMs, long endMs,
+                             @Nullable String romaji, boolean hasTrailingSpace,
+                             @Nullable String ruby, boolean averaged) {
+
+        public WordTiming(int start, int end, long startMs, long endMs,
+                          @Nullable String romaji, boolean hasTrailingSpace,
+                          @Nullable String ruby) {
+            this(start, end, startMs, endMs, romaji, hasTrailingSpace, ruby, false);
+        }
+
+        public WordTiming(int start, int end, long startMs, long endMs,
+                          @Nullable String romaji, boolean hasTrailingSpace, boolean averaged) {
+            this(start, end, startMs, endMs, romaji, hasTrailingSpace, null, averaged);
+        }
 
         /** A reading ending in a space stands for the space after its word. */
         WordTiming(int start, int end, long startMs, long endMs, @Nullable String romaji) {
             this(start, end, startMs, endMs, romaji,
-                    romaji != null && romaji.endsWith(" "));
+                    romaji != null && romaji.endsWith(" "), null, false);
+        }
+
+        public WordTiming(int start, int end, long startMs, long endMs,
+                          @Nullable String romaji, boolean hasTrailingSpace) {
+            this(start, end, startMs, endMs, romaji, hasTrailingSpace, null, false);
         }
     }
 
@@ -119,7 +139,7 @@ final class LyricsSpanBuilder {
             final int start = formatted.offset(word.start() + originalStart) - base;
             final int end = formatted.offset(word.end() + originalStart) - base;
             if (end > start) mapped.add(new WordTiming(start, end, word.startMs(), word.endMs(),
-                    word.romaji(), word.hasTrailingSpace()));
+                    word.romaji(), word.hasTrailingSpace(), word.ruby(), word.averaged()));
         }
         return new PresentedLine(new BuildResult(text, raw.unsungSpan(),
                 formatted.offset(raw.transStart()), formatted.offset(raw.transEnd()),
@@ -307,7 +327,8 @@ final class LyricsSpanBuilder {
                     }
                     final int start = text.length();
                     text.append(reading);
-                    spans.add(new WordTiming(start, text.length(), word.startMs(), word.endMs(), null));
+                    spans.add(new WordTiming(start, text.length(), word.startMs(), word.endMs(),
+                            null, false, null, timings != null && isEntirelyAveraged(timings)));
                     if (found >= 0) {
                         at = found + own.length();
                         previous = own;
@@ -333,23 +354,33 @@ final class LyricsSpanBuilder {
             @Nullable List<LyricsLine> romanizedLines,
             boolean perWordRomaji,
             @Nullable List<WordTiming> timings,
-            String mainText) {
+            String mainText,
+            boolean embeddedReading) {
         if (timings == null || timings.isEmpty() || mainText.isEmpty()) {
             return null;
         }
-        if (romanizedLines == null && !perWordRomaji) {
+        final boolean wantRoman = romanizedLines != null || perWordRomaji;
+        final boolean lineHasRuby = hasAnyRuby(timings);
+        if (!lineHasRuby && isEntirelyAveraged(timings) && !Settings.LYRICS_WORD_SYNC.get()) {
+            return null;
+        }
+        if (!wantRoman && !lineHasRuby) {
             return null;
         }
         String cleanMain = stripBidiControls(mainText).trim();
-        if (cleanMain.isEmpty() || ScriptDetector.containsRtl(cleanMain)
-                || (ScriptDetector.detect(cleanMain) == ScriptDetector.Script.OTHER
-                && !ScriptDetector.containsCjk(cleanMain))
-                || LyricsRomanizer.isPurelyLatinScript(cleanMain)) {
+        if (!lineHasRuby) {
+            if (cleanMain.isEmpty() || ScriptDetector.containsRtl(cleanMain)
+                    || (ScriptDetector.detect(cleanMain) == ScriptDetector.Script.OTHER
+                    && !ScriptDetector.containsCjk(cleanMain))
+                    || LyricsRomanizer.isPurelyLatinScript(cleanMain)) {
+                return null;
+            }
+        } else if (cleanMain.isEmpty() || ScriptDetector.containsRtl(cleanMain)) {
             return null;
         }
 
-        String wholeRoman = lineRomanizationAt(line, index, romanizedLines);
-        if (wholeRoman != null && stripBidiControls(wholeRoman).trim().equalsIgnoreCase(cleanMain)) {
+        String wholeRoman = wantRoman ? lineRomanizationAt(line, index, romanizedLines) : null;
+        if (!lineHasRuby && wholeRoman != null && stripBidiControls(wholeRoman).trim().equalsIgnoreCase(cleanMain)) {
             return null;
         }
 
@@ -365,24 +396,38 @@ final class LyricsSpanBuilder {
             isLatinWord[i] = LyricsRomanizer.isPurelyLatinScript(own);
         }
 
+        // Pre-compute ruby per word so ruby==original can be filtered before alignment.
+        String[] ownRuby = new String[n];
+        boolean[] rubyIsOriginal = new boolean[n];
+        for (int i = 0; i < n; i++) {
+            String ruby = timings.get(i).ruby();
+            ownRuby[i] = ruby;
+            rubyIsOriginal[i] = ruby != null && !ruby.isEmpty()
+                    && ruby.equalsIgnoreCase(ownWords[i]);
+        }
+
         String[] romTexts = new String[n];
         boolean[] romTrailingSpaces = new boolean[n];
         boolean populated = false;
 
-        // A provider that reads every word itself has already said which reading goes where.
-        boolean hasNativeTimingRomaji = true;
+        final boolean allowTransliteration = Settings.LYRICS_ALLOW_TRANSLITERATION.get();
+        boolean hasNativeTimingRomaji = wantRoman;
         boolean anyNativeNonEmpty = false;
-        for (int i = 0; i < n; i++) {
-            String tr = timings.get(i).romaji();
-            if (!isLatinWord[i]) {
-                if (tr == null || tr.trim().isEmpty() || ScriptDetector.containsCjk(tr)) {
-                    hasNativeTimingRomaji = false;
-                    break;
+        if (wantRoman) {
+            for (int i = 0; i < n; i++) {
+                if (isLatinWord[i]) {
+                    continue;
                 }
-                anyNativeNonEmpty = true;
+                String tr = timings.get(i).romaji();
+                if (tr != null && !tr.trim().isEmpty()
+                        && (allowTransliteration || !ScriptDetector.containsCjk(tr))) {
+                    anyNativeNonEmpty = true;
+                } else {
+                    hasNativeTimingRomaji = false;
+                }
             }
         }
-        if (hasNativeTimingRomaji && anyNativeNonEmpty) {
+        if (wantRoman && anyNativeNonEmpty && (hasNativeTimingRomaji || embeddedReading)) {
             for (int i = 0; i < n; i++) {
                 if (isLatinWord[i]) {
                     romTexts[i] = "";
@@ -390,8 +435,16 @@ final class LyricsSpanBuilder {
                 } else {
                     String r = timings.get(i).romaji();
                     r = r != null ? stripBidiControls(isSecondaryLine(line) ? LyricsBracketSplitter.stripAllBrackets(r) : r) : "";
-                    romTrailingSpaces[i] = r.endsWith(" ") || timings.get(i).hasTrailingSpace();
-                    romTexts[i] = r.trim();
+                    final String trimmed = r.trim();
+                    // A source that reads only some words must not have the rest read for it.
+                    if (trimmed.isEmpty() || (!allowTransliteration && ScriptDetector.containsCjk(trimmed))
+                            || trimmed.equalsIgnoreCase(ownWords[i])) {
+                        romTexts[i] = "";
+                        romTrailingSpaces[i] = false;
+                    } else {
+                        romTrailingSpaces[i] = r.endsWith(" ") || timings.get(i).hasTrailingSpace();
+                        romTexts[i] = trimmed;
+                    }
                 }
             }
             populated = true;
@@ -399,14 +452,16 @@ final class LyricsSpanBuilder {
 
         // Otherwise the line's whole reading, or one joined up from its words, is cut into pieces that
         // best match a reading worked out locally for each syllable.
-        if (!populated) {
+        if (wantRoman && !populated) {
             if (wholeRoman == null || wholeRoman.trim().isEmpty()) {
                 List<Word> rWords = readingWords(line, index, romanizedLines);
                 if (!rWords.isEmpty() && anyReading(rWords)) {
                     StringBuilder sb = new StringBuilder();
                     for (Word rw : rWords) {
                         String r = rw.romaji();
-                        if (r != null && !r.trim().isEmpty() && !ScriptDetector.containsCjk(r)) {
+                        // Skip romaji that equals the original, as it is not a reading.
+                        if (r != null && !r.trim().isEmpty() && !r.trim().equalsIgnoreCase(rw.text().trim())
+                                && (allowTransliteration || !ScriptDetector.containsCjk(r))) {
                             if (isSecondaryLine(line)) {
                                 r = LyricsBracketSplitter.stripAllBrackets(r);
                             }
@@ -427,37 +482,51 @@ final class LyricsSpanBuilder {
             }
 
             List<String> guides = new ArrayList<>(n);
-            List<String> syllables = new ArrayList<>(n);
             for (int i = 0; i < n; i++) {
-                String own = ownWords[i];
-                syllables.add(own);
-                guides.add(phoneticGuideFor(own, mainText, isLatinWord[i]));
+                // Skip ruby that equals the original, as the guide would misalign allocateReading.
+                guides.add(rubyIsOriginal[i] ? "" : phoneticGuideFor(ownWords[i], mainText, isLatinWord[i]));
+            }
+
+            // Han in wholeRoman is original text, not a reading; replace with spaces.
+            if (wholeRoman != null) {
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < wholeRoman.length(); i++) {
+                    sb.append(ScriptDetector.isHan(wholeRoman.charAt(i)) ? ' ' : wholeRoman.charAt(i));
+                }
+                String filtered = sb.toString().trim();
+                wholeRoman = filtered.isEmpty() ? null : filtered;
             }
 
             if (wholeRoman != null && !wholeRoman.trim().isEmpty()) {
-                List<String> aligned = alignPhoneticRomaji(
-                        stripBidiControls(wholeRoman).trim(), guides, syllables, isLatinWord);
+                String[] aligned = LocalRomanizer.allocateReading(
+                        stripBidiControls(wholeRoman).trim(), n, guides);
                 for (int i = 0; i < n; i++) {
                     if (isLatinWord[i]) {
                         romTexts[i] = "";
                         romTrailingSpaces[i] = false;
                         continue;
                     }
-                    String chunk = i < aligned.size() && aligned.get(i) != null ? aligned.get(i) : "";
+                    String chunk = i < aligned.length && aligned[i] != null ? aligned[i] : "";
                     final boolean chunkTrailingSpace = chunk.endsWith(" ");
                     chunk = chunk.trim();
-                    if (chunk.isEmpty() || ScriptDetector.containsCjk(chunk)
+                    if (chunk.isEmpty() || (!allowTransliteration && ScriptDetector.containsCjk(chunk))
                             || chunk.equalsIgnoreCase(ownWords[i])) {
-                        chunk = guides.get(i);
+                        // The source read this line, so a hole it left stays a hole.
+                        chunk = embeddedReading ? "" : guides.get(i);
                     }
-                    // A Korean word written without a space reads as one word too:
-                    // "yeogijeogi seo" becomes "yeogijeogiseo".
+                    // Korean without spaces reads as one word
                     if (!ownWords[i].contains(" ") && chunk.contains(" ")
                             && ScriptDetector.contains(ownWords[i], Character.UnicodeScript.HANGUL)) {
                         chunk = chunk.replace(" ", "");
                     }
                     romTexts[i] = chunk;
                     romTrailingSpaces[i] = chunkTrailingSpace;
+                }
+                // Single-token reading can't wrap; spread over syllables so the line can
+                // break instead of running off the right edge.
+                if (!embeddedReading && n > 1 && countFilledChunks(aligned) <= 1) {
+                    spreadSingleReading(stripBidiControls(wholeRoman).trim(),
+                            romTexts, romTrailingSpaces, isLatinWord, guides, ownWords);
                 }
                 populated = true;
             } else {
@@ -468,7 +537,7 @@ final class LyricsSpanBuilder {
                         romTexts[i] = "";
                     } else {
                         String g = guides.get(i);
-                        romTexts[i] = (g != null && !g.equalsIgnoreCase(ownWords[i]) && !ScriptDetector.containsCjk(g))
+                        romTexts[i] = (g != null && !g.equalsIgnoreCase(ownWords[i]) && (allowTransliteration || !ScriptDetector.containsCjk(g)))
                                 ? g.trim() : "";
                         if (!romTexts[i].isEmpty()) {
                             anyGuide = true;
@@ -479,11 +548,12 @@ final class LyricsSpanBuilder {
             }
         }
 
-        if (!populated) {
+        if (!populated && !lineHasRuby) {
             return null;
         }
 
         boolean anyRoman = false;
+        boolean anyRuby = false;
         List<WordTiming> out = new ArrayList<>(n);
         for (int i = 0; i < n; i++) {
             WordTiming wt = timings.get(i);
@@ -492,7 +562,7 @@ final class LyricsSpanBuilder {
             String own = ownWords[i];
 
             String r = (isLatinWord[i] || romTexts[i] == null) ? "" : romTexts[i].trim();
-            if (!r.isEmpty() && (r.equalsIgnoreCase(own) || ScriptDetector.containsCjk(r))) {
+            if (!r.isEmpty() && (r.equalsIgnoreCase(own) || (!allowTransliteration && ScriptDetector.containsCjk(r)))) {
                 r = "";
             }
 
@@ -507,10 +577,133 @@ final class LyricsSpanBuilder {
                 anyRoman = true;
                 r = r + (trailSpace ? " " : "");
             }
-            out.add(new WordTiming(wt.start(), wt.end(), wt.startMs(), wt.endMs(), r, trailSpace));
+            final String ruby = lineHasRuby && ownRuby[i] != null && !ownRuby[i].isEmpty()
+                    ? ownRuby[i] : null;
+            // Skip ruby that repeats the word as written, since the original already shows it.
+            final String drawnRuby = ruby != null && !ruby.equalsIgnoreCase(own) ? ruby : null;
+            if (drawnRuby != null) {
+                anyRuby = true;
+            }
+            out.add(new WordTiming(wt.start(), wt.end(), wt.startMs(), wt.endMs(),
+                    r.isEmpty() ? null : r, trailSpace, drawnRuby, wt.averaged()));
         }
 
-        return anyRoman ? out : null;
+        return (anyRoman || anyRuby) ? out : null;
+    }
+
+    private static int countFilledChunks(String[] chunks) {
+        int filled = 0;
+        for (String chunk : chunks) {
+            if (chunk != null && !chunk.trim().isEmpty()) {
+                filled++;
+            }
+        }
+        return filled;
+    }
+
+    /** Spreads a reading the tokenizer couldn't split over its syllables so it can wrap. */
+    private static void spreadSingleReading(
+            String reading, String[] romTexts, boolean[] romTrailingSpaces,
+            boolean[] isLatinWord, List<String> guides, String[] ownWords) {
+        final int n = romTexts.length;
+        if (reading.isEmpty() || n < 2) {
+            return;
+        }
+        int readingSlots = 0;
+        for (int i = 0; i < n; i++) {
+            if (!isLatinWord[i] && hasReadableText(ownWords[i])) {
+                readingSlots++;
+            }
+        }
+        if (readingSlots < 2) {
+            return;
+        }
+
+        // Each syllable's own local reading splits the line the way it is said, when known.
+        boolean allGuided = true;
+        for (int i = 0; i < n; i++) {
+            if (isLatinWord[i] || !hasReadableText(ownWords[i])) {
+                continue;
+            }
+            final String guide = guides.get(i);
+            if (guide == null || guide.trim().isEmpty() || guide.equalsIgnoreCase(ownWords[i])) {
+                allGuided = false;
+                break;
+            }
+        }
+        if (allGuided) {
+            for (int i = 0; i < n; i++) {
+                romTexts[i] = isLatinWord[i] ? "" : guides.get(i).trim();
+                romTrailingSpaces[i] = false;
+            }
+            return;
+        }
+
+        // Shorter reading = one syllable's, leave where the allocator put it
+        if (reading.codePointCount(0, reading.length()) <= readingSlots) {
+            return;
+        }
+
+        // Otherwise cut it by how much of the line each syllable is written with.
+        final int[] weights = new int[n];
+        int totalWeight = 0;
+        for (int i = 0; i < n; i++) {
+            if (isLatinWord[i] || !hasReadableText(ownWords[i])) {
+                continue;
+            }
+            final int weight = ownWords[i].codePointCount(0, ownWords[i].length());
+            weights[i] = weight;
+            totalWeight += weight;
+        }
+        if (totalWeight <= 0) {
+            return;
+        }
+        final int codePoints = reading.codePointCount(0, reading.length());
+        int previous = 0;
+        int seenWeight = 0;
+        int lastSlot = -1;
+        for (int i = 0; i < n; i++) {
+            if (isLatinWord[i] || weights[i] <= 0) {
+                romTexts[i] = "";
+                romTrailingSpaces[i] = false;
+                continue;
+            }
+            lastSlot = i;
+            seenWeight += weights[i];
+            final int cutCodePoint = Math.min(codePoints,
+                    Math.max(0, Math.round((float) codePoints * seenWeight / totalWeight)));
+            final int cut = reading.offsetByCodePoints(0, cutCodePoint);
+            romTexts[i] = reading.substring(previous, cut).trim();
+            romTrailingSpaces[i] = false;
+            previous = Math.max(previous, cut);
+        }
+        if (lastSlot >= 0 && previous < reading.length()) {
+            romTexts[lastSlot] = (romTexts[lastSlot] + reading.substring(previous)).trim();
+        }
+    }
+
+    /** Whether a slot is written with something a reading can belong to, not just punctuation. */
+    private static boolean hasReadableText(String text) {
+        if (text == null) {
+            return false;
+        }
+        for (int i = 0; i < text.length(); ) {
+            final int cp = text.codePointAt(i);
+            if (Character.isLetterOrDigit(cp)) {
+                return true;
+            }
+            i += Character.charCount(cp);
+        }
+        return false;
+    }
+
+    private static boolean isEntirelyAveraged(List<WordTiming> timings) {
+        for (WordTiming timing : timings) {
+            if (!timing.averaged()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -526,200 +719,6 @@ final class LyricsSpanBuilder {
         }
         final String reading = LocalRomanizer.syllableReading(ownWord, fullLineText);
         return reading != null ? reading : "";
-    }
-
-    /**
-     * Cuts a whole-line reading into one piece per syllable, choosing the cuts that make each piece
-     * closest to that syllable's local reading.
-     */
-    private static List<String> alignPhoneticRomaji(
-            String fullRoman,
-            List<String> guides,
-            List<String> syllables,
-            boolean[] isLatinWord) {
-        final int N = fullRoman.length();
-        final int M = guides.size();
-        if (M == 0) {
-            return Collections.emptyList();
-        }
-        if (N == 0) {
-            return new ArrayList<>(Collections.nCopies(M, ""));
-        }
-
-        boolean anyGuide = false;
-        for (String g : guides) {
-            if (g != null && !g.trim().isEmpty()) {
-                anyGuide = true;
-                break;
-            }
-        }
-        if (!anyGuide) {
-            String[] split = fullRoman.trim().split("\\s+");
-            List<String> chunks = new ArrayList<>(M);
-            for (int i = 0; i < M; i++) {
-                final int tokStart = (i * split.length) / M;
-                final int tokEnd = (i == M - 1) ? split.length : (((i + 1) * split.length) / M);
-                StringBuilder sb = new StringBuilder();
-                for (int k = tokStart; k < tokEnd && k < split.length; k++) {
-                    //noinspection SizeReplaceableByIsEmpty
-                    if (sb.length() > 0) sb.append(' ');
-                    sb.append(split[k]);
-                }
-                //noinspection SizeReplaceableByIsEmpty
-                if (i < M - 1 && sb.length() > 0) sb.append(' ');
-                chunks.add(sb.toString());
-            }
-            return chunks;
-        }
-
-        double[][] dp = new double[M + 1][N + 1];
-        int[][] path = new int[M + 1][N + 1];
-        for (int i = 0; i <= M; i++) {
-            Arrays.fill(dp[i], Double.MAX_VALUE);
-            Arrays.fill(path[i], -1);
-        }
-        dp[0][0] = 0.0;
-
-        for (int i = 1; i <= M; i++) {
-            String guideRom = guides.get(i - 1) != null ? guides.get(i - 1) : "";
-            final boolean isLatin = isLatinWord[i - 1];
-            String origSyl = syllables.get(i - 1);
-            final int guideLen = Math.max(1, guideRom.length());
-
-            final int minLen = isLatin ? Math.max(1, guideLen - 1) : 1;
-            final int maxLen = isLatin
-                    ? guideLen + 4
-                    : Math.max(guideLen * 3 + 5, Math.max(origSyl.length() * 5, 16));
-
-            for (int j = 1; j <= N; j++) {
-                double bestCost = Double.MAX_VALUE;
-                int bestPrevJ = -1;
-
-                for (int len = minLen; len <= maxLen; len++) {
-                    final int k = j - len;
-                    if (k < 0) {
-                        break;
-                    }
-                    if (dp[i - 1][k] >= Double.MAX_VALUE * 0.5) {
-                        continue;
-                    }
-                    String candidate = fullRoman.substring(k, j);
-                    if (candidate.charAt(0) == ' ' && candidate.trim().length() > 0) {
-                        continue;
-                    }
-                    final double cost = dp[i - 1][k] + phoneticMatchCost(candidate, guideRom, isLatin);
-                    if (cost < bestCost) {
-                        bestCost = cost;
-                        bestPrevJ = k;
-                    }
-                }
-                dp[i][j] = bestCost;
-                path[i][j] = bestPrevJ;
-            }
-        }
-
-        List<String> results = new ArrayList<>(Collections.nCopies(M, ""));
-        int currJ = N;
-        if (dp[M][N] >= Double.MAX_VALUE * 0.5) {
-            double minEndCost = Double.MAX_VALUE;
-            for (int k = N; k >= 0; k--) {
-                if (dp[M][k] < minEndCost) {
-                    minEndCost = dp[M][k];
-                    currJ = k;
-                }
-            }
-        }
-
-        for (int i = M; i > 0; i--) {
-            final int prevJ = path[i][currJ];
-            if (prevJ < 0) {
-                results.set(i - 1, "");
-            } else {
-                results.set(i - 1, fullRoman.substring(prevJ, currJ));
-                currJ = prevJ;
-            }
-        }
-
-        if (currJ > 0 && !results.isEmpty()) {
-            results.set(0, fullRoman.substring(0, currJ) + results.get(0));
-        }
-        int totalLen = 0;
-        for (String r : results) {
-            totalLen += r.length();
-        }
-        if (totalLen < N && !results.isEmpty()) {
-            final int safeStart = Math.min(N, Math.max(0, totalLen));
-            results.set(M - 1, results.get(M - 1) + fullRoman.substring(safeStart));
-        }
-        return results;
-    }
-
-    private static double phoneticMatchCost(String candidate, String guide, boolean isLatin) {
-        String cTrim = candidate.trim();
-        String gTrim = guide.trim();
-        if (cTrim.isEmpty() && !gTrim.isEmpty()) {
-            return 50.0;
-        }
-        if (isLatin) {
-            final int dist = levenshtein(cTrim.toLowerCase(Locale.ROOT), gTrim.toLowerCase(Locale.ROOT));
-            return dist * 50.0 + Math.abs(cTrim.length() - gTrim.length()) * 0.5;
-        }
-        if (gTrim.isEmpty()) {
-            return cTrim.length() * 1.2 + (candidate.endsWith(" ") ? -0.3 : 0.0);
-        }
-        String cCompact = compactPhonetic(cTrim, false);
-        String gCompact = compactPhonetic(gTrim, false);
-        final int rawDist = levenshtein(cCompact, gCompact);
-        final int phonDist = levenshtein(compactPhonetic(cTrim, true), compactPhonetic(gTrim, true));
-        final double dist = Math.min(rawDist, phonDist + 0.25);
-        final int lenDiff = Math.abs(cCompact.length() - gCompact.length());
-        final double spaceBonus = candidate.endsWith(" ") ? -0.35 : 0.0;
-        return dist * 2.0 + lenDiff * 0.8 + spaceBonus;
-    }
-
-    private static String compactPhonetic(String s, boolean foldConsonants) {
-        StringBuilder sb = new StringBuilder(s.length());
-        for (int i = 0; i < s.length(); i++) {
-            char c = Character.toLowerCase(s.charAt(i));
-            if (c == ' ' || c == '-' || c == '\'') {
-                continue;
-            }
-            if (foldConsonants) {
-                c = switch (c) {
-                    case 'r' -> 'l';
-                    case 'p' -> 'b';
-                    case 'k' -> 'g';
-                    case 't' -> 'd';
-                    default -> c;
-                };
-            }
-            sb.append(c);
-        }
-        return sb.toString();
-    }
-
-    private static int levenshtein(String s1, String s2) {
-        final int len1 = s1.length();
-        final int len2 = s2.length();
-        if (len1 == 0) return len2;
-        if (len2 == 0) return len1;
-        int[] prev = new int[len2 + 1];
-        int[] curr = new int[len2 + 1];
-        for (int j = 0; j <= len2; j++) {
-            prev[j] = j;
-        }
-        for (int i = 1; i <= len1; i++) {
-            curr[0] = i;
-            final char c1 = s1.charAt(i - 1);
-            for (int j = 1; j <= len2; j++) {
-                final int cost = (c1 == s2.charAt(j - 1)) ? 0 : 1;
-                curr[j] = Math.min(Math.min(curr[j - 1] + 1, prev[j] + 1), prev[j - 1] + cost);
-            }
-            int[] tmp = prev;
-            prev = curr;
-            curr = tmp;
-        }
-        return prev[len2];
     }
 
     /**
@@ -797,27 +796,18 @@ final class LyricsSpanBuilder {
             }
             closed.add(end > span.endMs()
                     ? new WordTiming(span.start(), span.end(), span.startMs(), end,
-                    span.romaji(), span.hasTrailingSpace())
+                    span.romaji(), span.hasTrailingSpace(), span.ruby(), span.averaged())
                     : span);
         }
         return closed;
-    }
-
-    /**
-     * A one-word line is swept by character across its word's span, but only when it has one: a
-     * line timed only as a whole lights in one go like every other such line in the song.
-     */
-    private static boolean hasTimedWord(LyricsLine line) {
-        List<Word> words = line.words();
-        return words.size() > 1
-                || (words.size() == 1 && words.get(0).endMs() > words.get(0).startMs());
     }
 
     static List<WordTiming> computeWordTimings(List<LyricsLine> lines, int index,
                                                boolean splitWordlessLine) {
         LyricsLine line = lines.get(index);
         String lineText = displayLineText(line);
-        if (countWords(lineText) == 1 && hasTimedWord(line)) {
+        // A lone word with furigana stays whole, so its reading sits over all of it.
+        if (!hasAnyRuby(line) && countWords(lineText) == 1 && line.hasWordTimings()) {
             long rangeStart = line.startTimeMs();
             if (rangeStart < 0 && line.hasWords()) {
                 rangeStart = line.words().get(0).startMs();
@@ -852,17 +842,22 @@ final class LyricsSpanBuilder {
                 if (!synthesized.isEmpty()) {
                     return synthesized;
                 }
+            } else if (lineStart <= 0) {
+                // Plain text has no timing; a dummy range lets the per-syllable
+                // romaji align under each character.
+                List<WordTiming> synthesized = synthesizeLineWords(lineText, 0, 1);
+                if (!synthesized.isEmpty()) {
+                    return synthesized;
+                }
             }
         }
         return computeWordTimingsFromWords(line);
     }
 
     /**
-     * Spreads a line's own span across its words.
+     * Spreads a line's own span across its words, counted as {@link #countWords} counts them.
      *
-     * <p>A Han, Hangul or kana character is said as a syllable of its own and so counts as a word
-     * on its own, the same way {@link #countWords} counts it. Letters are said as the word they
-     * spell, so they are taken a run at a time.
+     * <p>Nothing here comes from the source, so every word is marked averaged.
      */
     private static List<WordTiming> synthesizeLineWords(String text, long startMs, long endMs) {
         int[] bounds = wordBoundaries(text);
@@ -889,7 +884,7 @@ final class LyricsSpanBuilder {
             final boolean trailSpace = bounds[i + 1] < text.length()
                     && Character.isWhitespace(text.charAt(bounds[i + 1]));
             timings.add(new WordTiming(bounds[i], bounds[i + 1], wordStart,
-                    Math.max(wordEnd, wordStart + 1), null, trailSpace));
+                    Math.max(wordEnd, wordStart + 1), null, trailSpace, true));
             seen++;
         }
         return timings;
@@ -957,7 +952,7 @@ final class LyricsSpanBuilder {
             final long clusterEnd = i + 1 == clusterCount
                     ? endMs
                     : startMs + (endMs - startMs) * (i + 1) / clusterCount;
-            timings.add(new WordTiming(boundaries[i], boundaries[i + 1], clusterStart, clusterEnd, null));
+            timings.add(new WordTiming(boundaries[i], boundaries[i + 1], clusterStart, clusterEnd, null, false, true));
         }
         return timings;
     }
@@ -1007,13 +1002,9 @@ final class LyricsSpanBuilder {
         return words + (inWord ? 1 : 0);
     }
 
+    /** The ranges live in {@link ScriptDetector}, so a syllable here is a syllable there too. */
     static boolean isCjkCodePoint(int codePoint) {
-        return (codePoint >= 0x3400 && codePoint <= 0x4DBF)
-                || (codePoint >= 0x4E00 && codePoint <= 0x9FFF)
-                || (codePoint >= 0xF900 && codePoint <= 0xFAFF)
-                || (codePoint >= 0xAC00 && codePoint <= 0xD7A3)
-                || (codePoint >= 0x3040 && codePoint <= 0x30FF)
-                || (codePoint >= 0x31F0 && codePoint <= 0x31FF);
+        return ScriptDetector.isCjkCodePoint(codePoint);
     }
 
     private static int indexOfIgnoreCase(String haystack, String needle, int fromIndex) {
@@ -1029,7 +1020,7 @@ final class LyricsSpanBuilder {
 
     /** The line's own word timings, with any text they leave out lit along with its neighbours. */
     private static List<WordTiming> computeWordTimingsFromWords(LyricsLine line) {
-        if (!line.hasWordTimings()) {
+        if (!line.hasWordTimings() && !hasAnyRuby(line)) {
             return Collections.emptyList();
         }
 
@@ -1042,6 +1033,8 @@ final class LyricsSpanBuilder {
 
         // The drawn text of a background vocal has lost its brackets, so its words lose them too.
         final boolean secondary = isSecondaryLine(line);
+        // Ruby on a plain-text line has no real timing; all its timings are averaged.
+        final boolean averaged = !line.hasWordTimings();
         int offset = 0;
         for (Word word : line.words()) {
             String rawWordText = secondary
@@ -1082,14 +1075,14 @@ final class LyricsSpanBuilder {
                     String partRom = (romParts != null && romParts.length == parts.length)
                             ? romParts[pi] : null;
                     offset = appendMatchedWordTiming(
-                            timings, text, textLength, offset, part,
-                            curStartMs, partEndMs, partRom, !isLast || wordTrailingSpace);
+                            timings, text, textLength, offset, part, wordToken(part),
+                            curStartMs, partEndMs, partRom, !isLast || wordTrailingSpace, word.ruby(), averaged);
                     curStartMs = partEndMs;
                 }
             } else {
                 offset = appendMatchedWordTiming(
-                        timings, text, textLength, offset, trimmed,
-                        word.startMs(), word.endMs(), rawRom, wordTrailingSpace);
+                        timings, text, textLength, offset, trimmed, wordToken(trimmed),
+                        word.startMs(), word.endMs(), rawRom, wordTrailingSpace, word.ruby(), averaged);
             }
         }
 
@@ -1103,38 +1096,130 @@ final class LyricsSpanBuilder {
         return timings;
     }
 
+    private static int findToken(String text, int offset, String token) {
+        int start = text.indexOf(token, offset);
+        return start < 0 ? indexOfIgnoreCase(text, token, offset) : start;
+    }
+
+    /** A source may wrap a word the line draws bare. */
+    private static String wordToken(String word) {
+        int start = 0;
+        int end = word.length();
+        while (start < end && isSurroundingMark(word.charAt(start))) {
+            start++;
+        }
+        while (end > start && isSurroundingMark(word.charAt(end - 1))) {
+            end--;
+        }
+        return start == end ? word : word.substring(start, end);
+    }
+
+    private static boolean isSurroundingMark(char c) {
+        return Character.isWhitespace(c)
+                || c == '"' || c == '\'' || c == '“' || c == '”' || c == '‘' || c == '’'
+                || c == '(' || c == ')' || c == '[' || c == ']'
+                || c == '（' || c == '）' || c == '【' || c == '】';
+    }
+
+    /** {@return wordStart, span end, word end} */
+    private static int[] wordHit(String text, int textLength, int start, String token) {
+        final int spanEnd = Math.min(start + token.length(), textLength);
+        int wordStart = start;
+        while (wordStart < spanEnd && isSurroundingMark(text.charAt(wordStart))) {
+            wordStart++;
+        }
+        int wordEnd = spanEnd;
+        while (wordEnd > wordStart && isSurroundingMark(text.charAt(wordEnd - 1))) {
+            wordEnd--;
+        }
+        return new int[]{wordStart, spanEnd, wordEnd};
+    }
+
+    /** {@return the hit, or -1 when it is not there or only within a longer word} */
+    private static int usableHit(String text, int textLength, int offset, String token) {
+        int start = findToken(text, offset, token);
+        if (start < 0) {
+            return -1;
+        }
+        final int[] hit = wordHit(text, textLength, start, token);
+        final int wordStart = hit[0];
+        final int wordEnd = hit[2];
+        if (wordEnd > wordStart
+                && ((wordStart > 0 && isWordContinuation(text.charAt(wordStart - 1)))
+                || (wordEnd < textLength && isWordContinuation(text.charAt(wordEnd))))) {
+            return -1;
+        }
+        return start;
+    }
+
     private static int appendMatchedWordTiming(
             List<WordTiming> timings,
             String text,
             int textLength,
             int offset,
             String token,
+            String bareToken,
             long startMs,
             long endMs,
             @Nullable String rom,
-            boolean wordTrailingSpace) {
-        int start = text.indexOf(token, offset);
-        if (start < 0) {
-            start = indexOfIgnoreCase(text, token, offset);
+            boolean wordTrailingSpace,
+            @Nullable String ruby,
+            boolean averaged) {
+        // The drawn line may hold the word's marks elsewhere, hence the bare word to fall back on.
+        int start = usableHit(text, textLength, offset, token);
+        String matched = token;
+        if (start < 0 && !token.equals(bareToken)) {
+            start = usableHit(text, textLength, offset, bareToken);
+            matched = bareToken;
         }
         if (start < 0) {
             // Left where it was, so the words after an unmatched one can still be found.
             return offset;
         }
+        final int[] hit = wordHit(text, textLength, start, matched);
+        final int wordStart = hit[0];
+        final int spanEnd = hit[1];
+        final int wordEnd = hit[2];
+        final long timedStart = startMs;
+        final long timedEnd = Math.max(endMs, startMs + 1L);
         if (start > offset) {
             final long gapStartMs = timings.isEmpty()
-                    ? Math.max(0L, startMs - 150L)
+                    ? Math.max(0L, timedStart - 150L)
                     : timings.get(timings.size() - 1).endMs();
-            fillUntimedGap(timings, text, textLength, offset, start, gapStartMs, startMs);
+            fillUntimedGap(timings, text, textLength, offset, start, gapStartMs, timedStart);
         }
-        final int end = Math.min(start + token.length(), textLength);
-        if (start >= end) {
+        if (spanEnd <= start) {
             return offset;
         }
-        final boolean trailSpace = wordTrailingSpace
-                || (end < textLength && Character.isWhitespace(text.charAt(end)));
-        timings.add(new WordTiming(start, end, startMs, Math.max(endMs, startMs + 1L), rom, trailSpace));
-        return end;
+        if (start < wordStart) {
+            appendMarksTiming(timings, text, textLength, start, wordStart, timedStart, averaged);
+        }
+        if (wordEnd > wordStart) {
+            final boolean trailSpace = wordTrailingSpace
+                    || (wordEnd < textLength && Character.isWhitespace(text.charAt(wordEnd)));
+            timings.add(new WordTiming(wordStart, wordEnd, timedStart, timedEnd, rom, trailSpace, ruby, averaged));
+        } else {
+            appendMarksTiming(timings, text, textLength, wordStart, spanEnd, timedStart, averaged);
+        }
+        if (wordEnd < spanEnd) {
+            appendMarksTiming(timings, text, textLength, wordEnd, spanEnd, timedEnd, averaged);
+        }
+        return spanEnd;
+    }
+
+    /** A share of the word's own time would put a reading on syllable marks it never held. */
+    private static void appendMarksTiming(List<WordTiming> timings, String text, int textLength,
+                                          int start, int end, long atMs, boolean averaged) {
+        if (start >= end) {
+            return;
+        }
+        final boolean trailSpace = end < textLength && Character.isWhitespace(text.charAt(end));
+        timings.add(new WordTiming(start, end, atMs, atMs + 1L, null, trailSpace, null, averaged));
+    }
+
+    /** A CJK glyph spells a word on its own, so a neighbouring one is not part of a longer word. */
+    private static boolean isWordContinuation(char c) {
+        return Character.isLetterOrDigit(c) && !isCjkCodePoint(c);
     }
 
     private static void fillUntimedGap(
@@ -1152,7 +1237,8 @@ final class LyricsSpanBuilder {
                 WordTiming prev = timings.get(lastIdx);
                 if (!prev.hasTrailingSpace()) {
                     timings.set(lastIdx, new WordTiming(
-                            prev.start(), prev.end(), prev.startMs(), prev.endMs(), prev.romaji(), true));
+                            prev.start(), prev.end(), prev.startMs(), prev.endMs(), prev.romaji(),
+                            true, prev.ruby(), prev.averaged()));
                 }
             }
             return;
@@ -1190,14 +1276,14 @@ final class LyricsSpanBuilder {
                 if (prev.end() == sp[0]) {
                     final boolean trail = sp[1] < textLength && Character.isWhitespace(text.charAt(sp[1]));
                     timings.set(lastIdx, new WordTiming(
-                            prev.start(), sp[1], prev.startMs(), prev.endMs(), prev.romaji(), trail));
+                            prev.start(), sp[1], prev.startMs(), prev.endMs(), prev.romaji(), trail, prev.ruby(), prev.averaged()));
                     continue;
                 }
             }
             final long wStart = safeStart + (dur * idx) / spans.size();
             final long wEnd = safeStart + (dur * (idx + 1)) / spans.size();
             final boolean trail = sp[1] < textLength && Character.isWhitespace(text.charAt(sp[1]));
-            timings.add(new WordTiming(sp[0], sp[1], wStart, Math.max(wEnd, wStart + 1L), null, trail));
+            timings.add(new WordTiming(sp[0], sp[1], wStart, Math.max(wEnd, wStart + 1L), null, trail, true));
         }
     }
 
@@ -1220,11 +1306,14 @@ final class LyricsSpanBuilder {
      * this TextView, which left the highlight invisible.
      */
     static BuildResult buildLineText(LyricsLine line, List<WordTiming> timings, int index,
-                                     boolean perWordRomaji, List<LyricsLine> romanizedLines, List<String> translatedLines,
-                                     LyricsPanelView.OnlyMode onlyMode, Paint basePaint, boolean isRightAligned) {
+                                     boolean perWordRomaji, List<LyricsLine> romanizedLines,
+                                     List<String> translatedLines,
+                                     LyricsPanelView.OnlyMode onlyMode, Paint basePaint,
+                                     boolean isRightAligned, boolean embeddedReading) {
         Paint.FontMetricsInt baseFm = new Paint.FontMetricsInt();
         basePaint.getFontMetricsInt(baseFm);
         String original = displayLineText(line);
+        final boolean centered = line.isCentered();
 
         final int lineHeight = baseFm.descent - baseFm.ascent;
         final int mainClear = Math.max(0, (int) (lineHeight * MAIN_LINE_SPACING + 0.5f) - lineHeight);
@@ -1243,7 +1332,8 @@ final class LyricsSpanBuilder {
             final int transEnd = content.isEmpty() ? -1 : content.length();
             attachUniformSpacing(text, spacing);
             if (!content.isEmpty()) {
-                text.setSpan(new AlignmentSpan.Standard(resolveAlignment(isRtlText(content), isRightAligned)),
+                text.setSpan(new AlignmentSpan.Standard(
+                                resolveAlignment(isRtlText(content), isRightAligned, centered)),
                         0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
             return new BuildResult(text, null, transStart, transEnd, -1, -1);
@@ -1258,7 +1348,8 @@ final class LyricsSpanBuilder {
             if (content.isEmpty()) {
                 return new BuildResult(text, null, -1, -1, -1, -1);
             }
-            text.setSpan(new AlignmentSpan.Standard(resolveAlignment(isRtlText(content), isRightAligned)),
+            text.setSpan(new AlignmentSpan.Standard(
+                            resolveAlignment(isRtlText(content), isRightAligned, centered)),
                     0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             // No bounds reported paints the whole line the lyric colour, and none of the reading's fade.
             List<WordTiming> spans = readsNothing ? timings : roma.spans();
@@ -1283,10 +1374,11 @@ final class LyricsSpanBuilder {
                 applySpans(dual, Collections.emptyList(), 0, smallStart - 1,
                         smallIsRoma ? -1 : smallStart, smallIsRoma ? -1 : smallEnd,
                         smallIsRoma ? smallStart : -1, smallIsRoma ? smallEnd : -1,
-                        isRightAligned);
+                        isRightAligned, centered, false);
             } else {
                 boolean isRtl = isRtlText(dual);
-                dual.setSpan(new AlignmentSpan.Standard(resolveAlignment(isRtl, isRightAligned)),
+                dual.setSpan(new AlignmentSpan.Standard(
+                                resolveAlignment(isRtl, isRightAligned, centered)),
                         0, dual.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
             // A small run carrying the word timings is what is sung, and keeps the reading's
@@ -1304,9 +1396,12 @@ final class LyricsSpanBuilder {
         // A reading drawn over each word sits where the word's own highlight is painted, so the
         // two land on top of each other. With word sync on, the view draws each syllable's reading
         // under it instead; otherwise the reading goes on a line of its own, and takes its progress
-        // from the same words rather than from a second set of marks.
-        List<WordTiming> syllableRomanTimings = Settings.LYRICS_WORD_SYNC.get()
-                ? buildSyllableRomanizedTimings(line, index, romanizedLines, perWordRomaji, timings, original)
+        // from the same words rather than from a second set of marks. Furigana is always drawn
+        // over its own word.
+        List<WordTiming> syllableRomanTimings = (Settings.LYRICS_WORD_SYNC.get()
+                || hasAnyRuby(line))
+                ? buildSyllableRomanizedTimings(line, index, romanizedLines, perWordRomaji, timings,
+                original, embeddedReading)
                 : null;
         final boolean showSyllableRomanization = syllableRomanTimings != null;
         Reading reading = showSyllableRomanization
@@ -1315,48 +1410,74 @@ final class LyricsSpanBuilder {
         String romanization = reading.text();
 
         final boolean swap = Settings.LYRICS_SWAP_TRANS_ROMA.get();
+        // The reading is drawn over each word when syllable romanization is active, so a
+        // separate ruby line would repeat it. Only the line-level ruby goes here.
+        final String rubyText = showSyllableRomanization ? null : wholeLineRuby(line);
         StringBuilder builder = new StringBuilder();
         int romaStart = -1;
         int romaEnd = -1;
+        int rubyStart = -1;
+        int rubyEnd = -1;
         int transStart = -1;
         int transEnd = -1;
-        // The swap puts the translation above the lyric and the reading below it.
-        String above = swap ? translation : romanization;
-        if (above != null) {
-            builder.append(above);
+        // Swap puts the translation above the lyrics.
+        if (translation != null && swap) {
+            builder.append(translation);
+            transStart = 0;
+            transEnd = builder.length();
             builder.append('\n');
-            if (swap) {
-                transStart = 0;
-                transEnd = builder.length();
-            } else {
-                romaStart = 0;
-                romaEnd = builder.length();
-            }
+        }
+        if (rubyText != null) {
+            rubyStart = builder.length();
+            builder.append(rubyText);
+            rubyEnd = builder.length();
+            builder.append('\n');
         }
         final int originalStart = builder.length();
         builder.append(original);
         final int originalEnd = builder.length();
-        String below = swap ? romanization : translation;
-        if (below != null) {
+        if (romanization != null) {
             builder.append('\n');
-            if (swap) {
-                romaStart = builder.length();
-                builder.append(below);
-                romaEnd = builder.length();
-            } else {
-                transStart = builder.length();
-                builder.append(below);
-                transEnd = builder.length();
-            }
+            romaStart = builder.length();
+            builder.append(romanization);
+            romaEnd = builder.length();
+        }
+        if (translation != null && !swap) {
+            builder.append('\n');
+            transStart = builder.length();
+            builder.append(translation);
+            transEnd = builder.length();
         }
 
         SpannableString text = new SpannableString(builder.toString());
         attachUniformSpacing(text, spacing);
         ForegroundColorSpan unsungSpan = applySpans(text,
                 showSyllableRomanization ? syllableRomanTimings : timings,
-                originalStart, originalEnd, romaStart, romaEnd, transStart, transEnd, isRightAligned);
+                originalStart, originalEnd, romaStart, romaEnd, transStart, transEnd,
+                isRightAligned, centered, line.hasWordTimings());
+        if (rubyStart >= 0 && rubyEnd > rubyStart) {
+            text.setSpan(new ForegroundColorSpan(LyricsColors.secondaryTextColor()),
+                    rubyStart, rubyEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
         return new BuildResult(text, unsungSpan, transStart, transEnd, romaStart, romaEnd,
                 reading.spans(), false, showSyllableRomanization, originalStart);
+    }
+
+    /** The ruby of a line's words, leaving out ruby that repeats the word as written. */
+    @Nullable
+    private static String wholeLineRuby(LyricsLine line) {
+        StringBuilder ruby = new StringBuilder();
+        for (Word word : line.words()) {
+            if (word.ruby() != null && !word.ruby().isEmpty()
+                    && !word.ruby().equalsIgnoreCase(word.text().trim())) {
+                ruby.append(word.ruby());
+            }
+            if (word.endsWithSpace()) {
+                ruby.append(' ');
+            }
+        }
+        final String trimmed = ruby.toString().trim();
+        return trimmed.isEmpty() ? null : trimmed;
     }
 
     private static void attachUniformSpacing(SpannableString text, Spacing spacing) {
@@ -1399,13 +1520,9 @@ final class LyricsSpanBuilder {
             main = mainIsRoma ? romanization : translation;
             small = mainIsRoma ? translation : romanization;
         } else if (translation != null) {
-            // The original takes the reading's slot when the reading never arrived, so the swap
-            // still decides which of the two that is: off puts the original above the translation,
-            // on puts it below. Swapping this way hands the main slot to the translation, which is
-            // what lights the line, so the words move down with the original they belong to.
             mainIsRoma = false;
-            main = swap ? translation : original;
-            small = swap ? original : translation;
+            main = original;
+            small = translation;
         } else if (romanization != null) {
             mainIsRoma = true;
             main = romanization;
@@ -1418,7 +1535,7 @@ final class LyricsSpanBuilder {
         // The words follow the reading, and fall back to the original when there is none; the
         // translation never holds them.
         List<WordTiming> words = romanization != null ? roma.spans() : lineTimings;
-        final boolean wordsOnSmall = romanization != null ? !mainIsRoma : swap;
+        final boolean wordsOnSmall = romanization != null && !mainIsRoma;
         if (small == null) {
             return new DualLine(main, mainIsRoma, false, -1, -1, words, false);
         }
@@ -1436,15 +1553,16 @@ final class LyricsSpanBuilder {
         List<WordTiming> shifted = new ArrayList<>(spans.size());
         for (WordTiming span : spans) {
             shifted.add(new WordTiming(span.start() + by, span.end() + by,
-                    span.startMs(), span.endMs(), span.romaji(), span.hasTrailingSpace()));
+                    span.startMs(), span.endMs(), span.romaji(), span.hasTrailingSpace(),
+                    span.ruby(), span.averaged()));
         }
         return shifted;
     }
 
     /** The line's own translation, null when it has none or it only repeats the original. */
     @Nullable
-    static String translationAt(LyricsLine line, int index,
-                                @Nullable List<String> translatedLines) {
+    public static String translationAt(LyricsLine line, int index,
+                                       @Nullable List<String> translatedLines) {
         if (translatedLines == null || index >= translatedLines.size()) {
             return null;
         }
@@ -1498,6 +1616,24 @@ final class LyricsSpanBuilder {
         return !roma.isEmpty() && !roma.equalsIgnoreCase(origTrimmed) ? roma : null;
     }
 
+    private static boolean hasAnyRuby(LyricsLine line) {
+        for (Word word : line.words()) {
+            if (word.ruby() != null && !word.ruby().isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean hasAnyRuby(List<WordTiming> timings) {
+        for (WordTiming timing : timings) {
+            if (timing.ruby() != null && !timing.ruby().isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /** Text and words come back as one, so no word is lit at an offset from another string. */
     private record Romanized(@Nullable String text, @Nullable List<WordTiming> spans) {
     }
@@ -1536,6 +1672,7 @@ final class LyricsSpanBuilder {
             return null;
         }
         List<WordTiming> spans = new ArrayList<>(tokens.length);
+        boolean averaged = isEntirelyAveraged(lineTimings);
         for (int i = 0; i < words.size(); i++) {
             Word word = words.get(i);
             final int from = spread[i][0];
@@ -1544,7 +1681,7 @@ final class LyricsSpanBuilder {
                 continue;
             }
             spreadWordWindow(spans, tokens, from, to, word.startMs(),
-                    windowEndFor(words, i, word.endMs()));
+                    windowEndFor(words, i, word.endMs()), averaged);
         }
         return spans.isEmpty() ? null : spans;
     }
@@ -1570,7 +1707,8 @@ final class LyricsSpanBuilder {
      * and the lit edge, being the furthest, jumps to the word's last syllable.
      */
     private static void spreadWordWindow(List<WordTiming> out, int[][] tokens,
-                                         int from, int to, long startMs, long endMs) {
+                                         int from, int to, long startMs, long endMs,
+                                         boolean averaged) {
         int spelling = 0;
         for (int at = from; at < to; at++) {
             spelling += tokens[at][1] - tokens[at][0];
@@ -1580,7 +1718,8 @@ final class LyricsSpanBuilder {
             // Nothing to divide by, so the syllables share what there is.
             final long end = Math.max(endMs, startMs + 1);
             for (int at = from; at < to; at++) {
-                out.add(new WordTiming(tokens[at][0], tokens[at][1], startMs, end, null));
+                out.add(new WordTiming(tokens[at][0], tokens[at][1], startMs, end,
+                        null, false, null, averaged));
             }
             return;
         }
@@ -1591,7 +1730,8 @@ final class LyricsSpanBuilder {
             final long share = at + 1 == to
                     ? Math.max(endMs, cursor + 1)
                     : Math.max(startMs + window * said / spelling, cursor + 1);
-            out.add(new WordTiming(tokens[at][0], tokens[at][1], cursor, share, null));
+            out.add(new WordTiming(tokens[at][0], tokens[at][1], cursor, share,
+                    null, false, null, averaged));
             cursor = share;
         }
     }
@@ -1606,15 +1746,15 @@ final class LyricsSpanBuilder {
                 continue;
             }
             words.add(new Word(timing.startMs(), timing.endMs(), text.substring(start, end),
-                    timing.romaji(), timing.hasTrailingSpace()));
+                    timing.romaji(), timing.hasTrailingSpace(), timing.ruby()));
         }
         return words;
     }
 
     /** What a romanization-only line shows: its own, else the per-word one joined up. */
     @Nullable
-    static String romanizationForOnlyMode(LyricsLine line, int index,
-                                          @Nullable List<LyricsLine> romanizedLines) {
+    public static String romanizationForOnlyMode(LyricsLine line, int index,
+                                                 @Nullable List<LyricsLine> romanizedLines) {
         return romanizedWithTimings(line, index, romanizedLines, null).text();
     }
 
@@ -1634,22 +1774,25 @@ final class LyricsSpanBuilder {
     private static ForegroundColorSpan applySpans(SpannableString text, List<WordTiming> timings,
                                                   int originalStart, int originalEnd,
                                                   int romaStart, int romaEnd, int transStart, int transEnd,
-                                                  boolean isRightAligned) {
+                                                  boolean isRightAligned, boolean centered, boolean applyKaraoke) {
         ForegroundColorSpan unsungSpan = null;
         if (romaStart >= 0 && romaEnd > romaStart) {
             text.setSpan(new RelativeSizeSpan(TRANSLATION_RELATIVE_SIZE), romaStart, romaEnd,
                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            text.setSpan(new ForegroundColorSpan(LyricsColors.secondaryTextColor() | 0xFF000000),
+            text.setSpan(new ForegroundColorSpan(LyricsColors.lineTextColor() | 0xFF000000),
                     romaStart, romaEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         if (transStart >= 0 && transEnd > transStart) {
             text.setSpan(new RelativeSizeSpan(TRANSLATION_RELATIVE_SIZE), transStart, transEnd,
                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            text.setSpan(new ForegroundColorSpan(LyricsColors.secondaryTextColor() | 0xFF000000),
+            text.setSpan(new ForegroundColorSpan(LyricsColors.lineTextColor() | 0xFF000000),
                     transStart, transEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
-        if (Settings.LYRICS_WORD_SYNC.get() && !timings.isEmpty()) {
+        // The karaoke sweep lights words one by one, but a line that carries no word timings from
+        // its source has nothing real to sweep through. Synthesised timings still fill the word
+        // spans for snap alignment and romanization, but they must not drive the highlight.
+        if (Settings.LYRICS_WORD_SYNC.get() && !timings.isEmpty() && applyKaraoke) {
             int unsung = LyricsColors.unsungWordColor() | 0xFF000000;
             unsungSpan = new ForegroundColorSpan(unsung);
             text.setSpan(unsungSpan, originalStart, originalEnd,
@@ -1660,20 +1803,22 @@ final class LyricsSpanBuilder {
             int spanEnd = originalEnd < text.length() && text.charAt(originalEnd) == '\n'
                     ? originalEnd + 1 : originalEnd;
             boolean isOrigRtl = isRtlText(text.subSequence(originalStart, originalEnd));
-            text.setSpan(new AlignmentSpan.Standard(resolveAlignment(isOrigRtl, isRightAligned)),
+            text.setSpan(new AlignmentSpan.Standard(
+                            resolveAlignment(isOrigRtl, isRightAligned, centered)),
                     originalStart, spanEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         if (romaStart >= 0 && romaEnd > romaStart) {
             int spanEnd = romaEnd < text.length() && text.charAt(romaEnd) == '\n'
                     ? romaEnd + 1 : romaEnd;
-            text.setSpan(new AlignmentSpan.Standard(resolveAlignment(false, isRightAligned)),
+            text.setSpan(new AlignmentSpan.Standard(resolveAlignment(false, isRightAligned, centered)),
                     romaStart, spanEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         if (transStart >= 0 && transEnd > transStart) {
             int spanEnd = transEnd < text.length() && text.charAt(transEnd) == '\n'
                     ? transEnd + 1 : transEnd;
             boolean isTransRtl = isRtlText(text.subSequence(transStart, transEnd));
-            text.setSpan(new AlignmentSpan.Standard(resolveAlignment(isTransRtl, isRightAligned)),
+            text.setSpan(new AlignmentSpan.Standard(
+                            resolveAlignment(isTransRtl, isRightAligned, centered)),
                     transStart, spanEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
@@ -1687,8 +1832,13 @@ final class LyricsSpanBuilder {
         return ScriptDetector.isLineRtl(text);
     }
 
-    public static Layout.Alignment resolveAlignment(boolean isRtl, boolean isRightAligned) {
-        if (Settings.LYRICS_FORCE_CENTER.get()) {
+    /**
+     * @param forceCenter The line's own agent says it is centred ({@code v1000}/{@code v2000}), so
+     *                    the "Always center lyrics" setting does not decide it.
+     */
+    public static Layout.Alignment resolveAlignment(boolean isRtl, boolean isRightAligned,
+                                                    boolean forceCenter) {
+        if (forceCenter || Settings.LYRICS_FORCE_CENTER.get()) {
             return Layout.Alignment.ALIGN_CENTER;
         }
         if (isRightAligned) {

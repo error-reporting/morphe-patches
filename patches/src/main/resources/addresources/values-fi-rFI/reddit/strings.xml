@@ -18,6 +18,13 @@ Second \"item\" text"</string>
 <resources>
   <string name="reddit_privacy_policy">Redditin tietosuojakäytäntö</string>
   <string name="morphe_google_signin_not_available_toast">Google-kirjautuminen ei ole käytettävissä. Kirjaudu sähköpostilla</string>
+  <string name="morphe_app_downgrade_dialog_title">Versionin alentamista ei tueta</string>
+  <string name="morphe_app_downgrade_dialog_message">"Tämä Reddit-asennus on alennettu versiosta &lt;b&gt;%1$s&lt;/b&gt; versioon &lt;b&gt;%2$s&lt;/b&gt;
+&lt;br/&gt;&lt;br/&gt;
+Uudemman version sovellustiedot eivät toimi vanhempien versioiden kanssa, ja sovellus ei välttämättä toimi oikein.
+&lt;br/&gt;&lt;br/&gt;
+Käyttääksesi vanhempaa versiota, sinun on &lt;b&gt;poistettava&lt;/b&gt; Reddit ja asennettava sen jälkeen vanhempi versio."</string>
+  <string name="morphe_app_downgrade_dialog_open_app_info">Avaa sovellustiedot</string>
   <string name="morphe_screen_ads_title">Mainokset</string>
   <string name="morphe_hide_post_ads_title">Piilota syötteen mainokset</string>
   <string name="morphe_hide_comment_ads_title">Piilota kommenttimainokset</string>
@@ -58,6 +65,8 @@ Second \"item\" text"</string>
   <string name="morphe_hide_trending_shelves_summary">Piilottaa suositut hyllyt syötteestä ja ehdotuksista</string>
   <string name="morphe_remove_notification_dialog_title">Poista ilmoituspyyntödialogi</string>
   <string name="morphe_remove_notification_dialog_summary">Poistaa ilmoitusehdotusikkunan automaattisesti vieraillessa aliryhmässä</string>
+  <string name="morphe_high_quality_avatars_title">Korkealaatuiset avatarit</string>
+  <string name="morphe_high_quality_avatars_summary">Näyttää käyttäjien avatarit täydellä resoluutiolla</string>
   <string name="morphe_show_flairs_in_home_feed_title">Näytä tunnisteet kotisisösyötteessä</string>
   <string name="morphe_show_flairs_in_home_feed_summary">Näyttää julkaisujen tunniste-merkit kotisisösyötteessä</string>
   <string name="morphe_show_flairs_in_home_feed_user_dialog_message">Jotkin sisösyötteen kohteet eivät välttämättä näytä tunnisteita</string>

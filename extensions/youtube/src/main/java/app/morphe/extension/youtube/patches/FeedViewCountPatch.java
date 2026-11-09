@@ -67,7 +67,8 @@ import app.morphe.extension.youtube.settings.Settings;
  * The span is copied with the text, so it is kept when the Hide view count option
  * of the Hide layout components patch removes the view count from below the title.
  * No request is made, and the count is the same that YouTube shows. Until the text is drawn,
- * such as while only a part of the card is shown, the badge shows a loading spinner.
+ * such as while only a part of the card is shown, the count of the element of the video is used,
+ * or else the badge shows a loading spinner.
  * <p>
  * The same text is used by other lists too, such as the videos of a playlist, where no badge is
  * shown. So the view count is removed from below the title only for the texts of the components
@@ -153,11 +154,11 @@ public final class FeedViewCountPatch {
     private static final int MAX_VIDEO_VIEW_COUNTS = 200;
 
     /**
-     * View count of the element of a video, and the text of the duration badge on its thumbnail,
-     * such as "12:34". The badge of a card must show the same text, so the view count of
-     * another video is not shown if the card is matched to the wrong video.
+     * View count of the element of a video, and the texts of the element that can be the badge on
+     * its thumbnail, such as "12:34". The badge of a card must show one of them, so the view count
+     * of another video is not shown if the card is matched to the wrong video.
      */
-    private record ElementViewCount(String viewCount, String badgeText) {
+    private record ElementViewCount(String viewCount, Set<String> badgeTexts) {
     }
 
     /**
@@ -166,6 +167,29 @@ public final class FeedViewCountPatch {
      */
     @GuardedBy("itself")
     private static final Map<String, ElementViewCount> videoViewCounts = Utils
+            .createSizeRestrictedMap(MAX_VIDEO_VIEW_COUNTS, true);
+
+    /**
+     * Field of the element of a Short with the metadata of the Short. Its field 2 has the shortened view count,
+     * such as 4,8 Mln, and the full view count, such as "4,8 milioni di visualizzazioni".
+     */
+    private static final int SHORTS_METADATA_FIELD = 218178449;
+
+    /** Field of the commands of an element, such as what a tap opens. */
+    private static final int COMMAND_FIELD = 169495254;
+
+    /**
+     * Characters that can be between the characters of a view count in one text and not in another,
+     * such as the spaces of "4,8 Mln" and the marks of the text direction of right to left languages.
+     */
+    private static final String VIEW_COUNT_GAP = "[\\s\\p{Z}\\p{Cf}]*";
+
+    /**
+     * Video id -> shortened view count of the element of a Short. The cards of Shorts do not show their view count.
+     * Oldest videos are removed first.
+     */
+    @GuardedBy("itself")
+    private static final Map<String, String> shortsViewCounts = Utils
             .createSizeRestrictedMap(MAX_VIDEO_VIEW_COUNTS, true);
 
     private FeedViewCountPatch() {
@@ -628,22 +652,86 @@ public final class FeedViewCountPatch {
      * Only the text shown below the title is used, such as "Channel  4.7M  2 days ago":
      * the text with a part that the element also has as a text of its own, such as "4.7M".
      * Usually called off the main thread.
+     *
+     * @param isShort If the element is of a Short, whose view count is in the metadata of the element.
      */
-    public static void onVideoElementLoaded(String videoId, List<ProtoNode> textNodes) {
+    public static void onVideoElementLoaded(String videoId, List<ProtoNode> textNodes, boolean isShort) {
         if (!ENABLED) {
             return;
         }
         try {
+            if (isShort) {
+                // The cards of Shorts do not show their view count, which is in the metadata of the element.
+                String viewCount = null;
+                for (ProtoNode node : textNodes) {
+                    if (node.pathEndsWith(SHORTS_METADATA_FIELD, 2, 1, 1)) {
+                        viewCount = node.getText().trim();
+                        break;
+                    }
+                }
+                if (viewCount == null || !NUMBER_PATTERN.matcher(viewCount).find()) {
+                    return;
+                }
+                // Some cards show it below the title, such as the Shorts of the search results.
+                // They have no badge, decided now, as the texts of a card that enters the list
+                // are drawn after its thumbnail, so the badge would be shown and then removed.
+                // The view count is found in any language: the spaces and the marks of the text
+                // direction between its characters can differ, and it must not be part of
+                // a longer number or word of Latin letters, such as of a URL.
+                StringBuilder regex = new StringBuilder("(?<![A-Za-z\\p{Nd}])");
+                final int start = regex.length();
+                viewCount.codePoints().forEach(codePoint -> {
+                    if (Character.isWhitespace(codePoint) || Character.isSpaceChar(codePoint)
+                            || Character.getType(codePoint) == Character.FORMAT) {
+                        return;
+                    }
+                    if (regex.length() > start) {
+                        regex.append(VIEW_COUNT_GAP);
+                    }
+                    regex.append(Pattern.quote(new String(Character.toChars(codePoint))));
+                });
+                regex.append("(?![A-Za-z\\p{Nd}])");
+                Pattern countPattern = Pattern.compile(regex.toString());
+                ProtoNode shortItem = null;
+                for (ProtoNode node : textNodes) {
+                    if (node.getText().startsWith(FeedVideoCardsPatch.SHORTS_ITEM_PREFIX)) {
+                        shortItem = node.getParent();
+                        break;
+                    }
+                }
+                nodes:
+                for (ProtoNode node : textNodes) {
+                    String text = node.getText();
+                    // The texts of the Short itself are not drawn, such as its accessibility label,
+                    // which has the view count in some languages.
+                    if (text.length() > MAX_SUBTITLE_LENGTH || node.getParent() == shortItem) {
+                        continue;
+                    }
+                    for (ProtoNode parent = node.getParent(); parent != null; parent = parent.getParent()) {
+                        final int field = parent.getFieldNumber();
+                        if (field == SHORTS_METADATA_FIELD || field == COMMAND_FIELD) {
+                            continue nodes;
+                        }
+                    }
+                    if (countPattern.matcher(text).find()) {
+                        return;
+                    }
+                }
+                synchronized (shortsViewCounts) {
+                    shortsViewCounts.put(videoId, viewCount);
+                }
+                return;
+            }
             Set<String> texts = new HashSet<>();
-            String badgeText = null;
+            Set<String> badgeTexts = new HashSet<>();
             for (ProtoNode node : textNodes) {
                 String text = node.getText();
                 texts.add(SPACES_PATTERN.matcher(text).replaceAll(""));
-                if (badgeText == null && FeedVideoCardsPatch.isVideoBadgeText(text.trim())) {
-                    badgeText = text.trim();
+                if (FeedVideoCardsPatch.isVideoBadgeText(text.trim())) {
+                    badgeTexts.add(text.trim());
                 }
             }
-            if (badgeText == null) {
+            if (badgeTexts.isEmpty()) {
                 return;
             }
             Locale locale = Locale.getDefault();
@@ -671,7 +759,7 @@ public final class FeedViewCountPatch {
                 if (match != null
                         && texts.contains(SPACES_PATTERN.matcher(match.parsed.count).replaceAll(""))) {
                     synchronized (videoViewCounts) {
-                        videoViewCounts.put(videoId, new ElementViewCount(match.parsed.count, badgeText));
+                        videoViewCounts.put(videoId, new ElementViewCount(match.parsed.count, badgeTexts));
                     }
                     return;
                 }
@@ -912,7 +1000,7 @@ public final class FeedViewCountPatch {
     }
 
     /**
-     * A view almost as wide as the card at its top, such as a 16:9 or a square thumbnail.
+     * A view almost as wide as the card at its top, such as a 16:9, a square or a vertical thumbnail.
      * Cards of some layouts show the thumbnail inset from their edges, so its shape is
      * checked with its own width.
      */
@@ -925,7 +1013,9 @@ public final class FeedViewCountPatch {
                 && root.getWidth() - rect.right <= maxInset
                 && rect.top <= maxInset
                 && rect.height() >= width * FeedVideoCardsPatch.THUMBNAIL_RATIO - TOLERANCE_DP * density
-                && rect.height() <= width + TOLERANCE_DP * density;
+                // Thumbnails can be taller than a square, such as of vertical videos, and have the
+                // texts below them. A background can be as large as the card.
+                && rect.height() < root.getHeight();
     }
 
     /**
@@ -962,7 +1052,7 @@ public final class FeedViewCountPatch {
         @Nullable
         public final Rect thumbnail;
 
-        ThumbnailFrame(@Nullable Rect duration, @Nullable Rect thumbnail) {
+        public ThumbnailFrame(@Nullable Rect duration, @Nullable Rect thumbnail) {
             this.duration = duration;
             this.thumbnail = thumbnail;
         }
@@ -991,10 +1081,13 @@ public final class FeedViewCountPatch {
     /**
      * Called on the main thread after a root host is laid out.
      *
-     * @param videoId The video of the card, or null if the host is not a video card
-     *                or its video is not known.
+     * @param videoId     The video of the card, or null if the host is not a video card
+     *                    or its video is not known.
+     * @param shortsFrame If the host is the card of a Short, its thumbnail and the row above its title,
+     *                    as the duration badge at the end of the row. Otherwise null.
      */
-    public static void onCardLaidOut(ComponentHost host, @Nullable String videoId) {
+    public static void onCardLaidOut(ComponentHost host, @Nullable String videoId,
+                                     @Nullable ThumbnailFrame shortsFrame) {
         if (!ENABLED) {
             return;
         }
@@ -1008,11 +1101,29 @@ public final class FeedViewCountPatch {
         // Videos of shelves are not known, but the view count is shown by the card itself,
         // so it is shown on any card shaped like a video with a duration.
         // Cards of a grid, such as in landscape, are narrower than the screen and their video is not known.
-        final boolean checkCard = videoId != null
+        final boolean checkCard = shortsFrame == null && (videoId != null
                 || (FeedVideoCardsPatch.isVideoShaped(host, MIN_GRID_CARD_WIDTH_OF_SCREEN)
                 && !FeedVideoCardsPatch.isPlaylistCard(host)
-                && !FeedVideoCardsPatch.hasHorizontalList(host));
-        if (checkCard && !FeedVideoCardsPatch.isInDialog(host) && !FeedVideoCardsPatch.isLiveCard(host)) {
+                && !FeedVideoCardsPatch.hasHorizontalList(host)));
+        if (shortsFrame != null && videoId != null) {
+            synchronized (shortsViewCounts) {
+                viewCount = shortsViewCounts.get(videoId);
+            }
+            if (viewCount != null) {
+                // The view count is shown only once, and some layouts can show it below the title.
+                CardInfo info = new CardInfo(0);
+                findCardInfo(host, host, info, new Rect());
+                String count = SPACES_PATTERN.matcher(viewCount).replaceAll("");
+                for (PlacedText placed : info.texts) {
+                    if (SPACES_PATTERN.matcher(placed.text).replaceAll("").contains(count)) {
+                        viewCount = null;
+                        break;
+                    }
+                }
+            }
+            duration = shortsFrame.duration;
+            thumbnail = shortsFrame.thumbnail;
+        } else if (checkCard && !FeedVideoCardsPatch.isInDialog(host) && !FeedVideoCardsPatch.isLiveCard(host)) {
             CardInfo info = new CardInfo(getTextsTop(host));
             findCardInfo(host, host, info, new Rect());
             if (videoId != null || info.hasDuration) {
@@ -1049,7 +1160,7 @@ public final class FeedViewCountPatch {
                         synchronized (videoViewCounts) {
                             element = videoViewCounts.get(cardVideoId);
                         }
-                        if (element != null && element.badgeText.equals(info.badgeText)) {
+                        if (element != null && element.badgeTexts.contains(info.badgeText)) {
                             viewCount = element.viewCount;
                             // Checked again when its texts are drawn, as they can show the view count.
                             FeedVideoCardsPatch.scheduleScrollCheck(host);
@@ -1060,8 +1171,11 @@ public final class FeedViewCountPatch {
                 if (viewCount == null) {
                     // The texts can be drawn after the layout of the card. Once the text below the title
                     // is drawn there is nothing to wait for, so the loading spinner is not shown, even if
-                    // the card is checked again.
-                    loading = FeedVideoCardsPatch.scheduleRetry(host) && info.texts.size() < MIN_DRAWN_TEXTS;
+                    // the card is checked again. Rows below the part of the card that is shown are not
+                    // drawn yet, such as the view count below the channel of the cards layout.
+                    final Rect shown = new Rect();
+                    loading = FeedVideoCardsPatch.scheduleRetry(host) && (info.texts.size() < MIN_DRAWN_TEXTS
+                            || !host.getLocalVisibleRect(shown) || shown.bottom < host.getHeight());
                     logTexts(id, info.texts);
                 } else if (duration == null) {
                     final Rect found = thumbnail;
@@ -1100,7 +1214,7 @@ public final class FeedViewCountPatch {
     /**
      * Dark rounded badge with a play icon and the view count, drawn on the overlay of the card.
      */
-    private static final class ViewCountBadge extends Drawable {
+    private static final class ViewCountBadge extends Drawable implements View.OnAttachStateChangeListener {
         private final Paint backgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         private final Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         private final Paint iconPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -1111,6 +1225,12 @@ public final class FeedViewCountPatch {
         private final float maxTextSize;
         private final WeakReference<ComponentHost> hostRef;
 
+        /**
+         * False after the card was detached, such as when a list reuses it for something else.
+         * Nothing is drawn until the card is checked again, so the view count of the previous
+         * video is not shown on what the card shows now.
+         */
+        private boolean confirmed = true;
         /** The view count, or null while it's loading. */
         @Nullable
         private String viewCount;
@@ -1123,6 +1243,7 @@ public final class FeedViewCountPatch {
 
         ViewCountBadge(ComponentHost host) {
             hostRef = new WeakReference<>(host);
+            host.addOnAttachStateChangeListener(this);
             density = host.getResources().getDisplayMetrics().density;
             maxTextSize = TEXT_SP * density * host.getResources().getConfiguration().fontScale;
 
@@ -1151,6 +1272,7 @@ public final class FeedViewCountPatch {
          *                     Then a 16:9 thumbnail as wide as the card is used.
          */
         void bind(ComponentHost host, @Nullable String newViewCount, @Nullable Rect duration, @Nullable Rect thumbnail) {
+            confirmed = true;
             // Fades in when shown, or when the card shows another video.
             // Not when the card is only laid out again, and not the loading spinner.
             final boolean changed = newViewCount != null && !newViewCount.equals(viewCount);
@@ -1228,6 +1350,7 @@ public final class FeedViewCountPatch {
         }
 
         void detach(ComponentHost host) {
+            host.removeOnAttachStateChangeListener(this);
             endFadeIn();
             if (added) {
                 host.getOverlay().remove(this);
@@ -1236,7 +1359,26 @@ public final class FeedViewCountPatch {
         }
 
         @Override
+        public void onViewAttachedToWindow(@NonNull View view) {
+            try {
+                // A card that shows the same video may not be laid out again.
+                FeedVideoCardsPatch.requestUpdate((ComponentHost) view);
+            } catch (Exception ex) {
+                Logger.printException(() -> "onViewAttachedToWindow failure", ex);
+            }
+        }
+
+        @Override
+        public void onViewDetachedFromWindow(@NonNull View view) {
+            confirmed = false;
+            endFadeIn();
+        }
+
+        @Override
         public void draw(@NonNull Canvas canvas) {
+            if (!confirmed) {
+                return;
+            }
             ComponentHost host = hostRef.get();
             if (host != null && FeedVideoCardsPatch.isCardPlayingInline(host)) {
                 // The inline player shows its own controls over the thumbnail.

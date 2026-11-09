@@ -9,25 +9,35 @@ package app.morphe.extension.youtube.patches;
 import android.net.Uri;
 import android.util.Base64;
 
+import androidx.annotation.Nullable;
+
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.MessageLite;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import app.morphe.extension.shared.Logger;
+import app.morphe.extension.shared.ResourceType;
 import app.morphe.extension.shared.ResourceUtils;
 import app.morphe.extension.shared.Utils;
 import app.morphe.extension.youtube.innertube.FeedCardLayoutOuterClass.AddToPlaylistButtonViewModel;
 import app.morphe.extension.youtube.innertube.FeedCardLayoutOuterClass.ButtonViewModel;
 import app.morphe.extension.youtube.innertube.FeedCardLayoutOuterClass.ButtonViewModelHolder;
+import app.morphe.extension.youtube.innertube.FeedCardLayoutOuterClass.CompactChannelBarModel;
+import app.morphe.extension.youtube.innertube.FeedCardLayoutOuterClass.CompactChannelBarViewModel;
+import app.morphe.extension.youtube.innertube.FeedCardLayoutOuterClass.CompactChannelBarViewModelHolder;
 import app.morphe.extension.youtube.innertube.FeedCardLayoutOuterClass.ComponentType;
 import app.morphe.extension.youtube.innertube.FeedCardLayoutOuterClass.DislikeButtonViewModel;
 import app.morphe.extension.youtube.innertube.FeedCardLayoutOuterClass.Element;
 import app.morphe.extension.youtube.innertube.FeedCardLayoutOuterClass.ElementModel;
+import app.morphe.extension.youtube.innertube.FeedCardLayoutOuterClass.EnvironmentSubscriptionConfig;
 import app.morphe.extension.youtube.innertube.FeedCardLayoutOuterClass.LikeButtonViewModel;
 import app.morphe.extension.youtube.innertube.FeedCardLayoutOuterClass.LikeStatusEntityKey;
 import app.morphe.extension.youtube.innertube.FeedCardLayoutOuterClass.LockupModel;
-import app.morphe.extension.youtube.innertube.FeedCardLayoutOuterClass.LockupViewModelHolder;
+import app.morphe.extension.youtube.innertube.FeedCardLayoutOuterClass.SubscribeState;
+import app.morphe.extension.youtube.innertube.FeedCardLayoutOuterClass.SubscriptionConfig;
 import app.morphe.extension.youtube.innertube.FeedCardLayoutOuterClass.ToggleButtonViewModel;
 import app.morphe.extension.youtube.innertube.FeedCardLayoutOuterClass.ToggleButtonViewModelHolder;
 import app.morphe.extension.youtube.innertube.FeedCardLayoutOuterClass.VideoActionBarItem;
@@ -38,6 +48,10 @@ import app.morphe.extension.youtube.innertube.FeedCardLayoutOuterClass.VideoActi
 import app.morphe.extension.youtube.innertube.FeedCardLayoutOuterClass.VideoActionBarOverflow;
 import app.morphe.extension.youtube.innertube.FeedCardLayoutOuterClass.VideoActionBarSize;
 import app.morphe.extension.youtube.innertube.FeedCardLayoutOuterClass.VideoActionBarViewModel;
+import app.morphe.extension.youtube.innertube.NextResponseOuterClass.NewElement;
+import app.morphe.extension.youtube.innertube.NextResponseOuterClass.SecondaryContents;
+import app.morphe.extension.youtube.innertube.NextResponseOuterClass.SlimVideoMetadataSectionRenderer;
+import app.morphe.extension.youtube.innertube.NextResponseOuterClass.TertiaryContents;
 import app.morphe.extension.youtube.patches.utils.FeedVideoCardsPatch;
 import app.morphe.extension.youtube.patches.utils.requests.ConfigRequest;
 import app.morphe.extension.youtube.settings.Settings;
@@ -72,6 +86,10 @@ public class RestoreOldVideoActionBarPatch {
          */
         CLASSIC,
         /**
+         * The same buttons of {@link #CLASSIC} in their own row, below a row with the channel and the subscribe button.
+         */
+        CLASSIC_TWO_ROWS,
+        /**
          * Buttons with an icon above their text, and the other buttons in a menu.
          */
         MINIMAL
@@ -86,12 +104,53 @@ public class RestoreOldVideoActionBarPatch {
             || Settings.DISABLE_LAYOUT_UPDATES.get()
             ? VideoActionBarLayout.DEFAULT
             : Settings.VIDEO_ACTION_BAR_LAYOUT.get();
-    private static final boolean FIX_VIDEO_ACTION_BAR = LAYOUT == VideoActionBarLayout.CLASSIC;
+    private static final boolean FIX_VIDEO_ACTION_BAR = LAYOUT == VideoActionBarLayout.CLASSIC
+            || LAYOUT == VideoActionBarLayout.CLASSIC_TWO_ROWS;
 
     private static final String VIDEO_ACTION_BAR_TEMPLATE = "compactify_video_action_bar.eml";
     private static final int LAYOUT_STYLE_CLASSIC = 4;
     private static final int LAYOUT_STYLE_MINIMAL = 6;
+    /**
+     * Channel name beside the avatar, and the subscribe button at the end of the row, as on tablets.
+     */
+    private static final int TWO_ROWS_CHANNEL_BAR_STYLE = 2;
+    private static final FeedCardLayoutPatch.VideoTemplate CHANNEL_BAR_TEMPLATE =
+            new FeedCardLayoutPatch.VideoTemplate("compact_channel_bar.eml", 391108665, 6, 5);
+    private static final int CHANNEL_BAR_ENVIRONMENT_FIELD = 4;
     private static final String SHARE_BUTTON_ID = "id.video.share.button";
+    /**
+     * Key of the icon of a toggled button, after its target id.
+     */
+    private static final String TOGGLED_ICON_KEY = "|toggled";
+    /**
+     * Icons for buttons that the server sends without an icon, by target id, with the names of
+     * the newer app versions first. The like button has no icon, and its template draws an
+     * animation instead, which some accounts do not get.
+     */
+    private static final Map<String, String[]> FALLBACK_ICONS = new HashMap<>();
+    static {
+        FALLBACK_ICONS.put("id.video.like.button", new String[]{
+                "yt_outline_experimental_thumb_up_black_24", "yt_outline_thumb_up_black_24"});
+        FALLBACK_ICONS.put("id.video.like.button" + TOGGLED_ICON_KEY, new String[]{
+                "yt_fill_experimental_thumb_up_black_24", "yt_fill_thumb_up_black_24"});
+        FALLBACK_ICONS.put("id.video.dislike.button", new String[]{
+                "yt_outline_experimental_thumb_down_black_24", "yt_outline_thumb_down_black_24"});
+        FALLBACK_ICONS.put("id.video.dislike.button" + TOGGLED_ICON_KEY, new String[]{
+                "yt_fill_experimental_thumb_down_black_24", "yt_fill_thumb_down_black_24"});
+        FALLBACK_ICONS.put(SHARE_BUTTON_ID, new String[]{
+                "yt_outline_experimental_share_black_24", "yt_outline_share_black_24"});
+        FALLBACK_ICONS.put("id.video.add_to.button", new String[]{
+                "yt_outline_experimental_bookmark_black_24", "yt_outline_bookmark_black_24"});
+        FALLBACK_ICONS.put("id.video.add_to.button" + TOGGLED_ICON_KEY, new String[]{
+                "yt_fill_experimental_bookmark_black_24", "yt_fill_bookmark_black_24"});
+        FALLBACK_ICONS.put("id.video.remove_ads.button", new String[]{
+                "yt_outline_experimental_flag_black_24", "yt_outline_flag_black_24"});
+    }
+    /**
+     * Icons that the server sent for each button, by target id, so a button that later comes
+     * without its icon gets the same one.
+     */
+    private static final Map<String, String> serverIcons = new ConcurrentHashMap<>();
     private static final String OVERFLOW_BUTTON_ICON = "yt_outline_experimental_overflow_horizontal_black_24";
     private static final String MORE_ACTIONS_TEXT = "accessibility_more_actions_video";
     private static final int LIKE_COUNT_ENTITY_TYPE = 445;
@@ -172,13 +231,19 @@ public class RestoreOldVideoActionBarPatch {
         try {
             Element element = Element.parseFrom(bytes);
             ComponentType componentType = element.getType().getComponentType();
-            ElementModel model = componentType.getModel();
-            LockupModel lockupModel = model.getLockupModel();
-            LockupViewModelHolder viewModel = lockupModel.getViewModel();
-            VideoActionBarViewModel actionBar = viewModel.getVideoActionBarViewModel();
+            LockupModel lockupModel = componentType.getModel().getLockupModel();
+            VideoActionBarViewModel actionBar = lockupModel.getViewModel().getVideoActionBarViewModel();
             final boolean minimal = LAYOUT == VideoActionBarLayout.MINIMAL;
             if (actionBar.getLayoutStyle() != (minimal ? LAYOUT_STYLE_CLASSIC : LAYOUT_STYLE_MINIMAL)) {
-                return bytes;
+                // The server sends the chosen layout, or a layout that is not changed.
+                if (actionBar.getLayoutStyle() != (minimal ? LAYOUT_STYLE_MINIMAL : LAYOUT_STYLE_CLASSIC)) {
+                    return bytes;
+                }
+
+                VideoActionBarViewModel newActionBar = withButtonIcons(actionBar);
+                return newActionBar == actionBar
+                        ? bytes
+                        : withActionBar(element, componentType, lockupModel, newActionBar).toByteArray();
             }
 
             VideoActionBarViewModel.Builder newActionBar = actionBar.toBuilder().clearActions();
@@ -340,23 +405,322 @@ public class RestoreOldVideoActionBarPatch {
                 newActionBar.clearSubscribeButton().clearSize();
             }
 
-            return element.toBuilder()
-                    .setType(element.getType().toBuilder()
-                            .setComponentType(componentType.toBuilder()
-                                    .setModel(model.toBuilder()
-                                            .setLockupModel(lockupModel.toBuilder()
-                                                    .setViewModel(viewModel.toBuilder()
-                                                            .setVideoActionBarViewModel(newActionBar
-                                                                    .setLayoutStyle(minimal ? LAYOUT_STYLE_MINIMAL : LAYOUT_STYLE_CLASSIC)
-                                                                    .setLayoutConfig(actionBar.getLayoutConfig().toBuilder()
-                                                                            .setIconButtons(minimal))))))))
-                    .build()
+            return withActionBar(element, componentType, lockupModel, withButtonIcons(newActionBar
+                    .setLayoutStyle(minimal ? LAYOUT_STYLE_MINIMAL : LAYOUT_STYLE_CLASSIC)
+                    .setLayoutConfig(actionBar.getLayoutConfig().toBuilder().setIconButtons(minimal))
+                    .build()))
                     .toByteArray();
         } catch (Exception ex) {
             Logger.printException(() -> "setVideoActionBarLayout failure", ex);
         }
 
         return bytes;
+    }
+
+    /**
+     * Injection point.
+     * <p>
+     * The channel and the buttons of the phone layouts are one element, so the row of each one is
+     * another element of the section that the watch page shows, as on tablets.
+     *
+     * @return The section with the two rows, or null if the section does not change.
+     */
+    public static byte[] getTwoRowsSection(MessageLite section) {
+        if (LAYOUT != VideoActionBarLayout.CLASSIC_TWO_ROWS) {
+            return null;
+        }
+
+        byte[] sectionBytes;
+        try {
+            sectionBytes = section.toByteArray();
+        } catch (RuntimeException ex) {
+            // A section that 'Hide related videos' changed in place after its serialized size was saved.
+            // Depending on the change, this throws an IllegalStateException or a RuntimeException.
+            return null;
+        }
+
+        try {
+            SecondaryContents contents = SecondaryContents.parseFrom(sectionBytes);
+            if (!contents.hasSlimVideoMetadataSectionRenderer()) {
+                return null;
+            }
+
+            SlimVideoMetadataSectionRenderer renderer = contents.getSlimVideoMetadataSectionRenderer();
+            SlimVideoMetadataSectionRenderer.Builder newRenderer = renderer.toBuilder().clearTertiaryContents();
+            boolean changed = false;
+            for (TertiaryContents row : renderer.getTertiaryContentsList()) {
+                byte[] bytes = row.getElementRenderer().getNewElement().toByteArray();
+                if (!FeedVideoCardsPatch.getElementText(bytes).contains(VIDEO_ACTION_BAR_TEMPLATE)) {
+                    newRenderer.addTertiaryContents(row);
+                    continue;
+                }
+
+                Element element = Element.parseFrom(setVideoActionBarLayout(bytes));
+                ComponentType componentType = element.getType().getComponentType();
+                LockupModel lockupModel = componentType.getModel().getLockupModel();
+                VideoActionBarViewModel actionBar = lockupModel.getViewModel().getVideoActionBarViewModel();
+                // The response has no element of the channel bar, so its uri is taken from the template cache.
+                String channelBarUri = CHANNEL_BAR_TEMPLATE.getUri();
+                if (channelBarUri == null || actionBar.getActionsCount() == 0
+                        || !actionBar.getActions(0).getContent().hasSubscribeButton()) {
+                    newRenderer.addTertiaryContents(row);
+                    continue;
+                }
+
+                // The settings that hide the channel and its Subscribe button are applied to the new channel bar here.
+                if (!Settings.HIDE_CHANNEL_PROFILE_BUTTON.get() && !Settings.HIDE_ACTION_BAR.get()) {
+                    CompactChannelBarViewModel channel = CompactChannelBarViewModel.parseFrom(
+                            actionBar.getActions(0).getContent().getSubscribeButton());
+                    CompactChannelBarViewModel.Builder newChannel = channel.toBuilder()
+                            .setChannelBarStyle(TWO_ROWS_CHANNEL_BAR_STYLE)
+                            .setChannelBarHeader(channel.getChannelBarHeader().toBuilder()
+                                    .setChannelBarHeaderViewModel(channel.getChannelBarHeader()
+                                            .getChannelBarHeaderViewModel().toBuilder().clearStyle()));
+                    if (Settings.HIDE_CHANNEL_PROFILE_SUBSCRIBE_BUTTON.get()) {
+                        newChannel.clearSubscribeButton();
+                    }
+
+                    SubscriptionConfig config = FeedCardLayoutPatch.subscriptionConfig(
+                            componentType.getSubscriptionConfig(), CHANNEL_BAR_TEMPLATE);
+                    newRenderer.addTertiaryContents(elementRow(row, element.toBuilder()
+                            .setProperties(element.getProperties().toBuilder()
+                                    .setIdentifierProperties(element.getProperties().getIdentifierProperties().toBuilder()
+                                            .setIdentifier(channelBarUri)))
+                            .setType(element.getType().toBuilder()
+                                    .setComponentType(ComponentType.newBuilder()
+                                            .setTemplateConfig(FeedCardLayoutPatch.templateConfig(channelBarUri))
+                                            .setModel(ElementModel.newBuilder()
+                                                    .setCompactChannelBarModel(CompactChannelBarModel.newBuilder()
+                                                            .setContext(lockupModel.getContext())
+                                                            .setSubscribeState(SubscribeState.newBuilder().setKey(channel
+                                                                    .getSubscribeButton().getSubscribeButtonViewModel()
+                                                                    .getStateEntityStoreKey()))
+                                                            .setViewModel(CompactChannelBarViewModelHolder.newBuilder()
+                                                                    .setCompactChannelBarViewModel(newChannel))
+                                                            .setUseThemeFromContext(true)))
+                                            .setSubscriptionConfig(config.toBuilder()
+                                                    .setEnvironmentSubscriptionConfig(EnvironmentSubscriptionConfig.newBuilder()
+                                                            .setModelField(CHANNEL_BAR_TEMPLATE.modelField)
+                                                            .setResultField(CHANNEL_BAR_ENVIRONMENT_FIELD)))))
+                            .build()));
+                }
+
+                VideoActionBarViewModel.Builder buttons = actionBar.toBuilder().clearActions();
+                for (int i = 1, count = actionBar.getActionsCount(); i < count; i++) {
+                    VideoActionBarItem action = actionBar.getActions(i);
+                    VideoActionBarItemContent content = action.getContent();
+                    // The share button has its text, as there is enough room without the channel.
+                    buttons.addActions(SHARE_BUTTON_ID.equals(content.getButton().getTargetId())
+                            ? action.toBuilder().setContent(content.toBuilder().setButton(content.getButton().toBuilder()
+                                    .setTitle(content.getButton().getAccessibilityText()))).build()
+                            : action);
+                }
+
+                // The buttons start where the avatar of the row above starts.
+                buttons.setLayoutConfig(actionBar.getLayoutConfig().toBuilder().clearEnableMarginStartAdjustment());
+                newRenderer.addTertiaryContents(elementRow(row,
+                        withActionBar(element, componentType, lockupModel, buttons.build())));
+                changed = true;
+            }
+
+            return changed
+                    ? contents.toBuilder().setSlimVideoMetadataSectionRenderer(newRenderer).build().toByteArray()
+                    : null;
+        } catch (Exception ex) {
+            Logger.printException(() -> "getTwoRowsSection failure", ex);
+        }
+
+        return null;
+    }
+
+    private static Element withActionBar(Element element, ComponentType componentType,
+                                         LockupModel lockupModel, VideoActionBarViewModel actionBar) {
+        return element.toBuilder()
+                .setType(element.getType().toBuilder()
+                        .setComponentType(componentType.toBuilder()
+                                .setModel(componentType.getModel().toBuilder()
+                                        .setLockupModel(lockupModel.toBuilder()
+                                                .setViewModel(lockupModel.getViewModel().toBuilder()
+                                                        .setVideoActionBarViewModel(actionBar))))))
+                .build();
+    }
+
+    private static TertiaryContents elementRow(TertiaryContents row, Element element)
+            throws InvalidProtocolBufferException {
+        return row.toBuilder()
+                .setElementRenderer(row.getElementRenderer().toBuilder()
+                        .setNewElement(NewElement.parseFrom(element.toByteArray())))
+                .build();
+    }
+
+    private interface ButtonMapper {
+        ButtonViewModel map(ButtonViewModel button, boolean toggled);
+    }
+
+    /**
+     * Buttons without an icon get the icon that the server sent for the same button,
+     * or a fallback icon of the app.
+     *
+     * @return The same action bar if no button changes.
+     */
+    private static VideoActionBarViewModel withButtonIcons(VideoActionBarViewModel actionBar) {
+        // The icons of the whole action bar are saved first,
+        // because the same button can be in the row and in the overflow.
+        mapButtons(actionBar, (button, toggled) -> {
+            if (!button.getTargetId().isEmpty() && !button.getIconName().isEmpty()) {
+                serverIcons.put(toggled ? button.getTargetId() + TOGGLED_ICON_KEY : button.getTargetId(),
+                        button.getIconName());
+            }
+            return button;
+        });
+
+        return mapButtons(actionBar, (button, toggled) -> {
+            String targetId = button.getTargetId();
+            if (!button.getIconName().isEmpty() || targetId.isEmpty()) {
+                return button;
+            }
+
+            String icon = toggled ? buttonIcon(targetId + TOGGLED_ICON_KEY) : null;
+            if (icon == null) {
+                // A toggled button without its own icon shows the icon of the button.
+                icon = buttonIcon(targetId);
+            }
+            if (icon == null) {
+                return button;
+            }
+            final String newIcon = icon;
+            Logger.printDebug(() -> "Button " + targetId + (toggled ? " (toggled)" : "") + " has no icon, using: " + newIcon);
+            return button.toBuilder().setIconName(newIcon).build();
+        });
+    }
+
+    @Nullable
+    private static String buttonIcon(String key) {
+        String icon = serverIcons.get(key);
+        if (icon != null) {
+            return icon;
+        }
+
+        String[] fallbackIcons = FALLBACK_ICONS.get(key);
+        if (fallbackIcons != null) {
+            for (String fallbackIcon : fallbackIcons) {
+                // Older app versions have other names for the same icons.
+                if (ResourceUtils.getIdentifier(ResourceType.DRAWABLE, fallbackIcon) != 0) {
+                    return fallbackIcon;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @return The same action bar if the mapper changes no button.
+     */
+    private static VideoActionBarViewModel mapButtons(VideoActionBarViewModel actionBar, ButtonMapper mapper) {
+        VideoActionBarViewModel.Builder builder = null;
+        for (int i = 0, count = actionBar.getActionsCount(); i < count; i++) {
+            VideoActionBarItem action = actionBar.getActions(i);
+            VideoActionBarItemContent content = mapButtons(action.getContent(), mapper);
+            if (content != action.getContent()) {
+                if (builder == null) builder = actionBar.toBuilder();
+                builder.setActions(i, action.toBuilder().setContent(content));
+            }
+        }
+        return builder == null ? actionBar : builder.build();
+    }
+
+    /**
+     * @return The same content if the mapper changes no button.
+     */
+    private static VideoActionBarItemContent mapButtons(VideoActionBarItemContent content, ButtonMapper mapper) {
+        if (content.hasLikeDislikeButtons()) {
+            VideoActionBarLikeDislike likeDislike = content.getLikeDislikeButtons();
+            VideoActionBarItemContent likeButton = mapButtons(likeDislike.getLikeButton(), mapper);
+            VideoActionBarItemContent dislikeButton = mapButtons(likeDislike.getDislikeButton(), mapper);
+            return likeButton == likeDislike.getLikeButton() && dislikeButton == likeDislike.getDislikeButton()
+                    ? content
+                    : content.toBuilder().setLikeDislikeButtons(likeDislike.toBuilder()
+                            .setLikeButton(likeButton)
+                            .setDislikeButton(dislikeButton)).build();
+        }
+
+        if (content.hasOverflow()) {
+            // The buttons of the minimal layout, and the items of its menu.
+            VideoActionBarOverflow overflow = content.getOverflow();
+            VideoActionBarOverflow.Builder builder = null;
+            for (int i = 0, count = overflow.getShownItemsCount(); i < count; i++) {
+                VideoActionBarItemContent item = mapButtons(overflow.getShownItems(i), mapper);
+                if (item != overflow.getShownItems(i)) {
+                    if (builder == null) builder = overflow.toBuilder();
+                    builder.setShownItems(i, item);
+                }
+            }
+            for (int i = 0, count = overflow.getMenuItemsCount(); i < count; i++) {
+                VideoActionBarItemContent item = mapButtons(overflow.getMenuItems(i), mapper);
+                if (item != overflow.getMenuItems(i)) {
+                    if (builder == null) builder = overflow.toBuilder();
+                    builder.setMenuItems(i, item);
+                }
+            }
+            return builder == null ? content : content.toBuilder().setOverflow(builder).build();
+        }
+
+        if (content.hasButton()) {
+            ButtonViewModel button = mapper.map(content.getButton(), false);
+            return button == content.getButton() ? content : content.toBuilder().setButton(button).build();
+        }
+
+        if (content.hasLikeButton()) {
+            LikeButtonViewModel likeButton = content.getLikeButton();
+            ToggleButtonViewModelHolder toggleButton = mapToggleButton(likeButton.getToggleButtonViewModel(), mapper);
+            return toggleButton == likeButton.getToggleButtonViewModel()
+                    ? content
+                    : content.toBuilder().setLikeButton(likeButton.toBuilder().setToggleButtonViewModel(toggleButton)).build();
+        }
+
+        if (content.hasDislikeButton()) {
+            DislikeButtonViewModel dislikeButton = content.getDislikeButton();
+            ToggleButtonViewModelHolder toggleButton = mapToggleButton(dislikeButton.getToggleButtonViewModel(), mapper);
+            return toggleButton == dislikeButton.getToggleButtonViewModel()
+                    ? content
+                    : content.toBuilder().setDislikeButton(dislikeButton.toBuilder().setToggleButtonViewModel(toggleButton)).build();
+        }
+
+        if (content.hasSaveButton()) {
+            AddToPlaylistButtonViewModel saveButton = content.getSaveButton();
+            ToggleButtonViewModelHolder toggleButton = mapToggleButton(saveButton.getToggleButtonViewModel(), mapper);
+            return toggleButton == saveButton.getToggleButtonViewModel()
+                    ? content
+                    : content.toBuilder().setSaveButton(saveButton.toBuilder().setToggleButtonViewModel(toggleButton)).build();
+        }
+
+        return content;
+    }
+
+    /**
+     * @return The same holder if the mapper changes no button.
+     */
+    private static ToggleButtonViewModelHolder mapToggleButton(ToggleButtonViewModelHolder holder, ButtonMapper mapper) {
+        ToggleButtonViewModel toggleButton = holder.getToggleButtonViewModel();
+        if (!toggleButton.hasDefaultButtonViewModel() || !toggleButton.hasToggledButtonViewModel()) {
+            return holder;
+        }
+
+        ButtonViewModel defaultButton = toggleButton.getDefaultButtonViewModel().getButtonViewModel();
+        ButtonViewModel toggledButton = toggleButton.getToggledButtonViewModel().getButtonViewModel();
+        ButtonViewModel newDefaultButton = mapper.map(defaultButton, false);
+        ButtonViewModel newToggledButton = mapper.map(toggledButton, true);
+        if (newDefaultButton == defaultButton && newToggledButton == toggledButton) {
+            return holder;
+        }
+
+        return holder.toBuilder()
+                .setToggleButtonViewModel(toggleButton.toBuilder()
+                        .setDefaultButtonViewModel(toggleButton.getDefaultButtonViewModel().toBuilder()
+                                .setButtonViewModel(newDefaultButton))
+                        .setToggledButtonViewModel(toggleButton.getToggledButtonViewModel().toBuilder()
+                                .setButtonViewModel(newToggledButton)))
+                .build();
     }
 
     /**

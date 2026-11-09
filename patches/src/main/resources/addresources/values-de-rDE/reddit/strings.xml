@@ -18,6 +18,13 @@ Second \"item\" text"</string>
 <resources>
   <string name="reddit_privacy_policy">Datenschutzerklärung von Reddit</string>
   <string name="morphe_google_signin_not_available_toast">Google Login nicht verfügbar. Verwende die E-Mail-Adresse für die Anmeldung.</string>
+  <string name="morphe_app_downgrade_dialog_title">Downgrade nicht unterstützt</string>
+  <string name="morphe_app_downgrade_dialog_message">"Diese Reddit-Installation wurde von &lt;b&gt;%1$s&lt;/b&gt; auf &lt;b&gt;%2$s&lt;/b&gt; downgradet
+&lt;br/&gt;&lt;br/&gt;
+App-Daten einer neueren Version funktionieren nicht mit älteren Versionen, und die App funktioniert möglicherweise nicht korrekt.
+&lt;br/&gt;&lt;br/&gt;
+Um eine ältere Version zu verwenden, müssen Sie Reddit &lt;b&gt;deinstallieren&lt;/b&gt; und dann die ältere Version installieren."</string>
+  <string name="morphe_app_downgrade_dialog_open_app_info">App-Info öffnen</string>
   <string name="morphe_screen_ads_title">Anzeigen</string>
   <string name="morphe_hide_post_ads_title">Feed-Anzeigen ausblenden</string>
   <string name="morphe_hide_comment_ads_title">Kommentar-Anzeigen ausblenden</string>
@@ -58,6 +65,8 @@ Second \"item\" text"</string>
   <string name="morphe_hide_trending_shelves_summary">Verbirgt die Trending-Regale aus dem Feed und den Suchvorschlägen</string>
   <string name="morphe_remove_notification_dialog_title">Benachrichtigungs-Vorschlagsdialog entfernen</string>
   <string name="morphe_remove_notification_dialog_summary">Entfernt den Benachrichtigungsvorschlagsdialog automatisch beim Besuch eines Subreddits</string>
+  <string name="morphe_high_quality_avatars_title">Hochwertige Avatare</string>
+  <string name="morphe_high_quality_avatars_summary">Zeigt Benutzer-Avatare in voller Auflösung</string>
   <string name="morphe_show_flairs_in_home_feed_title">Flairs im Home-Feed anzeigen</string>
   <string name="morphe_show_flairs_in_home_feed_summary">Zeigt Post-Flair-Badges im Home-Feed an</string>
   <string name="morphe_show_flairs_in_home_feed_user_dialog_message">Einige Feed-Einträge zeigen möglicherweise keinen Flair</string>

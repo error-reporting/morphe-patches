@@ -20,7 +20,6 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.os.Build;
 import android.text.Layout;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -40,9 +39,9 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 import app.morphe.extension.music.patches.lyrics.model.LyricsLine;
+import app.morphe.extension.music.patches.lyrics.requests.LyricsRequests;
 import app.morphe.extension.music.settings.Settings;
 import app.morphe.extension.music.settings.preference.LyricsTargetLanguagePreference;
 import app.morphe.extension.shared.ui.Dim;
@@ -50,44 +49,25 @@ import app.morphe.extension.shared.ui.Dim;
 /** All of it is static and reads no state of its own, which is why it lives outside the view. */
 final class LyricsViewSupport {
 
-    private static final float FOOTER_ALPHA = 0.6f;
-
-    private static final long HIGHLIGHT_FADE_DURATION_MILLISECONDS = 320;
-
-    private static final String LYRICS_SOURCE_KEY = "morphe_music_lyrics_source_label";
-
-    private static final float FOOTER_TEXT_SIZE_SP = 16;
-
-    private static final float BACKGROUND_TEXT_SIZE_FACTOR = 0.7f;
-    private static final float SECTION_TAG_TEXT_SIZE_FACTOR = 0.45f;
-
-    private static final float SECTION_DOT_INSET_FACTOR = 0.18f;
-
     /** Lines other than the active one shrink a little, on top of dimming. */
     static final float ACTIVE_LINE_SCALE = 1.0f;
     static final float INACTIVE_LINE_SCALE = 0.95f;
-
-    private static final ArgbEvaluator BUTTON_COLOR_EVALUATOR = new ArgbEvaluator();
-
     /** Compose LinearOutSlowInEasing. */
     static final TimeInterpolator LINEAR_OUT_SLOW_IN =
             new PathInterpolator(0f, 0f, 0.2f, 1f);
-
-    /** Compose FastOutSlowInEasing. */
+    /** The Compose FastOutSlowInEasing. */
     static final TimeInterpolator FAST_OUT_SLOW_IN =
             new PathInterpolator(0.4f, 0f, 0.2f, 1f);
+    private static final float FOOTER_ALPHA = 0.6f;
+    private static final long HIGHLIGHT_FADE_DURATION_MILLISECONDS = 320;
+    private static final String LYRICS_SOURCE_KEY = "morphe_music_lyrics_source_label";
+    private static final float FOOTER_TEXT_SIZE_SP = 16;
+    private static final float BACKGROUND_TEXT_SIZE_FACTOR = 0.7f;
+    private static final float SECTION_TAG_TEXT_SIZE_FACTOR = 0.45f;
+    private static final float SECTION_DOT_INSET_FACTOR = 0.18f;
+    private static final ArgbEvaluator BUTTON_COLOR_EVALUATOR = new ArgbEvaluator();
 
-    /**
-     * MIUI and HyperOS draw the bold system font too thin, most visibly on CJK text, so these
-     * devices get a heavier weight on top.
-     */
-    private static final boolean IS_XIAOMI = isXiaomi();
-
-    private static boolean isXiaomi() {
-        String manufacturer = Build.MANUFACTURER.toLowerCase(Locale.ROOT);
-        String brand = Build.BRAND.toLowerCase(Locale.ROOT);
-        return manufacturer.contains("xiaomi") || brand.contains("xiaomi")
-                || brand.contains("redmi") || brand.contains("poco");
+    private LyricsViewSupport() {
     }
 
     /** Bolds a paint for lyrics; a typeface set on it afterwards undoes the weight. */
@@ -97,16 +77,13 @@ final class LyricsViewSupport {
                 | Paint.ANTI_ALIAS_FLAG
                 | Paint.SUBPIXEL_TEXT_FLAG
                 | Paint.LINEAR_TEXT_FLAG);
-        paint.setFontVariationSettings(IS_XIAOMI ? "'wght' 750" : "'wght' 700");
-        paint.setFakeBoldText(IS_XIAOMI);
+        paint.setFontVariationSettings(null);
+        paint.setFakeBoldText(false);
     }
 
     /** Draws a line a little tighter, except a joining script, which spacing would break apart. */
     static float lineLetterSpacing(@Nullable CharSequence text, float textSizeSp) {
         return LyricsSpanBuilder.containsJoiningScript(text) ? 0f : -0.5f / Math.max(12f, textSizeSp);
-    }
-
-    private LyricsViewSupport() {
     }
 
     static int leadingRegionSize(Layout layout, int start, int end) {
@@ -209,7 +186,8 @@ final class LyricsViewSupport {
         combined.addAll(lineTimings);
         for (LyricsSpanBuilder.WordTiming span : readingSpans) {
             combined.add(new LyricsSpanBuilder.WordTiming(
-                    span.start() + shift, span.end() + shift, span.startMs(), span.endMs(), null));
+                    span.start() + shift, span.end() + shift, span.startMs(), span.endMs(),
+                    null, span.hasTrailingSpace(), null, span.averaged()));
         }
         return combined;
     }
@@ -413,13 +391,13 @@ final class LyricsViewSupport {
     }
 
     static CharSequence sourceText(String providerName, boolean translated,
-                                    boolean translatedFromGoogle, boolean translatedFromAI, @Nullable String translatedAiModel,
-                                    boolean romanized, boolean romanizedFromGoogle, boolean romanizedFromAI,
-                                    @Nullable String romanizedAiModel, LyricsPanelView.OnlyMode onlyMode,
-                                    @Nullable String romanizedLocalDictionary,
-                                    @Nullable Runnable onTranslationLanguage,
-                                    @Nullable Runnable onRomanizationLanguage,
-                                    @Nullable Runnable onSourceClicked) {
+                                   boolean translatedFromGoogle, boolean translatedFromAI, @Nullable String translatedAiModel,
+                                   boolean romanized, boolean romanizedFromGoogle, boolean romanizedFromAI, boolean romanizedFromEmbedded,
+                                   @Nullable String romanizedAiModel, LyricsPanelView.OnlyMode onlyMode,
+                                   @Nullable String romanizedLocalDictionary,
+                                   @Nullable Runnable onTranslationLanguage,
+                                   @Nullable Runnable onRomanizationLanguage,
+                                   @Nullable Runnable onSourceClicked) {
         SpannableStringBuilder text = new SpannableStringBuilder();
         appendSourceLine(text, String.format(str(LYRICS_SOURCE_KEY), providerName), onSourceClicked);
 
@@ -432,17 +410,32 @@ final class LyricsViewSupport {
                         translatedAiModel), true, onTranslationLanguage);
             }
         }
-        if (onlyMode != LyricsPanelView.OnlyMode.TRANS && romanized) {
-            if (romanizedFromGoogle) {
-                appendLink(text, str("morphe_music_lyrics_romanized_by_google"),
-                        false, onRomanizationLanguage);
-            } else if (romanizedFromAI && romanizedAiModel != null) {
-                appendLink(text, String.format(str("morphe_music_lyrics_romanized_by_ai"),
-                        romanizedAiModel), false, onRomanizationLanguage);
-            } else if (romanizedLocalDictionary != null) {
-                // Named and nothing more: the licences are in the About row.
-                appendLink(text, String.format(str("morphe_music_lyrics_romanized_by_local"),
-                        romanizedLocalDictionary), false, onRomanizationLanguage);
+        if (onlyMode != LyricsPanelView.OnlyMode.TRANS) {
+            final String rubyProvider = LyricsTargetLanguagePreference.rubyProviderLabel();
+            String source = null;
+            if (LyricsRequests.isRomanizationOff()) {
+                // No romanization, so the ruby takes its place.
+                if (rubyProvider != null) {
+                    source = String.format(str("morphe_music_lyrics_romanized_by_local"), rubyProvider);
+                }
+            } else if (romanized) {
+                if (romanizedFromGoogle) {
+                    source = str("morphe_music_lyrics_romanized_by_google");
+                } else if (romanizedFromAI && romanizedAiModel != null) {
+                    source = String.format(str("morphe_music_lyrics_romanized_by_ai"), romanizedAiModel);
+                } else if (romanizedLocalDictionary != null) {
+                    // Named and nothing more: the licences are in the licenses dialog.
+                    source = String.format(str("morphe_music_lyrics_romanized_by_local"),
+                            romanizedLocalDictionary);
+                } else if (romanizedFromEmbedded && rubyProvider != null) {
+                    source = String.format(str("morphe_music_lyrics_romanized_by_local"), rubyProvider);
+                }
+                if (source != null && rubyProvider != null && !source.contains(rubyProvider)) {
+                    source = str("morphe_music_lyrics_with_ruby_provider", source, rubyProvider);
+                }
+            }
+            if (source != null) {
+                appendLink(text, source, false, onRomanizationLanguage);
             }
         }
         return text;

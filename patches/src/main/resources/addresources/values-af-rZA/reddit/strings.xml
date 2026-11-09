@@ -18,6 +18,13 @@ Second \"item\" text"</string>
 <resources>
   <string name="reddit_privacy_policy">Reddit privaatheidsbeleid</string>
   <string name="morphe_google_signin_not_available_toast">Google-aanmelding is nie beskikbaar nie. Gebruik e-pos om aan te meld.</string>
+  <string name="morphe_app_downgrade_dialog_title">Afgradering nie ondersteun nie</string>
+  <string name="morphe_app_downgrade_dialog_message">"Hierdie Reddit-installasie is afgradeer vanaf &lt;b&gt;%1$s&lt;/b&gt; na &lt;b&gt;%2$s&lt;/b&gt;
+&lt;br/&gt;&lt;br/&gt;
+Toepassingsdata vanaf 'n nuwer weergawe werk nie met ouer weergawes nie en die toepassing mag nie korrek werk nie.
+&lt;br/&gt;&lt;br/&gt;
+Om 'n ouer weergawe te gebruik, moet jy Reddit &lt;b&gt;deïnstalleer&lt;/b&gt; en dan die ouer weergawe installeer."</string>
+  <string name="morphe_app_downgrade_dialog_open_app_info">Maak toepassingsinfo oop</string>
   <string name="morphe_screen_ads_title">Advertensies</string>
   <string name="morphe_hide_post_ads_title">Verberg strokie-advertensies</string>
   <string name="morphe_hide_comment_ads_title">Verberg kommentaar-advertensies</string>
@@ -58,6 +65,8 @@ Second \"item\" text"</string>
   <string name="morphe_hide_trending_shelves_summary">Verberg die Trending-rakke van die nuutvoerm en soekvoorstelle</string>
   <string name="morphe_remove_notification_dialog_title">Verwyder kennisgewing-voorstel-dialoog</string>
   <string name="morphe_remove_notification_dialog_summary">Sluit die kennisgewingvoorstel-dialoog outomaties wanneer \'n subreddit besoek word</string>
+  <string name="morphe_high_quality_avatars_title">Hoëgehalte-avatars</string>
+  <string name="morphe_high_quality_avatars_summary">Wys gebruiker-avatars in volle resolusie</string>
   <string name="morphe_show_flairs_in_home_feed_title">Wys opflakkings in die tuisvoer</string>
   <string name="morphe_show_flairs_in_home_feed_summary">Wys posopflakkings in die tuisvoer</string>
   <string name="morphe_show_flairs_in_home_feed_user_dialog_message">Sommige items in die voer dalk nie \'n opflikking wys nie</string>

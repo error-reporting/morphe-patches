@@ -63,10 +63,14 @@ public final class LockScreenLyrics {
     private static String lastPushedArtist;
     /** Set when the app pushes fresh metadata, so the next tick pushes it again. */
     private static volatile boolean needsRepush;
-    /** Drives the periodic check that mirrors the current line into the MediaSession. */
-    private static final LyricsTicker ticker = new LyricsTicker(LockScreenLyrics::tick);
     @Nullable
     private static volatile PlaybackState playbackState;
+
+    /** Drives the periodic check that mirrors the current line into the MediaSession. */
+    private static final LyricsTicker ticker = new LyricsTicker(LockScreenLyrics::tick);
+    private static volatile long observedPositionMs;
+    private static volatile long observedAtElapsedMs;
+
     /**
      * Re-arms the ticker whenever lyrics arrive or disappear, so a late lookup does not
      * leave the mirror stuck on the track title.
@@ -76,8 +80,6 @@ public final class LockScreenLyrics {
             ticker.schedule();
         }
     };
-    private static volatile long observedPositionMs;
-    private static volatile long observedAtElapsedMs;
 
     private LockScreenLyrics() {
     }
@@ -201,7 +203,7 @@ public final class LockScreenLyrics {
         }
 
         session.setMetadata(metadata);
-        LyricNotificationRefresh.refresh(session, newTitle,
+        LyricsNotificationRefresh.refresh(session, newTitle,
                 metadata.getString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE));
         lastPushedTitle = newTitle;
         lastPushedArtist = artist;
@@ -253,7 +255,7 @@ public final class LockScreenLyrics {
             session.setMetadata(original);
             String title = original.getString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE);
             String text = original.getString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE);
-            LyricNotificationRefresh.refresh(session,
+            LyricsNotificationRefresh.refresh(session,
                     title != null ? title : original.getString(MediaMetadata.METADATA_KEY_TITLE),
                     text != null ? text : original.getString(MediaMetadata.METADATA_KEY_ARTIST));
             nudgePlaybackState(session);
@@ -309,6 +311,4 @@ public final class LockScreenLyrics {
         builder.putString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE, artist);
         return builder.build();
     }
-
-
 }

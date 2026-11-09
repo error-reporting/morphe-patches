@@ -9,6 +9,15 @@ option java_outer_classname = "FeedCardLayoutOuterClass";
 // Bytes of the newElement of an elementRenderer.
 message Element {
     ElementType type = 1;
+    ElementProperties properties = 2;
+}
+
+message ElementProperties {
+    ElementIdentifierProperties identifierProperties = 183314536;
+}
+
+message ElementIdentifierProperties {
+    string identifier = 1;
 }
 
 message ElementType {
@@ -36,6 +45,8 @@ message ElementModel {
     LockupModel lockupModel = 413471385;
     // Action bar of the watch page that is not collapsed, such as on tablets (video_action_bar.eml).
     VideoActionBarModel videoActionBarModel = 389155117;
+    // Channel bar of the watch page, in its own row above the action bar (compact_channel_bar.eml).
+    CompactChannelBarModel compactChannelBarModel = 391108665;
     // Header of the shelves, such as the Shorts shelf (shelf_header.eml).
     ShelfHeaderModel shelfHeaderModel = 229393850;
     // Horizontal shelf of videos, with its header (horizontal_shelf.eml).
@@ -44,12 +55,43 @@ message ElementModel {
     ShortsVideoCellModel shortsVideoCellModel = 519005951;
     // Shelf of Shorts in a carousel, with its header (shorts_shelf.eml), such as in the search results.
     ShortsShelfModel shortsShelfModel = 315733268;
-    // Video of the vertical shelves below a shelf header, such as in the channel home (grid_video_wrapper.eml).
+    // Video of the vertical shelves below a shelf header, such as in the channel home (grid_video_wrapper.eml),
+    // and playlist or podcast of these shelves (grid_video.eml).
     GridVideoModel gridVideoModel = 234662488;
+    // Playlist or podcast in a row of a list, such as in the vertical shelves of the channel home (compact_playlist.eml).
+    CompactPlaylistModel compactPlaylistModel = 202672916;
+}
+
+message CompactPlaylistModel {
+    CompactPlaylistData data = 16;
+}
+
+message CompactPlaylistData {
+    string accessibilityText = 5;
 }
 
 message GridVideoModel {
+    GridVideoData data = 1;
     string accessibilityText = 19;
+}
+
+// Texts are bytes, as the fields are not all texts in every element.
+message GridVideoData {
+    GridVideoThumbnail thumbnail = 1;
+    GridVideoMetadata metadata = 2;
+}
+
+message GridVideoThumbnail {
+    // Text of the badge of a playlist or a podcast, such as "249 episodes".
+    bytes collectionCountText = 6;
+}
+
+message GridVideoMetadata {
+    bytes title = 1;
+    // Such as "Channel · Playlist".
+    bytes subtitle = 2;
+    // Such as "Updated 2 days ago".
+    bytes details = 3;
 }
 
 message ShortsShelfModel {
@@ -92,8 +134,14 @@ message ShelfHeaderStyle {
 
 // Fills the theme and the capabilities of the model when the element is bound.
 message SubscriptionConfig {
+    EnvironmentSubscriptionConfig environmentSubscriptionConfig = 212323971;
     ThemeSubscriptionConfig themeSubscriptionConfig = 386334485;
     CapabilitiesSubscriptionConfig capabilitiesSubscriptionConfig = 386334486;
+}
+
+message EnvironmentSubscriptionConfig {
+    int32 modelField = 1;
+    int32 resultField = 2;
 }
 
 message ThemeSubscriptionConfig {
@@ -202,6 +250,43 @@ message LockupViewModelHolder {
     VideoActionBarViewModel videoActionBarViewModel = 2185;
 }
 
+message CompactChannelBarModel {
+    ElementContext context = 2;
+    SubscribeState subscribeState = 3;
+    CompactChannelBarViewModelHolder viewModel = 9;
+    bool useThemeFromContext = 11;
+}
+
+message SubscribeState {
+    string key = 1;
+}
+
+message CompactChannelBarViewModelHolder {
+    CompactChannelBarViewModel compactChannelBarViewModel = 1107;
+}
+
+message CompactChannelBarViewModel {
+    SubscribeButtonViewModelHolder subscribeButton = 24;
+    int32 channelBarStyle = 26;
+    ChannelBarHeaderViewModelHolder channelBarHeader = 27;
+}
+
+message SubscribeButtonViewModelHolder {
+    SubscribeButtonViewModel subscribeButtonViewModel = 518912898;
+}
+
+message SubscribeButtonViewModel {
+    string stateEntityStoreKey = 3;
+}
+
+message ChannelBarHeaderViewModelHolder {
+    ChannelBarHeaderViewModel channelBarHeaderViewModel = 477514866;
+}
+
+message ChannelBarHeaderViewModel {
+    int32 style = 5;
+}
+
 message VideoActionBarModel {
     VideoActionBarData videoActionBarData = 17;
 }
@@ -221,6 +306,7 @@ message VideoActionBarViewModel {
 
 message VideoActionBarLayoutConfig {
     bool iconButtons = 6; // Buttons of the minimal layout, with an icon above their text.
+    bool enableMarginStartAdjustment = 7; // Starts the row with the channel further from the start of the screen.
 }
 
 message VideoActionBarSize {
@@ -511,6 +597,13 @@ message InnertubeCommandHolder {
 message InnertubeCommand {
     BrowseEndpoint browseEndpoint = 48687626;
     LikeEndpoint likeEndpoint = 63158558;
+    OpenPopupAction openPopupAction = 98150882;
+}
+
+// Command of the menu button of the feed videos.
+message OpenPopupAction {
+    // Menu (PlaylistQueueRenderer.Menu), parsed only where it is read, because every feed video has one.
+    bytes popup = 1;
 }
 
 message BrowseEndpoint {
@@ -539,9 +632,15 @@ message ElementContext {
 
 message ElementsExperiments {
     CardLayoutExperiments cardLayoutExperiments = 5;
+    // Experiments read by lockup_metadata_ue.eml.
+    bytes lockupMetadataExperiments = 26;
+    // Experiments read by lockup.eml and lockup_thumbnail.eml (field 524937).
+    bytes lockupExperiments = 42;
 }
 
-// Experiments read by lockup.eml.
+// Experiments read by the cards and the classic layout. Besides these, lockup_metadata_ue.eml reads
+// 516593 (leaves out the menu button) and 520547, video_lockup_with_attachment.eml 475852 and 513889,
+// video_lockup_attachments.eml 445511.
 message CardLayoutExperiments {
     // Background in the color sampled from the thumbnail.
     bool enableColorSampledBackground = 491718;

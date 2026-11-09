@@ -66,7 +66,7 @@ public record LyricsLine(long startTimeMs, long endTimeMs, String text, List<Wor
                         if (i > 0) sb.append(' ');
                         sb.append(w.text());
                         boolean sp = (i < words.size() - 1);
-                        updated.add(new Word(w.startMs(), w.endMs(), w.text(), w.romaji(), sp));
+                        updated.add(new Word(w.startMs(), w.endMs(), w.text(), w.romaji(), sp, w.ruby()));
                     }
                     words = updated;
                     text = sb.toString();
@@ -85,7 +85,7 @@ public record LyricsLine(long startTimeMs, long endTimeMs, String text, List<Wor
                     } else {
                         sp = (i < words.size() - 1);
                     }
-                    updated.add(new Word(w.startMs(), w.endMs(), w.text(), w.romaji(), sp));
+                    updated.add(new Word(w.startMs(), w.endMs(), w.text(), w.romaji(), sp, w.ruby()));
                 }
                 words = updated;
             }
@@ -129,23 +129,6 @@ public record LyricsLine(long startTimeMs, long endTimeMs, String text, List<Wor
         return builder.toString();
     }
 
-    private static boolean hasMultipleWords(String value) {
-        boolean inWord = false;
-        int wordCount = 0;
-        for (int i = 0; i < value.length(); i++) {
-            if (Character.isWhitespace(value.charAt(i))) {
-                inWord = false;
-            } else if (!inWord) {
-                inWord = true;
-                wordCount++;
-                if (wordCount > 1) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     public boolean hasWords() {
         return !words.isEmpty();
     }
@@ -169,13 +152,25 @@ public record LyricsLine(long startTimeMs, long endTimeMs, String text, List<Wor
         }
         if (words.size() == 1) {
             Word single = words.get(0);
-            // A span over several words is the line's own timing written back out.
-            if (hasMultipleWords(text)) {
+            if (single.endMs() <= single.startMs()) {
                 return false;
             }
-            return single.endMs() > single.startMs();
+            if (compactText(single.text()).equalsIgnoreCase(compactText(text))) {
+                // Same text: word sync only when the word carries its own span, not the line's.
+                return single.startMs() != startTimeMs || single.endMs() != endTimeMs;
+            }
+            // Different text: the word covers only part of the line, so it is word sync.
+            return true;
         }
-        return true;
+        for (Word word : words) {
+            if (word.endMs() <= word.startMs()) {
+                continue;
+            }
+            if (word.startMs() != startTimeMs || word.endMs() != endTimeMs) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @NonNull

@@ -18,6 +18,13 @@ Second \"item\" text"</string>
 <resources>
   <string name="reddit_privacy_policy">Reddits integritetspolicy</string>
   <string name="morphe_google_signin_not_available_toast">Google-inloggning är inte tillgänglig. Använd e-post för att logga in.</string>
+  <string name="morphe_app_downgrade_dialog_title">Nedgradering stöds inte</string>
+  <string name="morphe_app_downgrade_dialog_message">"Den här installationen av Reddit nedgraderades från &lt;b&gt;%1$s&lt;/b&gt; till &lt;b&gt;%2$s&lt;/b&gt;
+&lt;br/&gt;&lt;br/&gt;
+Appdata från en nyare version fungerar inte med äldre versioner och appen kanske inte fungerar korrekt.
+&lt;br/&gt;&lt;br/&gt;
+För att använda en äldre version måste du &lt;b&gt;avinstallera&lt;/b&gt; Reddit och sedan installera den äldre versionen."</string>
+  <string name="morphe_app_downgrade_dialog_open_app_info">Öppna appinfo</string>
   <string name="morphe_screen_ads_title">Annonser</string>
   <string name="morphe_hide_post_ads_title">Dölj flödesannonser</string>
   <string name="morphe_hide_comment_ads_title">Dölj kommentarsannonser</string>
@@ -58,6 +65,8 @@ Second \"item\" text"</string>
   <string name="morphe_hide_trending_shelves_summary">Döljer Trendande-hyllorna från flödet och sökförslagen</string>
   <string name="morphe_remove_notification_dialog_title">Ta bort dialogruta för aviseringsförslag</string>
   <string name="morphe_remove_notification_dialog_summary">Avfärdar dialogrutan för aviseringsförslag automatiskt när du besöker en subreddit</string>
+  <string name="morphe_high_quality_avatars_title">Högkvalitativa avatarer</string>
+  <string name="morphe_high_quality_avatars_summary">Visar användaravatarer i full upplösning</string>
   <string name="morphe_show_flairs_in_home_feed_title">Visa flairer i hemkanalen</string>
   <string name="morphe_show_flairs_in_home_feed_summary">Visar postaflairer i hemkanalen</string>
   <string name="morphe_show_flairs_in_home_feed_user_dialog_message">Vissa inlägg kan visa en flair</string>

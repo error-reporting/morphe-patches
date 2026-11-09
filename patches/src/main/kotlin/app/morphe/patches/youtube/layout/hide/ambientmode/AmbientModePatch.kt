@@ -11,29 +11,38 @@
 package app.morphe.patches.youtube.layout.hide.ambientmode
 
 import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.methodCall
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.mutableClassDefBy
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.matchAllMethodIndicesForEach
 import app.morphe.patcher.util.matchSingle
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
+import app.morphe.patches.shared.layout.theme.lithoColorHookPatch
+import app.morphe.patches.shared.layout.theme.lithoDrawableColorHook
 import app.morphe.patches.shared.misc.fix.proto.fixProtoLibraryPatch
 import app.morphe.patches.shared.misc.fix.proto.parseByteArrayMethodRef
 import app.morphe.patches.shared.misc.settings.preference.PreferenceScreenPreference
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
+import app.morphe.patches.youtube.layout.sponsorblock.ControlsOverlayFingerprint
 import app.morphe.patches.youtube.misc.extension.sharedExtensionPatch
 import app.morphe.patches.youtube.misc.playservice.is_21_02_or_greater
 import app.morphe.patches.youtube.misc.playservice.is_21_03_or_greater
 import app.morphe.patches.youtube.misc.playservice.is_21_12_or_greater
+import app.morphe.patches.youtube.misc.playservice.is_21_30_or_greater
 import app.morphe.patches.youtube.misc.playservice.is_21_43_or_greater
 import app.morphe.patches.youtube.misc.playservice.versionCheckPatch
+import app.morphe.patches.youtube.misc.playertype.playerTypeHookPatch
 import app.morphe.patches.youtube.misc.settings.PreferenceScreen
 import app.morphe.patches.youtube.misc.settings.settingsPatch
 import app.morphe.patches.youtube.shared.Constants.COMPATIBILITY_YOUTUBE
+import app.morphe.patches.youtube.video.information.videoInformationPatch
+import app.morphe.patches.youtube.video.information.videoTimeHook
 import app.morphe.util.findFieldFromToString
 import app.morphe.util.findInstructionIndicesReversedOrThrow
 import app.morphe.util.indexOfFirstInstructionOrThrow
@@ -52,6 +61,9 @@ import com.android.tools.smali.dexlib2.util.MethodUtil
 
 private const val EXTENSION_CLASS =
     "Lapp/morphe/extension/youtube/patches/AmbientModePatch;"
+
+private const val EXTENSION_ENHANCED_AMBIENT_MODE_CLASS =
+    "Lapp/morphe/extension/youtube/ambientlight/AmbientLightController;"
 
 /**
  * `disableAmbientMode(true)` returns true if ambient mode is not disabled in the Morphe settings.
@@ -76,15 +88,18 @@ private const val DEFAULT_CINEMATIC_CONTAINER_RENDERER =
             "gICYAx0AAIA/CICAgJgDCAIdAAAAPyUAAAA/LQAAgD81AACAPw=="
 
 @Suppress("unused")
-val ambientModePatch = bytecodePatch(
+val ambientModePatch = patch(
     name = "Ambient mode",
-    description = "Forces Ambient mode on and adds options to bypass power saving restrictions for Ambient mode and disable it entirely or in fullscreen.",
+    description = "Adds Enhanced Ambient mode and options to force Ambient mode on, bypass its power saving restrictions, and disable it entirely or in fullscreen.",
 ) {
     dependsOn(
         settingsPatch,
         sharedExtensionPatch,
         versionCheckPatch,
         fixProtoLibraryPatch,
+        playerTypeHookPatch,
+        videoInformationPatch,
+        lithoColorHookPatch { is_21_30_or_greater },
     )
 
     compatibleWith(COMPATIBILITY_YOUTUBE)
@@ -95,12 +110,43 @@ val ambientModePatch = bytecodePatch(
                 key = "morphe_ambient_mode_screen",
                 sorting = PreferenceScreenPreference.Sorting.UNSORTED,
                 preferences = setOf(
+                    SwitchPreference("morphe_enhanced_ambient_mode", summary = true),
+                    SwitchPreference("morphe_enhanced_ambient_mode_readable_text", summary = true),
                     SwitchPreference("morphe_bypass_ambient_mode_restrictions", summary = true),
                     SwitchPreference("morphe_disable_ambient_mode"),
                     SwitchPreference("morphe_disable_fullscreen_ambient_mode"),
                 )
             )
         )
+
+        //
+        // Enhanced Ambient mode.
+        //
+        lithoDrawableColorHook("$EXTENSION_ENHANCED_AMBIENT_MODE_CLASS->getLithoColor(Landroid/graphics/drawable/Drawable;I)I")
+        videoTimeHook(EXTENSION_ENHANCED_AMBIENT_MODE_CLASS, "setVideoTime")
+        AmbientModeToggleFingerprint.let {
+            it.method.apply {
+                val index = it.instructionMatches.last().index
+                val register = getInstruction<FiveRegisterInstruction>(index).registerE
+
+                addInstruction(
+                    index,
+                    "invoke-static { v$register }, $EXTENSION_ENHANCED_AMBIENT_MODE_CLASS->" +
+                            "setAmbientModeToggle(Ljava/lang/Boolean;)V"
+                )
+            }
+        }
+        ControlsOverlayFingerprint.let {
+            it.clearMatch() // Parent fingerprint is shared and may have changed.
+            it.method.apply {
+                val checkCastIndex = it.instructionMatches.last().index
+                val register = getInstruction<OneRegisterInstruction>(checkCastIndex).registerA
+                addInstruction(
+                    checkCastIndex + 1,
+                    "invoke-static { v$register }, $EXTENSION_ENHANCED_AMBIENT_MODE_CLASS->initialize(Landroid/view/ViewGroup;)V"
+                )
+            }
+        }
 
         //
         // Bypass ambient mode restrictions.
@@ -154,7 +200,7 @@ val ambientModePatch = bytecodePatch(
 
             // 21.43+ inlines the lambdas that read the first value for the Ambient mode receiver.
             // The receiver is registered on the main thread, or asynchronously if a server flag is on.
-            powerSaveModeInitialValueFingerprint(PowerSaveModeReceiverRegisterFingerprint.method).method.hook()
+            PowerSaveModeInitialValueFingerprint.method.hook()
             PowerSaveModeInitialValueAsyncFingerprint.method.hook()
         } else if (is_21_03_or_greater) {
             IntentActionSyntheticAlternativeLegacyFingerprint.method.hook()
@@ -199,10 +245,9 @@ val ambientModePatch = bytecodePatch(
         val styleHasBitMask = styleMatches[1].getInstruction<NarrowLiteralInstruction>().narrowLiteral
         val styleField = styleMatches[3].fieldReference
 
-        val configField = cinematicContainerConfigFingerprint(rendererType).matchSingle()
+        val configField = CinematicContainerConfigFingerprint.matchSingle()
             .instructionMatches.last().fieldReference
-        val configType = configField.type
-        val enabledByDefaultField = cinematicContainerEnabledByDefaultFingerprint(configType).matchSingle()
+        val enabledByDefaultField = CinematicContainerEnabledByDefaultFingerprint.matchSingle()
             .instructionMatches[3].fieldReference
 
         val defaultRendererField = rendererClass.fields.first { field ->

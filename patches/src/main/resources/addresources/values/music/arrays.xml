@@ -191,6 +191,8 @@
         <item>हिन्दी</item>
         <item>Հայերեն</item>
         <item>日本語</item>
+        <item>日本語（平仮名）</item>
+        <item>日本語（片仮名）</item>
         <item>ქართული</item>
         <item>Қазақ тілі</item>
         <item>ಕನ್ನಡ</item>
@@ -248,6 +250,8 @@
         <item>HI</item>
         <item>HY</item>
         <item>JA</item>
+        <item>ja-Hira</item>
+        <item>ja-Kana</item>
         <item>KA</item>
         <item>KK</item>
         <item>KN</item>

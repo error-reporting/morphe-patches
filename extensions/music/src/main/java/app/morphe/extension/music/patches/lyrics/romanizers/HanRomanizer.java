@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 
 /**
  * Reads a line of Han characters a word at a time, since a character alone cannot say which of its
- * readings the word around it wants, and a character at a time where no word is known. Kana are
+ * readings the surrounding word wants, and a character at a time when no word is known. Kana are
  * read by rule and the rest is passed through, so a line that mixes scripts keeps its other half.
  */
 final class HanRomanizer {
@@ -33,7 +33,7 @@ final class HanRomanizer {
             char c = line.charAt(i);
             String syllable = character(c, readings);
             if (syllable != null) {
-                append(out, syllable);
+                Romanizations.appendWord(out, syllable);
                 i++;
                 continue;
             }
@@ -45,7 +45,7 @@ final class HanRomanizer {
                 while (kanaEnd < line.length() && ScriptDetector.isKana(line.charAt(kanaEnd))) {
                     kanaEnd++;
                 }
-                append(out, KanaRomanizer.romanize(line.substring(i, kanaEnd)));
+                Romanizations.appendWord(out, KanaRomanizer.romanize(line.substring(i, kanaEnd)));
                 i = kanaEnd;
                 continue;
             }
@@ -55,7 +55,7 @@ final class HanRomanizer {
                     && !ScriptDetector.isKana(line.charAt(end))) {
                 end++;
             }
-            append(out, line.substring(i, end).trim());
+            Romanizations.appendWord(out, line.substring(i, end).trim());
             i = end;
         }
         return out.toString().trim();
@@ -72,7 +72,7 @@ final class HanRomanizer {
         for (int length = longest; length >= 1; length--) {
             String reading = readings.word(line.substring(index, index + length));
             if (reading != null) {
-                append(out, reading);
+                Romanizations.appendWord(out, reading);
                 return length;
             }
         }
@@ -82,12 +82,6 @@ final class HanRomanizer {
     @Nullable
     private static String character(char c, Readings readings) {
         return ScriptDetector.isHan(c) ? readings.character(c) : null;
-    }
-
-    private static void append(StringBuilder out, @Nullable String reading) {
-        if (reading == null || reading.isEmpty()) return;
-        if (out.length() > 0) out.append(' ');
-        out.append(reading);
     }
 
     interface Readings {

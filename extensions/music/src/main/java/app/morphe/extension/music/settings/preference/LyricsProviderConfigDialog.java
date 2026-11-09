@@ -12,8 +12,6 @@ import static app.morphe.extension.shared.StringRef.str;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.text.InputType;
 import android.util.Pair;
 import android.util.TypedValue;
@@ -36,14 +34,14 @@ import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import app.morphe.extension.music.patches.lyrics.derive.AiProviders;
-import app.morphe.extension.music.patches.lyrics.derive.DeepLClient;
+import app.morphe.extension.music.patches.lyrics.derive.ProcessingProviders;
 import app.morphe.extension.music.patches.lyrics.derive.OpenAIClient;
 import app.morphe.extension.music.settings.Settings;
 import app.morphe.extension.shared.Logger;
 import app.morphe.extension.shared.settings.StringSetting;
 import app.morphe.extension.shared.Utils;
 import app.morphe.extension.shared.settings.preference.CustomDialogListPreference;
+import app.morphe.extension.shared.translation.DeepLClient;
 import app.morphe.extension.shared.theme.ThemeUtils;
 import app.morphe.extension.shared.ui.CustomDialog;
 import app.morphe.extension.shared.ui.Dim;
@@ -65,15 +63,16 @@ final class LyricsProviderConfigDialog {
     }
 
     /**
-     * @param prompt the prompt the service is sent, or null for a service that does not read one.
+     * @param prompt     the prompt the service is sent, or null for a service that does not read one.
+     * @param rubyPrompt the prompt for the ruby, or null for a list that does not read it.
      */
     static void show(Activity context, String provider, @Nullable StringSetting prompt,
-                     Runnable onSaved) {
+                     @Nullable StringSetting rubyPrompt, Runnable onSaved) {
         final Dialog dialog;
         try {
             dialog = switch (provider) {
-                case AiProviders.OPENAI_COMPATIBLE -> compatibleDialog(context, prompt, onSaved);
-                case AiProviders.DEEPL -> deepLDialog(context, onSaved);
+                case ProcessingProviders.OPENAI_COMPATIBLE -> compatibleDialog(context, prompt, rubyPrompt, onSaved);
+                case ProcessingProviders.DEEPL -> deepLDialog(context, onSaved);
                 default -> null;
             };
         } catch (WindowManager.BadTokenException ex) {
@@ -97,14 +96,14 @@ final class LyricsProviderConfigDialog {
                 boolean valid = false;
                 try {
                     switch (provider) {
-                        case AiProviders.OPENAI_COMPATIBLE -> valid = OpenAIClient.validateConfig(
+                        case ProcessingProviders.OPENAI_COMPATIBLE -> valid = OpenAIClient.validateConfig(
                                 Settings.LYRICS_AI_BASE_URL.get(),
                                 Settings.LYRICS_AI_API_TOKEN.get(),
                                 Settings.LYRICS_AI_MODEL.get());
-                        case AiProviders.DEEPL -> {
+                        case ProcessingProviders.DEEPL -> {
                             final String key = Settings.LYRICS_DEEPL_API_KEY.get();
-                            valid = !key.isEmpty() && DeepLClient.translate(
-                                    Collections.singletonList("hello"), "EN", key) != null;
+                            valid = !key.isEmpty() && !DeepLClient.translate(
+                                    Collections.singletonList("hello"), "EN", key).isEmpty();
                         }
                         default -> {
                         }
@@ -122,6 +121,7 @@ final class LyricsProviderConfigDialog {
     }
 
     private static Dialog compatibleDialog(Activity context, @Nullable StringSetting prompt,
+                                           @Nullable StringSetting rubyPrompt,
                                            Runnable onSaved) {
         LinearLayout content = createContent(context);
         // The URL row is added last so the preset it triggers can fill the boxes above.
@@ -156,12 +156,15 @@ final class LyricsProviderConfigDialog {
             test(context, () -> OpenAIClient.validateConfig(url,
                     tokenInput.getText().toString().trim(),
                     modelInput.getText().toString().trim()) ? List.of("ok") : null,
-                    AiProviders.OPENAI_COMPATIBLE_LABEL);
+                    ProcessingProviders.OPENAI_COMPATIBLE_LABEL);
         });
-        final PromptField promptField = addPromptSection(content, prompt);
+        final PromptField promptField = addPromptSection(content, prompt,
+                "morphe_music_lyrics_ai_config_prompt_label");
+        final PromptField rubyPromptField = addPromptSection(content, rubyPrompt,
+                "morphe_music_lyrics_ai_config_ruby_prompt_label");
 
         return createDialog(context,
-                AiProviders.OPENAI_COMPATIBLE_LABEL,
+                ProcessingProviders.OPENAI_COMPATIBLE_LABEL,
                 content, onSaved,
                 () -> {
                     final String extraBody = extraBodyInput.getText().toString().trim();
@@ -172,6 +175,7 @@ final class LyricsProviderConfigDialog {
                     Settings.LYRICS_AI_API_TOKEN.save(tokenInput.getText().toString().trim());
                     Settings.LYRICS_AI_MODEL.save(modelInput.getText().toString().trim());
                     promptField.save();
+                    rubyPromptField.save();
                 },
                 () -> {
                     Settings.LYRICS_AI_BASE_URL.resetToDefault();
@@ -180,6 +184,7 @@ final class LyricsProviderConfigDialog {
                     Settings.LYRICS_AI_EXTRA_BODY.resetToDefault();
                     Settings.LYRICS_AI_EXTRA_HEADERS.resetToDefault();
                     promptField.reset();
+                    rubyPromptField.reset();
                 },
                 () -> !OpenAIClient.isValidExtraBody(
                         extraBodyInput.getText().toString().trim()),
@@ -202,22 +207,16 @@ final class LyricsProviderConfigDialog {
                 Settings.LYRICS_DEEPL_API_KEY.get(), true);
 
         final Button getKeyButton = CustomDialog.createButton(context, null,
-                str("morphe_music_token_dialog_get_token"), () -> {
-                    try {
-                        final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(DEEPL_DASHBOARD_URL));
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
-                    } catch (Exception ex) {
-                        Logger.printDebug(() -> "DeepL dashboard button failure", ex);
-                    }
-                }, false, false);
+                str("morphe_music_token_dialog_get_token"),
+                () -> ThemedInput.openInBrowser(context, DEEPL_DASHBOARD_URL, "DeepL dashboard button"),
+                false, false);
         final LinearLayout.LayoutParams getKeyParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, Dim.dp36);
         getKeyParams.topMargin = Dim.dp12;
         content.addView(getKeyButton, getKeyParams);
 
         return createDialog(context,
-                AiProviders.DEEPL_LABEL,
+                ProcessingProviders.DEEPL_LABEL,
                 content, onSaved,
                 () -> Settings.LYRICS_DEEPL_API_KEY.save(keyInput.getText().toString().trim()),
                 () -> Settings.LYRICS_DEEPL_API_KEY.resetToDefault(),
@@ -262,14 +261,29 @@ final class LyricsProviderConfigDialog {
 
     /** The prompt box for a list whose service reads one; null for both members otherwise. */
     private static PromptField addPromptSection(LinearLayout content,
-                                                @Nullable StringSetting prompt) {
+                                                @Nullable StringSetting prompt,
+                                                String labelKey) {
         if (prompt == null) {
             return new PromptField(null, null);
         }
-        final EditText input = addInput(content,
-                "morphe_music_lyrics_ai_config_prompt_label", prompt.get(), false);
+        final EditText input = addInput(content, labelKey, prompt.get(), false);
         makeMultiLine(input, 4, 8);
+        content.addView(createHint(content.getContext(),
+                "morphe_music_lyrics_ai_prompt_dialog_hint"));
         return new PromptField(prompt, input);
+    }
+
+    static TextView createHint(Context context, String textKey) {
+        final int fg = ThemeUtils.getAppForegroundColor();
+        TextView hint = new TextView(context);
+        hint.setText(str(textKey));
+        hint.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+        hint.setTextColor((0x99 << 24) | (fg & 0x00FFFFFF));
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.topMargin = Dim.dp8;
+        hint.setLayoutParams(params);
+        return hint;
     }
 
     interface Validator {
@@ -357,7 +371,7 @@ final class LyricsProviderConfigDialog {
 
     /** The endpoint box and its preset button, added at the top of the form. */
     private static EditText addBaseUrlInput(LinearLayout section, String value,
-                                           Consumer<AiProviders.EndpointPreset> onPresetPicked) {
+                                           Consumer<ProcessingProviders.EndpointPreset> onPresetPicked) {
         final Context context = section.getContext();
         EditText input = ThemedInput.create(context);
         input.setText(value);
@@ -365,17 +379,17 @@ final class LyricsProviderConfigDialog {
         Button presets = Glyph.DOWN.create(context);
         presets.setContentDescription(str("morphe_music_lyrics_ai_config_base_url_presets"));
         presets.setOnClickListener(v -> {
-            final List<AiProviders.EndpointPreset> items =
-                    new ArrayList<>(AiProviders.ENDPOINT_PRESETS);
-            items.sort(Comparator.comparing(AiProviders.EndpointPreset::label,
+            final List<ProcessingProviders.EndpointPreset> items =
+                    new ArrayList<>(ProcessingProviders.ENDPOINT_PRESETS);
+            items.sort(Comparator.comparing(ProcessingProviders.EndpointPreset::label,
                     String.CASE_INSENSITIVE_ORDER));
             final String[] labels = items.stream()
-                    .map(AiProviders.EndpointPreset::label)
+                    .map(ProcessingProviders.EndpointPreset::label)
                     .toArray(String[]::new);
             CustomDialogListPreference.createListDialog(context,
                     str("morphe_music_lyrics_ai_config_base_url_presets_title"),
                     labels, labels, null, index -> {
-                        final AiProviders.EndpointPreset preset = items.get(index);
+                        final ProcessingProviders.EndpointPreset preset = items.get(index);
                         input.setText(preset.baseUrl());
                         input.setSelection(input.getText().length());
                         onPresetPicked.accept(preset);

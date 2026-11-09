@@ -116,7 +116,7 @@ Gawing default na kliyente ang %2$s?"</string>
   <string name="morphe_spoof_video_streams_client_type_title">Default na kliyente</string>
   <!-- Ensure this translation matches the translation of morphe_spoof_video_streams_no_clients_suggest_vr_toast -->
   <string name="morphe_spoof_video_streams_sign_in_android_vr_about_title">Pag-sign in sa Android VR</string>
-  <string name="morphe_spoof_video_streams_sign_in_android_vr_about_summary">Hindi naka-sign in sa Android VR. Pindutin dito upang mag-sign in</string>
+  <string name="morphe_spoof_video_streams_sign_in_android_vr_about_summary">Nangangailangan ang Android VR ng hiwalay na sign-in. I-tap dito para magpatuloy</string>
   <string name="morphe_spoof_video_streams_sign_in_android_vr_about_summary_signed_in">Kasalukuyang naka-sign in sa Android VR</string>
   <!-- "Default client" must be the same translated text as morphe_spoof_video_streams_client_type_title -->
   <string name="morphe_spoof_video_streams_sign_in_android_vr_about_summary_disabled">Upang gamitin ang tampok na ito, baguhin ang \'Default na kliyente\' sa Android VR</string>
@@ -227,7 +227,7 @@ Gayunpaman, magtatala din ng ilang datos ng tagagamit ang pagpapagana nito kagay
   <string name="morphe_settings_menu_filter_screen_summary">Itago ang mga item sa standard screen ng mga setting ng app ayon sa kanilang nakikitang pangalan</string>
   <string name="morphe_settings_menu_filter_picker_empty">Buksan ang standard screen ng mga setting ng app nang isang beses upang mapunan ang listahan</string>
   <!-- interaction.dialog.removeViewerDiscretionDialogPatch -->
-  <string name="morphe_remove_viewer_discretion_dialog_title">Alisin ang dialog para sa pagpapasya ng manonood\",\"key\":\"morphe_remove_viewer_discretion_dialog_title\",\"context\":\"morphe_remove_viewer_discretion_dialog_title\ninteraction.dialog.removeViewerDiscretionDialogPatch\",\"maxLength\":null,\"tmSuggestions\":[],\"terms\":[]},{</string>
+  <string name="morphe_remove_viewer_discretion_dialog_title">Alisin ang dialog para sa pagpapasya ng manonood</string>
   <string name="morphe_remove_viewer_discretion_dialog_summary">Hindi nito nilalagpasan ang age restriction. Tinatanggap lang nito ito nang awtomatiko</string>
   <!-- misc.potoken.poTokenProviderPatch -->
   <string name="morphe_potoken_provider_screen_title">Tagapagbigay ng PoToken</string>

@@ -179,16 +179,16 @@ Second \"item\" text"</string>
   <!-- Translations of this should not be longer than the original English text, otherwise the text can be clipped and not entirely shown. -->
   <string name="gms_core_toast_not_installed_message">MicroG نەستاوە. ئەوەی بێخە</string>
   <string name="gms_core_dialog_title">پێویستییه کار</string>
-  <string name="gms_core_dialog_outdated_message">"MicroG v%1s کۆنە و ڕەنگە ببێتە هۆی کێشە.
+  <string name="gms_core_dialog_outdated_message">"وەشان %1$sی MicroG کۆنە و ڕەنگە ببێتە هۆی کێشە.
 
-تکایە MicroG نوێ بکەرەوە بۆ نوێترین وەشانی v%2s"</string>
+تکایە MicroG نوێ بکەرەوە بۆ نوێترین وەشان v%2$s"</string>
   <string name="gms_core_dialog_update_text">نوێکردنەوە</string>
   <string name="gms_core_dialog_ignore_text">پشتگوێخستن</string>
-  <string name="gms_core_dialog_conflict_message">"ئەو MicroGـەی دامەزراوە لەلایەن Morpheـەوە پێشنیار نەکراوە:
+  <string name="gms_core_dialog_conflict_message">"ئەو MicroGـەی دامەزراوە لەلایەن Morphe پێشنیار نەکراوە:
 
-%1s
+%s
 
-کلیک بکە بۆ سڕینەوەی، پاشان ئەم ئەپڵیکەیشنە دووبارە بکەرەوە و MicroG RE دامەزرێنە"</string>
+کلیک بکە بۆ سڕینەوەی، پاشان ئەم ئەپە دووبارە بکەرەوە و MicroG RE دامەزێنە"</string>
   <string name="gms_core_dialog_uninstall_text">سڕینەوە</string>
   <!-- "Don't kill my app" should be kept in English and not translated -->
   <string name="gms_core_dialog_not_whitelisted_not_allowed_in_background_message">"MicroG ڕێگە بەوە نادات لە پشتەوە کار بکات.
@@ -228,6 +228,19 @@ Second \"item\" text"</string>
 ئەگەر تؤیترین توشی هەر كێشەیەك نةبوونى، ئەوا &lt;b&gt;راكړه‌تەر&lt;/b&gt; و بؤ وერსۆنى مسه‌تەبی &lt;b&gt;%2$s&lt;/b&gt;✅ په‌چۆكه"</string>
   <string name="morphe_experimental_app_version_dialog_confirm">⚠️ تاقیکاری دەمەوێت</string>
   <string name="morphe_experimental_app_version_dialog_open_homepage">✅ جێگیر دەمەوێت</string>
+  <!-- misc.announcements.patchesUpdateNoticePatch -->
+  <string name="morphe_patches_update_notice_title">ئاگادارکەرەوەی ناو ئەپڵیکەیشن بۆ نوێکردنەوەکانی پاتچ پیشان بدە</string>
+  <string name="morphe_patches_update_notice_entry_off">کوژاوە</string>
+  <string name="morphe_patches_update_notice_entry_stable">بۆشانی جێگیرەکان</string>
+  <string name="morphe_patches_update_notice_entry_dev">بۆشاندنەکانی جێگیر و گەشەپێدەر</string>
+  <string name="morphe_patches_update_notice_dialog_title">پینەی نوێ بەردەستە</string>
+  <string name="morphe_patches_update_notice_dialog_message">پاتچەکانی Morphe &lt;b&gt;%1$s&lt;/b&gt; (ئێستا: %2$s)</string>
+  <string name="morphe_patches_update_notice_dialog_features">✨ تایبەتمەندییەکانی نوێ</string>
+  <string name="morphe_patches_update_notice_dialog_fixes">🐛 چاککردنی کەلەکەکان</string>
+  <string name="morphe_patches_update_notice_dialog_other">🚀 گۆڕانکارییەکانی تر</string>
+  <string name="morphe_patches_update_notice_dialog_more">…و %s زیاتر</string>
+  <string name="morphe_patches_update_notice_dialog_update">نوێکردنەوە</string>
+  <string name="morphe_patches_update_notice_dialog_dismiss">داخستن</string>
   <!-- misc.crashlog.crashLogPatch -->
   <string name="morphe_crash_log_saved_documents">لۆگی هەرستە بڕاوە بۆ بەڵگەنامەکانی بەکارهێنەر: %s</string>
   <string name="morphe_crash_log_saved">لۆگی هەرستە بڕاوە: %s</string>

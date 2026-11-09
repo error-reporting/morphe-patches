@@ -115,7 +115,7 @@ YouTube Premium kullanıcısıysanız, bu ayar gerekli olmayabilir"</string>
   <string name="morphe_spoof_video_streams_client_type_title">Varsayılan istemci</string>
   <!-- Ensure this translation matches the translation of morphe_spoof_video_streams_no_clients_suggest_vr_toast -->
   <string name="morphe_spoof_video_streams_sign_in_android_vr_about_title">Android VR oturum açma</string>
-  <string name="morphe_spoof_video_streams_sign_in_android_vr_about_summary">Android VR oturumu açılmadı. Oturum açmak için buraya dokunun</string>
+  <string name="morphe_spoof_video_streams_sign_in_android_vr_about_summary">Android VR ayrı bir oturum açma işlemi gerektirir. Devam etmek için buraya dokunun</string>
   <string name="morphe_spoof_video_streams_sign_in_android_vr_about_summary_signed_in">Şu anda Android VR oturumu açık</string>
   <!-- "Default client" must be the same translated text as morphe_spoof_video_streams_client_type_title -->
   <string name="morphe_spoof_video_streams_sign_in_android_vr_about_summary_disabled">Bu özelliği kullanmak için \'Varsayılan istemci\'yi Android VR olarak değiştirin</string>
@@ -154,8 +154,8 @@ Oturum açmak için, devam et butonuna basın."</string>
   <string name="morphe_notification_media_screen_summary">Kilit ekranınızda ve bildirim panelinizde görünen oynatma kontrollerini özelleştirin</string>
   <string name="morphe_hide_notification_media_prev_next_title">Önceki ve Sonraki butonlarını gizle</string>
   <string name="morphe_hide_notification_media_prev_next_summary">Medya bildirimi, kilit ekranı ve kulaklık kontrollerindeki Önceki ve Sonraki butonlarını gizler</string>
-  <string name="morphe_disable_notification_media_seekbar_title">İlerleme çubuğunu devre dışı bırak</string>
-  <string name="morphe_disable_notification_media_seekbar_summary">Bildirim panelindeki ve kilit ekranındaki ilerleme çubuğunu sürüklemeyi engeller</string>
+  <string name="morphe_disable_notification_media_seekbar_title">Sardırma çubuğunu devre dışı bırak</string>
+  <string name="morphe_disable_notification_media_seekbar_summary">Bildirim paneli ve kilit ekranındaki sardırma çubuğunu sürüklemeyi engeller</string>
   <string name="morphe_seek_notification_media_prev_next_title">Önceki &amp; Sonraki düğmeleriyle sardırma</string>
   <string name="morphe_seek_notification_media_prev_next_summary">Medya bildirimi, kilit ekranı ve kulaklık kontrollerinin videoları değiştirmek yerine sardırma yapmasını sağlar</string>
   <string name="morphe_seek_notification_media_rewind_length_title">Geri sarma süresi</string>

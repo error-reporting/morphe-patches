@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.ZoneOffset;
@@ -235,8 +236,21 @@ public final class VisitorIdRequester {
             }
 
             connection.disconnect();
+        } catch (SocketTimeoutException ex) {
+            Logger.LogMessage message = () -> "Debug: Fetch visitor data timeout";
+            if (BaseSettings.DEBUG.get()) {
+                Logger.printException(message, ex);
+            } else {
+                Logger.printInfo(message, ex);
+            }
         } catch (IOException ex) {
-            Logger.printException(() -> "Failed to fetch visitor data", ex);
+            // A slow or broken connection, which is not an error of the patch.
+            Logger.LogMessage message = () -> "Failed to fetch visitor data";
+            if (BaseSettings.DEBUG.get()) {
+                Logger.printException(message, ex);
+            } else {
+                Logger.printInfo(message, ex);
+            }
         } catch (JSONException ex) {
             Logger.printException(() -> "Failed to parse visitor data", ex);
         } catch (Exception ex) {

@@ -21,8 +21,13 @@ Second \"item\" text"</string>
   <string name="morphe_splash_screen_style_title">Ishga tushirish animatsiyasi</string>
   <string name="morphe_splash_screen_style_entry_1">O\"chirilgan</string>
   <string name="morphe_splash_screen_style_entry_2">Rang</string>
+  <string name="morphe_splash_screen_style_entry_3">Morphe rangli</string>
   <string name="morphe_splash_screen_style_entry_4">Monoxrom</string>
+  <string name="morphe_splash_screen_style_entry_5">Morphe monoxrom</string>
   <!-- misc.settings.settingsPatch -->
+  <string name="morphe_settings_new_indicator_days_title">Yangi sozlamalarni belgilash</string>
+  <string name="morphe_settings_new_indicator_days_summary">Yangilanish orqali qo\'shilgan sozlamalar va variantlar yonida nuqta ko\'rsatiladigan kunlar soni</string>
+  <string name="morphe_settings_new_indicator_days_off">O\'chirilgan</string>
   <!-- misc.initialization.initializationPatch -->
   <string name="morphe_restart_first_run">Sozlashni tugatish uchun qayta ishga tushirish</string>
   <!-- layout.branding.baseCustomBrandingPatch -->
@@ -111,7 +116,7 @@ Agar siz YouTube Premium foydalanuvchisi bo‘lsangiz, ushbu sozlash talab qilin
   <string name="morphe_spoof_video_streams_client_type_title">Standart klient</string>
   <!-- Ensure this translation matches the translation of morphe_spoof_video_streams_no_clients_suggest_vr_toast -->
   <string name="morphe_spoof_video_streams_sign_in_android_vr_about_title">Android VR ga kirish</string>
-  <string name="morphe_spoof_video_streams_sign_in_android_vr_about_summary">Android VR ga kirish ta’minlanmadi. Kirish uchun shu yerni bosing</string>
+  <string name="morphe_spoof_video_streams_sign_in_android_vr_about_summary">Android VR alohida tizimga kirishni talab qiladi. Davom etish uchun bu yerni bosing</string>
   <string name="morphe_spoof_video_streams_sign_in_android_vr_about_summary_signed_in">Hozirda Android VR ga kiritilgan</string>
   <!-- "Default client" must be the same translated text as morphe_spoof_video_streams_client_type_title -->
   <string name="morphe_spoof_video_streams_sign_in_android_vr_about_summary_disabled">Ushbu funksiyadan foydalanish uchun, \'Asosiy mijoz\' ni Android VR yoki TV ga o\'zgartiring</string>
@@ -282,6 +287,7 @@ Keyinchalik o'chirilsa, UI xatolarining oldini olish uchun ilova ma'lumotlarini 
   <string name="morphe_ryd_failure_generic">Dislikes mavjud emas (%s)</string>
   <!-- Video likes have been set to hidden by the video uploader. -->
   <string name="morphe_ryd_video_likes_hidden_by_video_owner">Egasi tomonidan yashirilgan</string>
+  <string name="morphe_ryd_accessibility_dislike_count">Ushbu videoni siz va yana %s kishi yoqtirmadi</string>
   <string name="morphe_ryd_accessibility_dislike_percentage">Ushbu videoga yoqtirmaslik, ovozlarning %s qismi yoqtirmaganlar</string>
   <string name="morphe_ryd_enabled_title">Return YouTube Dislike ni yoqish</string>
   <string name="morphe_ryd_dislike_percentage_title">Dislike foiz sifatida ko‘rsatish</string>

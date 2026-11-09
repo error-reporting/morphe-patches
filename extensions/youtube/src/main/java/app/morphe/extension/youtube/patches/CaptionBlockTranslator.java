@@ -22,8 +22,8 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.IdentityHashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -71,6 +71,8 @@ final class CaptionBlockTranslator implements CaptionSession.Translator {
             url -> Requester.openConnection(url), () -> System.nanoTime() / 1_000_000L);
 
     private static final String GOOGLE_URL = "https://translate-pa.googleapis.com/v1/translateHtml";
+    // Google Translate webpage key. Ubiquitous and used by hundreds of projects
+    // https://github.com/search?q=AIzaSyATBXajvzQLTDHEQbcpq0Ihe0vWDHmO520&type=code
     private static final String GOOGLE_API_KEY = "AIzaSyATBXajvzQLTDHEQbcpq0Ihe0vWDHmO520";
     private static final String MICROSOFT_URL = "https://edge.microsoft.com/translate/translatetext";
 
@@ -372,7 +374,10 @@ final class CaptionBlockTranslator implements CaptionSession.Translator {
                 else microsoftCooldownUntil = until;
                 throw new Failure("Caption provider HTTP " + status, seconds * 1000, status == 429);
             }
-            if (google && status >= 300 && status < 400 && isVerificationPage(connection.getHeaderField("Location"))) {
+            String location = google && status >= 300 && status < 400
+                    ? connection.getHeaderField("Location") : null;
+            if (location != null && (location.startsWith("https://www.google.com/sorry/")
+                    || location.startsWith("https://google.com/sorry/"))) {
                 googleCooldownUntil = clock.millis() + VERIFICATION_COOLDOWN_MS;
                 throw new Failure("Caption Google requires verification", VERIFICATION_COOLDOWN_MS, true);
             }
@@ -414,11 +419,6 @@ final class CaptionBlockTranslator implements CaptionSession.Translator {
         } catch (IOException ex) {
             Logger.printDebug(() -> "Could not close caption error stream", ex);
         }
-    }
-
-    private static boolean isVerificationPage(@Nullable String location) {
-        return location != null && (location.startsWith("https://www.google.com/sorry/")
-                || location.startsWith("https://google.com/sorry/"));
     }
 
     /**
