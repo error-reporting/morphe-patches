@@ -62,7 +62,7 @@ public enum ClientType {
             false,
             false,
             false,
-            false,
+            true,
             false,
             "Android Music No SDK"
     ),
