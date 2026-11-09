@@ -45,7 +45,7 @@ import app.morphe.extension.shared.spoof.js.nsigsolver.provider.JsChallengeType;
 
 public abstract class JsRuntimeChalBaseJCP extends JsChallengeProvider {
     protected static final String CACHE_SECTION = "challenge-solver";
-    protected static final String SCRIPT_VERSION = "0.0.1";
+    protected static final String SCRIPT_VERSION = "0.8.0";
     protected static final String LIB_PREFIX = "nsigsolver/";
     private static final String repository = "yt-dlp/ejs";
 
