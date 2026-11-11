@@ -70,7 +70,7 @@ Zmiany obejmują:
   <string name="morphe_hide_channel_buttons_summary">Ukrywa przyciski takie jak Subskrybuj, Wyświetl kanał, Społeczność i YouTube Music na profilach kanałów w wynikach wyszukiwania</string>
   <string name="morphe_hide_community_posts_title">Ukryj posty</string>
   <string name="morphe_post_buttons_screen_title">Przyciski postów</string>
-  <string name="morphe_post_buttons_screen_summary">Wybierz układ przycisków pod postami społeczności oraz określ, które przyciski mają być ukryte</string>
+  <string name="morphe_post_buttons_screen_summary">Zdecyduj, jaki ma być układ przycisków pod postami społeczności oraz które przyciski ukryć</string>
   <string name="morphe_post_buttons_layout_title">Układ przycisków postów</string>
   <string name="morphe_post_buttons_layout_entry_1">Serwerowy</string>
   <string name="morphe_post_buttons_layout_entry_2">Wymuszony</string>
@@ -93,7 +93,7 @@ Zmiany obejmują:
   <string name="morphe_hide_get_premium_button_title">Ukryj przycisk \"Kup Premium\"</string>
   <string name="morphe_hide_history_shelf_title">Ukryj sekcję Historia</string>
   <string name="morphe_hide_horizontal_shelves_title">Ukryj sekcje poziome</string>
-  <string name="morphe_hide_horizontal_shelves_summary">Ukrywa poziome sekcje, takie jak Najważniejsze wiadomości, Posty, które mogą Cię zainteresować, Kontynuuj oglądanie, Odkryj więcej kanałów, Odkryj więcej tematów, Dla Ciebie, Najnowsze filmy, Najbardziej istotne, Posty ze Społeczności twórcy, Zakupy oraz Obejrzyj ponownie</string>
+  <string name="morphe_hide_horizontal_shelves_summary">Ukrywa poziome sekcje, takie jak Najważniejsze wiadomości, Posty, które mogą Cię zainteresować, Oglądaj dalej, Odkryj więcej kanałów, Odkryj więcej tematów, Dla Ciebie, Najnowsze filmy, Najbardziej istotne, Posty ze Społeczności twórcy, Zakupy oraz Obejrzyj ponownie</string>
   <string name="morphe_hide_image_shelf_title">Ukryj sekcję obrazków</string>
   <string name="morphe_hide_image_shelf_summary">Ukrywa sekcję obrazków w wynikach wyszukiwania</string>
   <!-- 'Invite others to message' should be translated using the same localized wording YouTube displays
@@ -500,6 +500,10 @@ Zgłoszenia są publiczne i podlegają weryfikacji przed dodaniem kanału do lis
   <string name="morphe_on_the_go_summary">Pozycja \"Tryb mobilny\" w menu odtwarzacza otwiera własne elementy sterujące odtwarzacza Morphe</string>
   <!-- 'On-the-go' should be translated using the same localized wording YouTube displays for the menu item. -->
   <string name="morphe_on_the_go_panel_title">Tryb mobilny</string>
+  <string name="morphe_on_the_go_audio_mode">Przełącz na tryb dźwięku</string>
+  <string name="morphe_on_the_go_video_mode">Przełącz na tryb filmu</string>
+  <string name="morphe_on_the_go_download">Pobierz</string>
+  <string name="morphe_on_the_go_queue">Kolejka</string>
   <!-- interaction.ask.askFlyoutMenuPatch -->
   <string name="morphe_ask_summarize_flyout_menu_title">Dodaj opcję \"Zapytaj\" do menu</string>
   <string name="morphe_ask_summarize_flyout_menu_summary">Dodaje opcję podsumowania filmu do menu na liście</string>
@@ -620,11 +624,13 @@ Zgłoszenia są publiczne i podlegają weryfikacji przed dodaniem kanału do lis
   <string name="morphe_vot_mymemory_quota_message_no_email">Wykorzystano dzisiejszy darmowy limit tłumaczeń MyMemory (5000 znaków). Dodaj adres e-mail MyMemory w ustawieniach, aby zwiększyć dzienny limit do 50 000 znaków, lub zmień usługę tłumaczenia</string>
   <string name="morphe_vot_mymemory_quota_message_with_email">Wykorzystano dzisiejszy limit tłumaczeń MyMemory (50 000 znaków). Zmień usługę tłumaczenia lub spróbuj ponownie jutro</string>
   <string name="morphe_vot_mymemory_error">Tłumaczenie MyMemory nie powiodło się (status %s)</string>
-  <!-- interaction.watchlater.watchLaterPatch -->
-  <string name="morphe_watch_later_wide_drag_handles_title">Poszerz uchwyty przeciągania w \"Do obejrzenia\"</string>
-  <string name="morphe_watch_later_wide_drag_handles_summary">Uchwyty do przeciągania filmów na playliście \"Do obejrzenia\" są łatwiejsze do chwycenia</string>
-  <string name="morphe_watch_later_hide_removal_snackbar_title">Ukryj powiadomienie o usunięciu z \"Do obejrzenia\"</string>
-  <string name="morphe_watch_later_hide_removal_snackbar_summary">Nie wyświetla potwierdzenia po usunięciu filmu z playlisty \"Do obejrzenia\"</string>
+  <!-- interaction.playlist.playlistPatch -->
+  <string name="morphe_playlist_wide_drag_handles_title">Poszerz uchwyty przeciągania na playliście</string>
+  <string name="morphe_playlist_wide_drag_handles_summary">Uchwyty do przeciągania na playliście są łatwiejsze do złapania</string>
+  <string name="morphe_playlist_hide_removal_snackbar_title">Ukryj pasek powiadomienia o usunięciu z playlisty</string>
+  <string name="morphe_playlist_hide_removal_snackbar_summary">Potwierdzenie nie jest wyświetlane po usunięciu filmu z playlisty</string>
+  <string name="morphe_playlist_long_press_drag_title">Przytrzymaj, aby zmienić kolejność filmów na playliście</string>
+  <string name="morphe_playlist_long_press_drag_summary">Przytrzymaj film na swojej playliście, aby przeciągnąć go na nową pozycję</string>
   <!-- interaction.loop.loopVideoPatch -->
   <string name="morphe_loop_video_title">Włącz zapętlanie filmu</string>
   <string name="morphe_do_not_remember_loop_video_title">Nie zapamiętuj zapętlania</string>
@@ -642,6 +648,25 @@ Zgłoszenia są publiczne i podlegają weryfikacji przed dodaniem kanału do lis
   <string name="morphe_loop_video_range_clear">Wyczyść</string>
   <string name="morphe_loop_video_range_toast_on">Zapętlanie %1$s - %2$s</string>
   <string name="morphe_loop_video_range_invalid_time">Nieprawidłowy zakres czasu</string>
+  <!-- interaction.loop.loopCountPatch -->
+  <string name="morphe_loop_count_screen_title">Liczba zapętleń</string>
+  <string name="morphe_loop_count_screen_summary">Zdecyduj, ile razy film ma zostać zapętlony przed przejściem do następnego filmu</string>
+  <string name="morphe_loop_count_title">Włącz liczbę zapętleń</string>
+  <string name="morphe_loop_count_summary">Menu \"Więcej\" odtwarzacza wyświetla opcję \"Liczba zapętleń\" obok \"Odtwarzaj w pętli\", pozwalając wybrać, ile razy film ma zostać odtworzony przed przejściem do następnego</string>
+  <string name="morphe_loop_count_playlists_title">Zapisuj liczbę zapętleń na playlistach</string>
+  <string name="morphe_loop_count_playlists_summary">Każdy film na playliście zachowuje wybraną liczbę zapętleń, a opcja \"Odtwarzaj w pętli\" włącza się, gdy playlista odtworzy go ponownie. Po wyłączeniu liczba zapętleń dotyczy tylko aktualnie odtwarzanego filmu</string>
+  <string name="morphe_loop_count_clear_title">Wyczyść zapisaną liczbę zapętleń</string>
+  <string name="morphe_loop_count_clear_summary">Usuń liczby zapętleń zapisane na Twoich playlistach. Zapisane filmy: %s</string>
+  <string name="morphe_loop_count_clear_summary_none">Nie zapisano żadnych liczb zapętleń</string>
+  <string name="morphe_loop_count_clear_dialog_title">Wyczyścić zapisane liczby zapętleń?</string>
+  <string name="morphe_loop_count_clear_dialog_message">Filmy z Twoich playlist zapomną swoją liczbę zapętleń, a opcja \"Odtwarzaj w pętli\" przestanie się włączać, gdy playlista będzie je odtwarzać</string>
+  <string name="morphe_loop_count_clear_done">Wyczyszczono zapisane liczby zapętleń</string>
+  <string name="morphe_loop_count_flyout_name">Liczba zapętleń</string>
+  <string name="morphe_loop_count_dialog_message">Ile razy film ma zostać odtworzony przed przejściem do następnego (od %1$s do %2$s). Pozostaw puste, aby zapętlać film bez limitu.</string>
+  <string name="morphe_loop_count_times">%s raz(y)</string>
+  <string name="morphe_loop_count_no_limit">Bez limitu</string>
+  <string name="morphe_loop_count_decrease">Mniej razy</string>
+  <string name="morphe_loop_count_increase">Więcej razy</string>
   <!-- interaction.pictureinpicture.pictureinPictureButtonPatch -->
   <string name="morphe_pip_button_overlay_title">Pokaż przycisk obrazu w obrazie</string>
   <string name="morphe_pip_button_flyout_title">Pokaż menu obrazu w obrazie</string>
@@ -751,6 +776,8 @@ Uwaga: Może nie działać na transmisjach na żywo"</string>
   <string name="morphe_queue_manager_open_queue">Otwórz kolejkę</string>
   <string name="morphe_queue_manager_save_queue">Zapisz kolejkę na playliście</string>
   <!-- interaction.nativeplaylistqueue.nativePlaylistQueuePatch -->
+  <string name="morphe_native_queue_fetch_on_scroll_title">Wczytuj strony kolejki podczas przewijania</string>
+  <string name="morphe_native_queue_fetch_on_scroll_summary">Wczytuje więcej filmów z playlisty podczas przewijania w pobliżu końca kolejki</string>
   <string name="morphe_native_playlist_queue_saved">Zapisano playlistę</string>
   <string name="morphe_native_playlist_queue_saved_to">Zapisano w %s</string>
   <string name="morphe_native_playlist_queue_clear">Wyczyść kolejkę</string>
@@ -1101,6 +1128,14 @@ Aby przejść do ustawień, włącz przycisk w menu: Ogólne → Pasek narzędzi
   <string name="morphe_bypass_ambient_mode_restrictions_summary">Umożliwia działanie oświetlenia kinowego w trybie oszczędzania baterii</string>
   <string name="morphe_disable_ambient_mode_title">Wyłącz oświetlenie kinowe</string>
   <string name="morphe_disable_fullscreen_ambient_mode_title">Wyłącz oświetlenie kinowe w trybie pełnoekranowym</string>
+  <string name="morphe_enhanced_ambient_mode_title">Ulepszony tryb oświetlenia kinowego</string>
+  <string name="morphe_enhanced_ambient_mode_summary">Podświetla całą stronę odtwarzania oraz czarne pasy kolorami z filmu, zastępując standardowy tryb oświetlenia kinowego</string>
+  <string name="morphe_enhanced_ambient_mode_readable_text_title">Zachowaj czytelność tekstu</string>
+  <string name="morphe_enhanced_ambient_mode_readable_text_summary">Przyciemnia podświetlenie przy jasnych filmach, aby tekst na stronie pozostał czytelny</string>
+  <string name="morphe_enhanced_ambient_mode_dim_while_scrolling_title">Przyciemniaj podczas przewijania</string>
+  <string name="morphe_enhanced_ambient_mode_dim_while_scrolling_summary">Przyciemnia światło podczas przewijania lub dotykania strony</string>
+  <string name="morphe_enhanced_ambient_mode_dim_duration_title">Czas przyciemnienia</string>
+  <string name="morphe_enhanced_ambient_mode_dim_duration_summary">Jak długo światło pozostaje przyciemnione po zaprzestaniu przewijania. Przy wartości 0 tylko przewijanie przyciemnia światło, a ono wraca natychmiast po zaprzestaniu przewijania</string>
   <!-- layout.hide.infocards.hideInfocardsPatch -->
   <string name="morphe_hide_info_cards_title">Ukryj karty informacyjne</string>
   <!-- layout.hide.rollingnumber.disableRollingNumberAnimationPatch -->
@@ -1121,6 +1156,7 @@ Aby przejść do ustawień, włącz przycisk w menu: Ogólne → Pasek narzędzi
   <string name="morphe_hide_shorts_subscriptions_title">Ukryj na stronie subskrypcji</string>
   <string name="morphe_hide_shorts_video_description_title">Ukryj w opisie filmów</string>
   <string name="morphe_hide_shorts_history_title">Ukryj w historii oglądania</string>
+  <string name="morphe_hide_shorts_notifications_title">Ukryj w powiadomieniach push</string>
   <string name="morphe_shorts_player_screen_title">Odtwarzacz Shorts</string>
   <string name="morphe_shorts_player_screen_summary">Zdecyduj, które elementy będą wyświetlane w odtwarzaczu Shorts</string>
   <string name="morphe_disable_shorts_double_tap_to_like_title">Wyłącz polubienie podwójnym dotknięciem</string>
@@ -1182,7 +1218,10 @@ To ustawienie działa tylko wtedy, gdy autoodtwarzanie jest wyłączone. Możesz
   <string name="morphe_disable_playlist_autoplay_title">Wyłącz autoodtwarzanie playlist</string>
   <string name="morphe_disable_playlist_autoplay_summary">Zapobiega automatycznemu przechodzeniu playlist do następnego filmu</string>
   <!-- interaction.continuewatching.disableContinueWatchingPromptPatch -->
-  <string name="morphe_disable_continue_watching_prompt_title">Wyłącz komunikat \"Kontynuować oglądanie?\"</string>
+  <string name="morphe_continue_watching_prompt_title">Komunikat \"Oglądasz dalej?\"</string>
+  <string name="morphe_continue_watching_prompt_entry_1">Domyślny</string>
+  <string name="morphe_continue_watching_prompt_entry_2">Wyłączony</string>
+  <string name="morphe_continue_watching_prompt_entry_3">Wyłączony, zawsze pokazuj odliczanie autoodtwarzania</string>
   <!-- layout.player.fullscreen.exitFullscreenPatch -->
   <string name="morphe_exit_fullscreen_title">Wyjście z trybu pełnoekranowego po zakończeniu filmu</string>
   <string name="morphe_exit_fullscreen_entry_1">Wyłączone</string>

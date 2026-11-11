@@ -1069,6 +1069,7 @@ public final class LayoutComponentsFilter extends Filter {
                 }
             }
             for (ProtoNode buttons : ProtoNode.findMessages(element, POST_BUTTONS_PATH)) {
+                assert (buttons.getParent() != null ? buttons.getParent().getParent() : null) != null;
                 ProtoNode model = buttons.getParent().getParent().getParent();
                 // Only the buttons data of a post model, which has the share or the comment button.
                 if (model != null && model.getFieldNumber() >= POST_MODEL_MIN_FIELD && buttons.children != null
@@ -1572,6 +1573,13 @@ public final class LayoutComponentsFilter extends Filter {
     public static boolean hideChannelTab(@Nullable String channelTabText) {
         if (!Utils.isNotEmpty(channelTabText) || !Settings.HIDE_CHANNEL_TAB.get()
                 || channelTabFilterStrings.isEmpty()) {
+            return false;
+        }
+
+        // A page without tabs is blank. The last tab is kept, as 21.44+ also shows
+        // the Home feed as a page with a single "Home" tab.
+        List<?> tabs = channelTabs;
+        if (tabs != null && tabs.size() <= 1) {
             return false;
         }
 

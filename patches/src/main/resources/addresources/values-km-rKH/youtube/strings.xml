@@ -65,6 +65,7 @@ Second \"item\" text"</string>
   <!-- 'On-the-go' should be translated using the same localized wording YouTube displays for the menu item. -->
   <!-- 'On-the-go' should be translated using the same localized wording YouTube displays for the menu item. -->
   <!-- 'On-the-go' should be translated using the same localized wording YouTube displays for the menu item. -->
+  <string name="morphe_on_the_go_download">ដោនឡូដ</string>
   <!-- interaction.ask.askFlyoutMenuPatch -->
   <!-- 'Ask' should be translated using the same localized wording YouTube displays for the Ask button under a video. -->
   <!-- 'Summarize the video' should be translated using the same localized wording YouTube displays for the suggestion of the Ask panel. -->
@@ -78,9 +79,10 @@ Second \"item\" text"</string>
   <!-- interaction.downloads.downloadsPatch -->
   <!-- video.voiceovertranslation.voiceOverTranslationPatch -->
   <!-- %s is dollar cost, e.g., $0.10 per 100 hours -->
-  <!-- interaction.watchlater.watchLaterPatch -->
+  <!-- interaction.playlist.playlistPatch -->
   <!-- interaction.loop.loopVideoPatch -->
   <!-- interaction.loop.loopVideoButtonPatch -->
+  <!-- interaction.loop.loopCountPatch -->
   <!-- interaction.pictureinpicture.pictureinPictureButtonPatch -->
   <!-- interaction.pictureinpicture.changePipActionsPatch -->
   <!-- interaction.playall.playAllButtonPatch -->
@@ -174,6 +176,7 @@ Second \"item\" text"</string>
   <!-- layout.panels.popup.disablePlayerPopupPanelsPatch -->
   <!-- layout.playlistautoplay.disablePlaylistAutoplayPatch -->
   <!-- interaction.continuewatching.disableContinueWatchingPromptPatch -->
+  <string name="morphe_continue_watching_prompt_entry_2">បានផ្ដាច់</string>
   <!-- layout.player.fullscreen.exitFullscreenPatch -->
   <!-- layout.player.fullscreen.forceFullscreenLandscapePatch -->
   <!-- layout.player.fullscreen.disableFullscreenGesturesPatch -->
