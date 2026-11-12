@@ -26,6 +26,7 @@ import app.morphe.extension.shared.settings.Setting;
 import app.morphe.extension.shared.settings.SharedYouTubeSettings;
 import app.morphe.extension.shared.settings.preference.BulletPointPreference;
 import app.morphe.extension.shared.spoof.ClientType;
+import app.morphe.extension.shared.spoof.WebViewCheck;
 import app.morphe.extension.youtube.settings.Settings;
 
 @SuppressWarnings({"deprecation", "unused"})
@@ -105,14 +106,21 @@ public class SpoofVideoStreamsSideEffectsPreference extends Preference {
                     summary = str("morphe_spoof_video_streams_about_failure")
                             + '\n' + str("morphe_spoof_video_streams_about_end_early")
                             + '\n' + str("morphe_spoof_video_streams_about_no_stable_volume");
-            case TV_SABR, TV_SABR_WII_U, TV_DASH, TV_SIMPLY, TV_SIMPLY_NO_AUTH ->
-                    summary = str("morphe_spoof_video_streams_about_js");
+            case TV_SABR, TV_SABR_WII_U, TV_DASH, TV_SIMPLY, TV_SIMPLY_NO_AUTH -> {
+                summary = str("morphe_spoof_video_streams_about_js");
+                switch (WebViewCheck.getStatus()) {
+                    case MISSING -> summary += '\n' + str("morphe_spoof_video_streams_about_webview_missing");
+                    case OUTDATED -> summary += '\n' + str("morphe_spoof_video_streams_about_webview_outdated");
+                    case OK -> {}
+                }
+            }
             case IOS_PRODUCER ->
                     summary = str("morphe_spoof_video_streams_about_no_audio_tracks")
                             + '\n' + str("morphe_spoof_video_streams_about_failure")
                             + '\n' + str("morphe_spoof_video_streams_about_no_stable_volume")
                             + '\n' + str("morphe_spoof_video_streams_about_no_av1")
                             + '\n' + str("morphe_spoof_video_streams_about_no_force_original_audio");
+
             default -> Logger.printException(() -> "Unknown client: " + clientType);
         }
 
