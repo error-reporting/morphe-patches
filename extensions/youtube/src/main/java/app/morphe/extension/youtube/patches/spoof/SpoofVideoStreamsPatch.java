@@ -49,7 +49,6 @@ public class SpoofVideoStreamsPatch {
                 ClientType.TV_SABR,
                 ClientType.IOS_PRODUCER,
                 ClientType.ANDROID_CREATOR
-
                 // If not signed in to Android VR, there may be playback issues.
                 // Only use it if the user has selected it.
                 // ClientType.ANDROID_VR_DASH
