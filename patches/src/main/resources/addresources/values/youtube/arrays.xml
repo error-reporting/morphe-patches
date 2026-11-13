@@ -258,22 +258,26 @@
         <item>@string/morphe_spoof_app_version_target_entry_20_39</item>
         <item>@string/morphe_spoof_app_version_target_entry_20_28</item>
         <item>@string/morphe_spoof_app_version_target_entry_20_13</item>
+        <item>@string/morphe_spoof_app_version_target_entry_20_05</item>
     </string-array>
     <string-array name="morphe_spoof_app_version_target_entry_values">
         <item>21.11.484</item>
         <item>20.39.41</item>
         <item>20.28.41</item>
         <item>20.13.41</item>
+        <item>20.05.46</item>
     </string-array>
     <string-array name="morphe_spoof_app_version_target_legacy_20_40_entries">
         <item>@string/morphe_spoof_app_version_target_entry_20_39</item>
         <item>@string/morphe_spoof_app_version_target_entry_20_28</item>
         <item>@string/morphe_spoof_app_version_target_entry_20_13</item>
+        <item>@string/morphe_spoof_app_version_target_entry_20_05</item>
     </string-array>
     <string-array name="morphe_spoof_app_version_target_legacy_20_40_entry_values">
         <item>20.39.41</item>
         <item>20.28.41</item>
         <item>20.13.41</item>
+        <item>20.05.46</item>
     </string-array><string-array name="morphe_spoof_app_version_target_legacy_20_31_entries">
         <item>@string/morphe_spoof_app_version_target_entry_20_28</item>
         <item>@string/morphe_spoof_app_version_target_entry_20_13</item>
