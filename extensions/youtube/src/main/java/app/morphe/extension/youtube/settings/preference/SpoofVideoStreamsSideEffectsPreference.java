@@ -112,7 +112,7 @@ public class SpoofVideoStreamsSideEffectsPreference extends Preference {
                             + '\n' + str("morphe_spoof_video_streams_about_720p_max")
                             + '\n' + str("morphe_spoof_video_streams_about_no_av1")
                             + '\n' + str("morphe_spoof_video_streams_about_no_force_original_audio");
-            case TV_SABR, TV_SABR_WII_U, TV_DASH, TV_SIMPLY, TV_SIMPLY_NO_AUTH -> {
+            case TV_SABR, TV_SABR_WII_U, TV_DASH, TV_SIMPLY, MWEB, TV_SIMPLY_NO_AUTH -> {
                 summary = str("morphe_spoof_video_streams_about_js");
                 switch (WebViewCheck.getStatus()) {
                     case MISSING -> summary += '\n' + str("morphe_spoof_video_streams_about_webview_missing");
