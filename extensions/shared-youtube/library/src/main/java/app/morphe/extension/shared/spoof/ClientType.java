@@ -409,6 +409,7 @@ public enum ClientType {
             false,
             "ios producer"
     ),
+    /**
      * Mobile web (m.youtube.com), as the Chrome browser of the device.
      * The user agent is of the Chrome version of the WebView, which opens the website (see {@link #getUserAgent()}).
      * Uses the web sign in if there is one (see {@link MwebSignIn}), and is used signed out otherwise.
