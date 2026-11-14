@@ -390,6 +390,10 @@ public enum ClientType {
             TV_SIMPLY.requireSABR,
             "TV Simply No auth"
     ),
+    /**
+     * Video not playable: Paid, Movie, Private, Age-restricted, Live stream.
+     * VP9 and AV1 codec not available.
+     */
     IOS_PRODUCER(
             92,
             "IOS_PRODUCER",
