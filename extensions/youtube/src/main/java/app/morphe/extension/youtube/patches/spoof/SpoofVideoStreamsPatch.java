@@ -54,6 +54,7 @@ public class SpoofVideoStreamsPatch {
         List<ClientType> availableClients = List.of(
                 ClientType.TV_SABR,
                 ClientType.IOS_PRODUCER,
+                ClientType.VISIONOS_1_02,
                 ClientType.ANDROID_CREATOR
                 // If not signed in to Android VR, there may be playback issues.
                 // Only use it if the user has selected it.
