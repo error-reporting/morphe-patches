@@ -330,7 +330,7 @@ public enum ClientType {
             "UKS9800",
             "Tizen",
             "2.4.0",
-            "5.20260707",
+            "5.20150304",
             "TV",
             "Mozilla/5.0 (SMART-TV; Linux; Tizen 2.4.0; SAMSUNG UKS9800) AppleWebKit/538.1 (KHTML, like Gecko) Version/2.4.0 TV Safari/538.1",
             TV_SABR.canLogin,
