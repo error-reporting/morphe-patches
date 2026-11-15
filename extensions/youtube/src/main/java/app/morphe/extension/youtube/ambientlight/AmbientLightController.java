@@ -265,6 +265,11 @@ public final class AmbientLightController {
     private static int convertedCaptures;
     private static int brighterCaptures;
     private static final int[] near = new int[PICTURE_WIDTH * PICTURE_HEIGHT];
+    /** The colors of {@code near} before rounding, 3 floats for each pixel. */
+    private static final float[] nearExact = new float[PICTURE_WIDTH * PICTURE_HEIGHT * LIGHT_CHANNELS];
+    private static long lastBlend;
+    /** The blur the light was last made with. */
+    private static float madeBlur = -1f;
     private static final int[] far = new int[FAR_WIDTH * FAR_HEIGHT];
     private static final float[] nearLinear = new float[PICTURE_WIDTH * PICTURE_HEIGHT * LIGHT_CHANNELS];
     private static final float[] farLinear = new float[FAR_WIDTH * FAR_HEIGHT * LIGHT_CHANNELS];
@@ -275,6 +280,8 @@ public final class AmbientLightController {
     private static volatile float cover;
     /** Where the video was when the cover was last chosen. */
     private static int[] coverVideo = new int[0];
+    /** If a panel was open over the page when the cover was last chosen. */
+    private static boolean coverPanel;
     private static float[] encodedLight = new float[0];
     private static float[] presentedLight = new float[0];
     private static float[] lightSoft = new float[0];
@@ -400,7 +407,10 @@ public final class AmbientLightController {
             if (host != null && host.getRootView() == rootRef.get()) {
                 pendingDrawables.remove(drawable);
                 seeThroughDrawables.put(drawable, Boolean.TRUE);
-                return replacement;
+                // A drawable keeps the color it has when it is given the color 0. One that was
+                // drawn with its own color before, as a header that has moved out of its list
+                // to stick to the top, would stay opaque.
+                return replacement == 0 ? pageColor & 0x00FFFFFF : replacement;
             }
 
             seeThroughDrawables.remove(drawable);
@@ -410,6 +420,19 @@ public final class AmbientLightController {
             Logger.printException(() -> "getLithoColor failure", ex);
             return color;
         }
+    }
+
+    /**
+     * Injection point. YouTube's drawable for touch feedback draws the background of its view
+     * under the feedback.
+     */
+    public static void drawTouchFeedbackBackground(Drawable background, Canvas canvas, Drawable feedback) {
+        try {
+            if (seeThrough && SeeThroughPage.drawPanelLight(background, canvas, feedback)) return;
+        } catch (Exception ex) {
+            Logger.printException(() -> "drawTouchFeedbackBackground failure", ex);
+        }
+        background.draw(canvas);
     }
 
     /**
@@ -1028,9 +1051,14 @@ public final class AmbientLightController {
             final boolean unchanged = difference <= UNCHANGED_DIFFERENCE;
             final boolean emptySurface = redraw;
             redraw = false;
-            if (unchanged && current == drawnLayout) {
+            final float blur = SeekBarPreference.clampToRange(Settings.ENHANCED_AMBIENT_MODE_BLUR) / 100f;
+            if (unchanged && current == drawnLayout && blur == madeBlur) {
                 stillCaptures.incrementAndGet();
-                if (stepCover() || emptySurface) {
+                // A panel that opens or closes over a picture that stays the same changes the cover.
+                final boolean coverMoved = SeeThroughPage.hasPanel() == coverPanel
+                        || light.length != LIGHT_COLUMNS * current.gridHeight() * LIGHT_CHANNELS
+                        ? stepCover() : chooseCover(current, LIGHT_COLUMNS, current.gridHeight());
+                if (coverMoved || emptySurface) {
                     if (!present(current)) redraw = true;
                 } else {
                     settled = true;
@@ -1039,9 +1067,21 @@ public final class AmbientLightController {
             }
             settled = false;
             stillCaptures.set(0);
-            AmbientLightMath.blend(near, pictureColors,
-                    resetSmoothing || difference >= SCENE_CUT_DIFFERENCE ? 0 : SMOOTHING_KEEP);
+            final long now = SystemClock.uptimeMillis();
+            final float smoothing = SeekBarPreference.clampToRange(Settings.ENHANCED_AMBIENT_MODE_SMOOTHING) / 10f;
+            final float keep;
+            if (resetSmoothing) {
+                keep = 0f;
+            } else if (smoothing > 0f) {
+                // The user wants a light that takes its time. The light of a scene cut comes in over that time too.
+                keep = AmbientLightMath.keptShare(now - lastBlend, smoothing);
+            } else {
+                keep = difference >= SCENE_CUT_DIFFERENCE ? 0f : SMOOTHING_KEEP / 256f;
+            }
+            lastBlend = now;
+            AmbientLightMath.blend(nearExact, pictureColors, keep, near);
             resetSmoothing = false;
+            madeBlur = blur;
             AmbientLightMath.downsample(near, PICTURE_WIDTH, FULL_PICTURE, far, FAR_WIDTH, FAR_HEIGHT);
 
             AmbientLightMath.toLinear(near, nearLinear);
@@ -1055,13 +1095,13 @@ public final class AmbientLightController {
                 lightScratch = new float[length];
             }
             AmbientLightMath.render(nearLinear, PICTURE_WIDTH, PICTURE_HEIGHT, farLinear, FAR_WIDTH, FAR_HEIGHT,
-                    current.video(), current.windowWidth(), current.windowHeight(), light, width, height);
+                    current.video(), current.windowWidth(), current.windowHeight(), blur, light, width, height);
             AmbientLightMath.toLinear(new int[]{pageColor}, pageLinear);
             final float toGridX = width / (float) current.windowWidth();
             final float toGridY = height / (float) current.windowHeight();
             float[] gridVideo = {current.video()[0] * toGridX, current.video()[1] * toGridY,
                     current.video()[2] * toGridX, current.video()[3] * toGridY};
-            AmbientLightMath.soften(light, lightSoft, lightScratch, width, height, gridVideo, pageLinear);
+            AmbientLightMath.soften(light, lightSoft, lightScratch, width, height, gridVideo, pageLinear, blur);
             final boolean coverMoved = chooseCover(current, width, height);
 
             if (encodedLight.length != length) {
@@ -1329,7 +1369,9 @@ public final class AmbientLightController {
      * @return If the cover changed.
      */
     private static boolean chooseCover(Layout current, int width, int height) {
-        if (!Settings.ENHANCED_AMBIENT_MODE_READABLE_TEXT.get()) {
+        // A panel over the page, such as the comments, is there to be read.
+        coverPanel = SeeThroughPage.hasPanel();
+        if (!Settings.ENHANCED_AMBIENT_MODE_READABLE_TEXT.get() && !coverPanel) {
             wantedCover = 0f;
             return stepCover();
         }
@@ -1348,6 +1390,16 @@ public final class AmbientLightController {
         if (cover == wantedCover) return false;
         cover = wantedCover;
         return true;
+    }
+
+    /**
+     * Main thread. A panel has opened over the page or has closed, and the light gets another
+     * cover, also while the video is paused.
+     */
+    static void onPanelChanged() {
+        settled = false;
+        stillCaptures.set(0);
+        scheduleTick();
     }
 
     /**
