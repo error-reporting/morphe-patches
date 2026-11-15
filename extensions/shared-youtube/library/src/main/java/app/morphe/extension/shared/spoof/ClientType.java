@@ -332,7 +332,7 @@ public enum ClientType {
             "2.4.0",
             "5.20260707",
             "TV",
-            "Mozilla/5.0 (SMART-TV; Linux; Tizen 2.4.0) AppleWebKit/538.1 (KHTML, like Gecko) Version/2.4.0 TV Safari/538.1",
+            "Mozilla/5.0 (SMART-TV; Linux; Tizen 2.4.0; SAMSUNG UKS9800) AppleWebKit/538.1 (KHTML, like Gecko) Version/2.4.0 TV Safari/538.1",
             TV_SABR.canLogin,
             TV_SABR.requireLogin,
             TV_SABR.supportsMultiAudioTracks,
