@@ -2,6 +2,7 @@
  * Copyright 2026 Morphe.
  * https://github.com/MorpheApp/morphe-patches/pull/3905
  * https://github.com/MorpheApp/morphe-patches/pull/4890
+ * https://github.com/MorpheApp/morphe-patches/pull/4909
  *
  * See the included NOTICE file for GPLv3 Section 7 terms that apply to this code.
  */
@@ -16,14 +17,13 @@ import androidx.annotation.Nullable;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.MessageLite;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import app.morphe.extension.shared.Logger;
-import app.morphe.extension.shared.ResourceType;
 import app.morphe.extension.shared.ResourceUtils;
 import app.morphe.extension.shared.innertube.Offline.ButtonCommand;
 import app.morphe.extension.shared.innertube.Offline.DownloadButtonColor;
@@ -97,31 +97,6 @@ public final class InAppDownloadsPatch extends BaseInAppDownloadsPatch {
     private static final String[] FORMAT_LABELS = {
             "2160p", "1440p", "1080p", "720p", "480p", "360p", "144p"
     };
-
-    /**
-     * Height of the highest download quality.
-     */
-    private static final int HIGHEST_QUALITY_HEIGHT = 2160;
-
-    /**
-     * Prefix of the names of {@link OfflineFormatType}, which the format type enum of the app has
-     * without the prefix.
-     */
-    private static final String FORMAT_TYPE_NAME_PREFIX = "OFFLINE_FORMAT_TYPE_";
-
-    /**
-     * Names of the constants of the format type enum of the app.
-     */
-    private static final String QUAD_HD_FORMAT_TYPE_NAME = "HD_1440";
-    private static final String ULTRA_HD_FORMAT_TYPE_NAME = "HD_2160";
-
-    /**
-     * Labels of the quality setting for the qualities above 1080p, which the app has no labels for.
-     */
-    private static final int QUAD_HD_LABEL_ID = ResourceUtils.getIdentifier(
-            ResourceType.STRING, "morphe_offline_video_quality_1440p");
-    private static final int ULTRA_HD_LABEL_ID = ResourceUtils.getIdentifier(
-            ResourceType.STRING, "morphe_offline_video_quality_2160p");
 
     /**
      * Injection point.
@@ -233,12 +208,7 @@ public final class InAppDownloadsPatch extends BaseInAppDownloadsPatch {
                 return formatTypes;
             }
 
-            Object[] constants = type.getDeclaringClass().getEnumConstants();
-            List<Object> qualities = new ArrayList<>(FORMAT_TYPES.length);
-            for (OfflineFormatType offlineFormatType : FORMAT_TYPES) {
-                qualities.add(appFormatType(constants, offlineFormatType));
-            }
-            return qualities;
+            return appFormatTypes(type, FORMAT_TYPES);
         } catch (Exception ex) {
             Logger.printException(() -> "getDownloadQualityFormatTypes failure", ex);
             return formatTypes;
@@ -246,50 +216,55 @@ public final class InAppDownloadsPatch extends BaseInAppDownloadsPatch {
     }
 
     /**
-     * @return The constant of the format type enum of the app, which has the name without the prefix.
+     * Implemented by the app class that picks the streams of a download quality.
      */
-    private static Object appFormatType(Object[] constants, OfflineFormatType type) {
-        String name = type.name().substring(FORMAT_TYPE_NAME_PREFIX.length());
-        for (Object constant : constants) {
-            if (((Enum<?>) constant).name().equals(name)) {
-                return constant;
-            }
-        }
-        throw new IllegalArgumentException("No format type: " + name);
+    public interface DownloadStreamSelector {
+        /**
+         * The stream selection of the app, which uses the same device and server checks as playback.
+         *
+         * @return The stream of the quality, a stream of a lower quality, or null.
+         */
+        @Nullable
+        FormatStreamInterface patch_selectStream(int quality, int maxHeight, int audioQuality,
+                                                 StreamingDataInterface streamingData, boolean audio,
+                                                 Object playerConfig);
+
+        /**
+         * @return The stream with its content length, which is fetched if the server did not give it.
+         */
+        FormatStreamInterface patch_fetchContentLength(FormatStreamInterface stream) throws IOException;
     }
 
     /**
      * Injection point.
      * <p>
-     * Called once when the offline settings are created. The app hides the download qualities
-     * that are taller than the shorter side of the screen, so a 720p screen can only save 720p.
-     * Every screen is offered the qualities up to 2160p.
+     * Called for each quality of the quality picker of a download, to pick the video and audio
+     * streams of the quality. The picker drops a quality whose stream is the same as one of a lower
+     * quality, and the app picks a lower quality if the device or server checks rule out the stream
+     * of the quality. These are the same checks as playback, such as which codecs the device can decode.
      *
-     * @param maxHeight Height of the highest download quality the app offers.
+     * @return The stream of the quality, or the stream the app picked.
      */
-    public static int getMaxDownloadQualityHeight(int maxHeight) {
-        return isInAppDownloadMode()
-                ? Math.max(maxHeight, HIGHEST_QUALITY_HEIGHT)
-                : maxHeight;
-    }
-
-    /**
-     * Injection point.
-     * <p>
-     * Called for the label of a download quality, which the app has only up to 1080p.
-     *
-     * @param formatType Format type of the quality.
-     * @return Resource id of the label, or 0 to keep the label of the app.
-     */
-    public static int getDownloadQualityLabel(@Nullable Object formatType) {
-        if (!isInAppDownloadMode() || !(formatType instanceof Enum<?> type)) {
-            return 0;
+    @Nullable
+    public static FormatStreamInterface selectDownloadStream(DownloadStreamSelector selector, int quality,
+                                                             int maxHeight, int audioQuality,
+                                                             StreamingDataInterface streamingData,
+                                                             boolean audio, Object playerConfig) {
+        FormatStreamInterface stream = selector.patch_selectStream(
+                quality, maxHeight, audioQuality, streamingData, audio, playerConfig);
+        if (audio) {
+            return stream;
         }
-        return switch (type.name()) {
-            case QUAD_HD_FORMAT_TYPE_NAME -> QUAD_HD_LABEL_ID;
-            case ULTRA_HD_FORMAT_TYPE_NAME -> ULTRA_HD_LABEL_ID;
-            default -> 0;
-        };
+
+        try {
+            FormatStreamInterface videoStream = getDownloadVideoStream(quality, maxHeight, streamingData, stream);
+            return videoStream == stream
+                    ? stream
+                    : selector.patch_fetchContentLength(videoStream);
+        } catch (Exception ex) {
+            Logger.printException(() -> "selectDownloadStream failure", ex);
+            return stream;
+        }
     }
 
     /**
