@@ -146,6 +146,8 @@
         <item>Mobile Web</item>
         <item>TV</item>
         <item>TV Simply</item>
+        <item>TV Simply No auth</item>
+        <item>IOS Producer</item>
         <item>visionOS</item>
         <item>visionOS Experimental</item>
     </string-array>
@@ -158,6 +160,8 @@
         <item>MWEB</item>
         <item>TV_SABR</item>
         <item>TV_SIMPLY</item>
+        <item>TV_SIMPLY_NO_AUTH</item>
+        <item>IOS_PRODUCER</item>
         <item>VISIONOS_1_02</item>
         <item>VISIONOS_1_06</item>
     </string-array>

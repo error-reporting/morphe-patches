@@ -93,9 +93,9 @@ val spoofAppVersionPatch = baseSpoofAppVersionPatch(
          * See: https://github.com/MorpheApp/morphe-patches/issues/183.
          */
         if (is_21_05_or_greater) {
-            // YouTube 20.05+ has removed the code for the old Shorts overlay.
+            // YouTube 21.05+ has removed the code for the old Shorts overlay.
             // If the app version is spoofed as 20.29 or earlier,
-            // the Shorts endpoint will use app version 20.30.40 to fix the Shorts no overlay.
+            // the Shorts endpoint will use app version 20.31.42 to fix the Shorts no overlay.
             addClientVersionHook(
                 Endpoint.REEL,
                 "$EXTENSION_CLASS->getShortsAppVersionOverride(Ljava/lang/String;)Ljava/lang/String;",

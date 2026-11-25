@@ -12,7 +12,7 @@ import static app.morphe.extension.shared.spoof.SpoofAppVersionPatch.isSpoofingT
 @SuppressWarnings("unused")
 public class SpoofAppVersionPatch {
 
-    private static final boolean DISABLE_BOLD_ICONS = isSpoofingToLessThan("20.30.00");
+    private static final boolean DISABLE_BOLD_ICONS = isSpoofingToLessThan("20.29.00");
 
     /**
      * Injection point.
@@ -21,7 +21,7 @@ public class SpoofAppVersionPatch {
     public static boolean disableShortsBoldIcons(boolean original) {
         return !DISABLE_BOLD_ICONS && original;
     }
-
+    
     /**
      * Injection point.
      * Used on YouTube 21.05+.
@@ -29,8 +29,8 @@ public class SpoofAppVersionPatch {
      * Called from the '/reel/create_reel_items', '/reel/reel_item_watch', and '/reel/reel_watch_sequence' endpoints.
      */
     public static String getShortsAppVersionOverride(String version) {
-        return DISABLE_BOLD_ICONS
-                ? "20.30.40" // Oldest version that supports new Shorts overlay endpoint response.
+        return DISABLE_BOLD_ICONS 
+                ? "20.31.42" // Oldest version that supports new Shorts overlay endpoint response.
                 : version;
     }
 }

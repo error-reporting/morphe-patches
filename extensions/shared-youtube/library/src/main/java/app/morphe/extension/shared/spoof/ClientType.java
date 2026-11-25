@@ -59,16 +59,16 @@ public enum ClientType {
             ANDROID_MUSIC_REEL.deviceModel,
             ANDROID_MUSIC_REEL.osName,
             ANDROID_MUSIC_REEL.osVersion,
-            "7.12.52",
+            "7.29.52",
             null,
-            "com.google.android.apps.youtube.music/7.12.52 (Linux; U; Android " + Build.VERSION.RELEASE + ") gzip",
+            "com.google.android.apps.youtube.music/7.29.52 (Linux; U; Android " + Build.VERSION.RELEASE + ") gzip",
             IS_YOUTUBE_MUSIC,
             IS_YOUTUBE_MUSIC,
             false,
             false,
             false,
-            false,
-            false,
+            true,
+            true,
             "Android Music No SDK"
     ),
     /**
@@ -259,7 +259,7 @@ public enum ClientType {
             Build.VERSION.RELEASE,
             String.valueOf(Build.VERSION.SDK_INT),
             Build.ID,
-            "20.10.38",
+            "20.21.37",
             null,
             true,
             true,
@@ -309,7 +309,7 @@ public enum ClientType {
             TV_SABR.osVersion,
             TV_SABR.clientVersion,
             TV_SABR.clientPlatform,
-            "Mozilla/5.0 (Nintendo WiiU) AppleWebKit/534.52 (KHTML, like Gecko) NX/2.1.0.8.23 NintendoBrowser/1.1.0.7579.EU",
+            "Mozilla/5.0 (Nintendo WiiU) AppleWebKit/534.52 (KHTML, like Gecko) NX/2.1.0.8.23 NintendoBrowser/1.1.0.7579.US",
             TV_SABR.canLogin,
             TV_SABR.requireLogin,
             TV_SABR.supportsMultiAudioTracks,
@@ -327,12 +327,12 @@ public enum ClientType {
             TV_SABR.id,
             TV_SABR.clientName,
             "Samsung",
-            "SmartTV",
+            "UKS9800",
             "Tizen",
             "2.4.0",
             "5.20150304",
             "TV",
-            "Mozilla/5.0 (SMART-TV; Linux; Tizen 2.4.0) AppleWebKit/538.1 (KHTML, like Gecko) Version/2.4.0 TV Safari/538.1",
+            "Mozilla/5.0 (SMART-TV; Linux; Tizen 2.4.0 SAMSUNG UKS9800) AppleWebKit/538.1 (KHTML, like Gecko) Version/2.4.0 TV Safari/538.1",
             TV_SABR.canLogin,
             TV_SABR.requireLogin,
             TV_SABR.supportsMultiAudioTracks,
@@ -365,6 +365,53 @@ public enum ClientType {
             true,
             false,
             "TV Simply"
+    ),
+    /**
+     * Video not playable: Paid, Movie, Private, Age-restricted.
+     * AV1 codec available.
+     */
+    TV_SIMPLY_NO_AUTH(
+            TV_SIMPLY.id,
+            TV_SIMPLY.clientName,
+            TV_SABR.deviceMake,
+            TV_SABR.deviceModel,
+            TV_SABR.osName,
+            TV_SABR.osVersion,
+            TV_SIMPLY.clientVersion,
+            TV_SABR.clientPlatform,
+            TV_SABR.userAgent,
+            false,
+            // This client requires a PoToken for logout.
+            TV_SIMPLY.requireLogin,
+            TV_SABR.supportsMultiAudioTracks,
+            TV_SABR.supportsVRImmersiveMode,
+            TV_SABR.requireJS,
+            TV_SIMPLY.requirePoToken,
+            TV_SIMPLY.requireSABR,
+            "TV Simply No auth"
+    ),
+    /**
+     * Video not playable: Paid, Movie, Private, Age-restricted, Live stream.
+     * VP9 and AV1 codec not available.
+     */
+    IOS_PRODUCER(
+            92,
+            "IOS_PRODUCER",
+            "Apple",
+            "iPhone16,2",
+            "iPhone",
+            "18.3.2.22D82",
+            "0.147.945",
+            null,
+            "com.google.ios.youtubeproducer/0.147.945 (iPhone16,2; U; CPU iOS 18_3_2 like Mac OS X;)",
+            false,
+            false,
+            true,
+            false,
+            false,
+            false,
+            false,
+            "ios producer"
     ),
     /**
      * Mobile web (m.youtube.com), as the Chrome browser of the device.
@@ -654,7 +701,7 @@ public enum ClientType {
      */
     @Nullable
     private static volatile String webViewChromeMajorVersion;
-
+	
     /**
      * The user agent of the client.
      * <p>

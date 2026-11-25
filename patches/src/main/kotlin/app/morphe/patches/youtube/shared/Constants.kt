@@ -33,15 +33,147 @@ internal object Constants {
                 isExperimental = true
             ),
             AppTarget(
-                version = "21.30.216",
-                minSdk = 29
+                version = "21.44.528",
+                minSdk = 29,
+                isExperimental = true
             ),
             AppTarget(
-                version = "21.28.208", // Last version with different miniplayers.
-                minSdk = 29
+                version = "21.43.523",
+                minSdk = 29,
+                isExperimental = true
+            ),
+            AppTarget(
+                version = "21.42.241",
+                minSdk = 29,
+                isExperimental = true
+            ),
+            AppTarget(
+                version = "21.41.525",
+                minSdk = 29,
+                isExperimental = true
+            ),
+            AppTarget(
+                version = "21.39.522",
+                minSdk = 29,
+                isExperimental = true
+            ),
+            AppTarget(
+                version = "21.38.130",
+                minSdk = 29,
+                isExperimental = true
+            ),
+            AppTarget(
+                version = "21.38.123",
+                minSdk = 29,
+                isExperimental = true
+            ),
+            AppTarget(
+                version = "21.37.42",
+                minSdk = 29,
+                isExperimental = true
+            ),
+            AppTarget(
+                version = "21.36.45",
+                minSdk = 29,
+                isExperimental = true
+            ),
+            AppTarget(
+                version = "21.35.442",
+                minSdk = 29,
+                isExperimental = true
+            ),
+            AppTarget(
+                version = "21.34.243",
+                minSdk = 29,
+                isExperimental = true
+            ),
+            AppTarget(
+                version = "21.33.321",
+                minSdk = 29,
+                isExperimental = true
+            ),
+            AppTarget(
+                version = "21.32.2",
+                minSdk = 29,
+                isExperimental = true
+            ),
+            AppTarget(
+                version = "21.31.523",
+                minSdk = 29,
+                isExperimental = true
+            ),
+            AppTarget(
+                version = "21.30.216",
+                minSdk = 29,
+                isExperimental = true
+            ),
+            AppTarget(
+                version = "21.30.209",
+                minSdk = 29,
+                isExperimental = true
+            ),
+            AppTarget(
+                version = "21.29.366",
+                minSdk = 29,
+                isExperimental = true
+            ),
+            AppTarget(
+                version = "21.28.208", // The first version that fully implements the removal of support for different miniplayers.
+                minSdk = 29,
+                isExperimental = true
+            ),
+            AppTarget(
+                version = "21.28.204", // The first version that debuts the removal of support for different miniplayers.
+                minSdk = 29,
+                isExperimental = true
+            ),
+            AppTarget(
+                version = "21.26.360",
+                minSdk = 29,
+                isExperimental = true
+            ),
+            AppTarget(
+                version = "21.25.523",
+                minSdk = 29,
+                isExperimental = true
+            ),
+            AppTarget(
+                version = "21.24.360",
+                minSdk = 29,
+                isExperimental = true
             ),
             AppTarget(
                 version = "21.23.492", // Last version for Android 9.0
+                minSdk = 28
+            ),
+            AppTarget(
+                version = "21.23.480",
+                minSdk = 28,
+                isExperimental = true
+            ),
+            AppTarget(
+                version = "21.20.405",
+                minSdk = 28
+            ),
+            AppTarget(
+                version = "21.16.256",
+                minSdk = 28
+            ),
+            AppTarget(
+                version = "21.13.164", 
+                minSdk = 28
+            ),
+            AppTarget(
+                version = "21.07.247",
+                minSdk = 28
+            ),
+            AppTarget(
+                version = "21.05.265",
+                minSdk = 28,
+                isExperimental = true
+            ),
+            AppTarget(
+                version = "21.04.223",
                 minSdk = 28
             ),
             AppTarget(
