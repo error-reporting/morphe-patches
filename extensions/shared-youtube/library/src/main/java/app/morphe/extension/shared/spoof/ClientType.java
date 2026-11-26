@@ -315,7 +315,7 @@ public enum ClientType {
             TV_SABR.supportsMultiAudioTracks,
             TV_SABR.supportsVRImmersiveMode,
             TV_SABR.requireJS,
-            TV_SABR.requirePoToken,
+            true,
             TV_SABR.requireSABR,
             "TV Wii U"
     ),
