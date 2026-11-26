@@ -373,7 +373,7 @@ public final class BotGuardManager {
             connection.setRequestProperty("User-Agent", USER_AGENT);
             connection.setRequestProperty("Accept", "application/json");
             connection.setRequestProperty("Content-Type", "application/json+protobuf");
-            connection.setRequestProperty("x-goog-api-key", "AIzaSyDyT5W0Jh49F30Pqqtyfdf7pDLFKLJoAnw");
+            connection.setRequestProperty("x-goog-api-key", "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8");
             connection.setRequestProperty("x-user-agent", "grpc-web-javascript/0.1");
             connection.setConnectTimeout(HTTP_TIMEOUT_MILLISECONDS);
             connection.setReadTimeout(HTTP_TIMEOUT_MILLISECONDS);
