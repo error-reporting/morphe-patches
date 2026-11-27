@@ -280,7 +280,7 @@ public enum ClientType {
             "Microsoft",
             "Xbox Series X",
             "Xbox",
-            "10.0",
+            "10.0.26100.8866",
             "7.20261007.13.00",
             "GAME_CONSOLE",
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64; Xbox; Xbox One) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36 Edge/44.18363.8131",
