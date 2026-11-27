@@ -289,7 +289,7 @@ public enum ClientType {
             true,
             false,
             true,
-            true,
+            false,
             true,
             "TV"
     ),
