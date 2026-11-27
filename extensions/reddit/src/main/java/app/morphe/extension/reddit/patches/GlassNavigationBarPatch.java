@@ -24,6 +24,7 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.Nullable;
 
 import com.reddit.launch.bottomnav.BottomNavScreen;
+import com.reddit.screen.ComposeBottomSheetScreen;
 
 import java.util.List;
 
@@ -529,6 +530,31 @@ public final class GlassNavigationBarPatch {
     }
 
     /**
+     * @return If the glass of the Home top bar buttons and tabs blurs the feed.
+     */
+    private static boolean isTopBarFrosted() {
+        return FROSTED_ENABLED && isSearchButtonActive();
+    }
+
+    /**
+     * @param modifier Modifier of the Home feed.
+     */
+    static Object getFeedFrostedModifier(Modifier modifier) {
+        return isTopBarFrosted()
+                ? modifier.patch_drawWithContent(GlassNavigationBarBlur.FeedDraw.INSTANCE)
+                : modifier;
+    }
+
+    /**
+     * @param modifier Modifier of the Home top bar, outside its graphics layer.
+     */
+    static Object getTopBarFrostedModifier(Modifier modifier) {
+        return isTopBarFrosted()
+                ? modifier.patch_drawWithContent(GlassNavigationBarBlur.TopBarDraw.INSTANCE)
+                : modifier;
+    }
+
+    /**
      * Injection point.
      */
     public static void onScreenAttached(Object screen, @Nullable View view) {
@@ -539,6 +565,8 @@ public final class GlassNavigationBarPatch {
         try {
             if (screen instanceof BottomNavScreen) {
                 GlassNavigationBarSearchButton.onBottomNavAttached(view);
+            } else if (screen instanceof ComposeBottomSheetScreen) {
+                GlassNavigationBarSearchButton.onBottomSheetAttached(screen);
             }
         } catch (Exception ex) {
             Logger.printException(() -> "onScreenAttached failure", ex);
@@ -556,6 +584,8 @@ public final class GlassNavigationBarPatch {
         try {
             if (screen instanceof BottomNavScreen) {
                 GlassNavigationBarSearchButton.onBottomNavDetached();
+            } else if (screen instanceof ComposeBottomSheetScreen) {
+                GlassNavigationBarSearchButton.onBottomSheetDetached(screen);
             }
         } catch (Exception ex) {
             Logger.printException(() -> "onScreenDetached failure", ex);
@@ -797,6 +827,10 @@ public final class GlassNavigationBarPatch {
         Canvas canvas = scope.patch_getCanvas().patch_getNativeCanvas();
 
         GlassNavigationBarEdge.drawShadow(canvas, left, top, width, height, radius);
+
+        if (FROSTED_ENABLED) {
+            GlassNavigationBarBlur.drawTopBarBackdrop(scope, left, top, width, height, radius);
+        }
 
         scope.patch_drawRoundRect(
                 getGlassColor(dark),
