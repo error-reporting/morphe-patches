@@ -308,7 +308,7 @@ public enum ClientType {
             "Nintendo WiiU",
             "",
             TV_SABR.clientVersion,
-            TV_SABR.clientPlatform,
+            "UNKNOWN_PLATFORM",
             "Mozilla/5.0 (Nintendo WiiU) AppleWebKit/534.52 (KHTML, like Gecko) NX/2.1.0.8.23 NintendoBrowser/1.1.0.7579.EU",
             TV_SABR.canLogin,
             TV_SABR.requireLogin,
