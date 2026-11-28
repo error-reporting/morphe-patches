@@ -60,6 +60,7 @@ Changes include:
     <string name="morphe_hide_account_menu_badges_title">Hide Badges</string>
     <string name="morphe_hide_account_menu_downloads_title">Hide Downloads</string>
     <string name="morphe_hide_account_menu_liked_videos_title">Hide \'Liked videos\'</string>
+    <string name="morphe_hide_account_menu_privacy_tos_footer_title">Hide \'Privacy Policy\' \'Terms of Service\' footer</string>
     <string name="morphe_hide_account_menu_watch_later_title">Hide \'Watch later\'</string>
     <string name="morphe_hide_album_cards_title">Hide album cards</string>
     <string name="morphe_hide_album_cards_summary">Hides the album cards under the artist description</string>
@@ -1567,6 +1568,8 @@ Automotive layout
     <string name="morphe_feed_card_layout_entry_1">Classic</string>
     <string name="morphe_feed_card_layout_entry_2">Cards</string>
     <string name="morphe_feed_card_layout_entry_3">Cards with like, comment and save buttons</string>
+    <string name="morphe_feed_card_layout_entry_4">Cards with avatar glow</string>
+    <string name="morphe_feed_card_layout_entry_5">Cards with like, comment and save buttons and avatar glow</string>
     <string name="morphe_feed_card_layout_comments">Comments</string>
 
     <!-- layout.miniplayer.miniplayerPatch -->
@@ -1663,6 +1666,10 @@ Automotive layout
     <string name="morphe_custom_branding_icon_entry_8">Original analog</string>
     <string name="morphe_custom_branding_icon_entry_9">Original cake</string>
     <string name="morphe_custom_branding_icon_entry_10">Original metal</string>
+    <string name="morphe_custom_branding_icon_entry_11">Original fur</string>
+    <string name="morphe_custom_branding_icon_entry_12">Original watercolor</string>
+    <string name="morphe_custom_branding_icon_entry_13">Original classic</string>
+    <string name="morphe_custom_branding_icon_entry_14">Original retro TV</string>
 
     <!-- layout.branding.header.changeHeaderPatch -->
     <string name="morphe_header_logo_entry_1">Default</string>
